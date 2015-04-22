@@ -13,6 +13,9 @@
 		4EE4BBBF1AE35C0100FC6146 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EE4BBBE1AE35C0100FC6146 /* Images.xcassets */; };
 		4EE4BBC21AE35C0100FC6146 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EE4BBC01AE35C0100FC6146 /* LaunchScreen.xib */; };
 		4EE4BBCE1AE35C0200FC6146 /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBCD1AE35C0200FC6146 /* OnTheMapTests.swift */; };
+		4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBD81AE4193300FC6146 /* WebClient.swift */; };
+		4EE4BBDB1AE4197100FC6146 /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBDA1AE4197100FC6146 /* UserIdentity.swift */; };
+		4EE4BBDD1AE4977300FC6146 /* UdacityWebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBDC1AE4977300FC6146 /* UdacityWebClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,9 @@
 		4EE4BBC71AE35C0200FC6146 /* OnTheMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnTheMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EE4BBCC1AE35C0200FC6146 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EE4BBCD1AE35C0200FC6146 /* OnTheMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapTests.swift; sourceTree = "<group>"; };
+		4EE4BBD81AE4193300FC6146 /* WebClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebClient.swift; sourceTree = "<group>"; };
+		4EE4BBDA1AE4197100FC6146 /* UserIdentity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserIdentity.swift; sourceTree = "<group>"; };
+		4EE4BBDC1AE4977300FC6146 /* UdacityWebClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityWebClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,10 +83,10 @@
 		4EE4BBB41AE35C0100FC6146 /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
+				4EE4BBD71AE4188A00FC6146 /* Model */,
 				4EE4BBB71AE35C0100FC6146 /* AppDelegate.swift */,
 				4EE4BBB91AE35C0100FC6146 /* ViewController.swift */,
 				4EE4BBBB1AE35C0100FC6146 /* Main.storyboard */,
-				4EE4BBBE1AE35C0100FC6146 /* Images.xcassets */,
 				4EE4BBC01AE35C0100FC6146 /* LaunchScreen.xib */,
 				4EE4BBB51AE35C0100FC6146 /* Supporting Files */,
 			);
@@ -90,6 +96,7 @@
 		4EE4BBB51AE35C0100FC6146 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4EE4BBBE1AE35C0100FC6146 /* Images.xcassets */,
 				4EE4BBB61AE35C0100FC6146 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -110,6 +117,16 @@
 				4EE4BBCC1AE35C0200FC6146 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4EE4BBD71AE4188A00FC6146 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4EE4BBD81AE4193300FC6146 /* WebClient.swift */,
+				4EE4BBDA1AE4197100FC6146 /* UserIdentity.swift */,
+				4EE4BBDC1AE4977300FC6146 /* UdacityWebClient.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,8 +229,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EE4BBDB1AE4197100FC6146 /* UserIdentity.swift in Sources */,
+				4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */,
 				4EE4BBBA1AE35C0100FC6146 /* ViewController.swift in Sources */,
 				4EE4BBB81AE35C0100FC6146 /* AppDelegate.swift in Sources */,
+				4EE4BBDD1AE4977300FC6146 /* UdacityWebClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +431,7 @@
 				4EE4BBD31AE35C0200FC6146 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4EE4BBD41AE35C0200FC6146 /* Build configuration list for PBXNativeTarget "OnTheMapTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +440,7 @@
 				4EE4BBD61AE35C0200FC6146 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

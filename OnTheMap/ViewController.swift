@@ -10,16 +10,38 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
+    
+    var webClient: UdacityWebClient!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        webClient = UdacityWebClient()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
+    @IBAction func performLogin(sender: UIButton) {
+        
+        let username = usernameTextField.text
+        let password = passwordTextField.text
+        
+        println("login tapped")
+        webClient.authenticateByUsername(username, withPassword: password) {
+            userIdentity, error in
+            if let userIdentity = userIdentity {
+                self.webClient.fetchUserDataForUserIdentity(userIdentity) {
+                    userData, error in
+                    println("UserData: \(userData)")
+                }
+            } else {
+                println("Login failed with code \(error?.code) \(error?.description)")
+            }
+        }
+        println("login request sent")
+        
+    }
+    
 
 }
 
