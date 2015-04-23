@@ -13,11 +13,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    var webClient: UdacityWebClient!
+    var udacityClient: UdacityWebClient!
+    var onTheMapClient: OnTheMapParseWebClient!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        webClient = UdacityWebClient()
+        udacityClient = UdacityWebClient()
+        onTheMapClient = OnTheMapParseWebClient()
     }
 
 
@@ -27,10 +29,10 @@ class ViewController: UIViewController {
         let password = passwordTextField.text
         
         println("login tapped")
-        webClient.authenticateByUsername(username, withPassword: password) {
+        udacityClient.authenticateByUsername(username, withPassword: password) {
             userIdentity, error in
             if let userIdentity = userIdentity {
-                self.webClient.fetchUserDataForUserIdentity(userIdentity) {
+                self.udacityClient.fetchUserDataForUserIdentity(userIdentity) {
                     userData, error in
                     println("UserData: \(userData)")
                 }
@@ -40,6 +42,16 @@ class ViewController: UIViewController {
         }
         println("login request sent")
         
+    }
+    
+    
+    @IBAction func requestStudentLocations(sender: UIButton) {
+        println("student locations tapped")
+        onTheMapClient.fetchStudentLocations() {
+            data, error in
+            println("nothing, probably not called yet")
+        }
+        println("student locations request sent")
     }
     
 

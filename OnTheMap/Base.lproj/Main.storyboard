@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -48,15 +48,26 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TNI-IP-YEL">
+                                <rect key="frame" x="223" y="323" width="155" height="30"/>
+                                <state key="normal" title="Get Student Locations">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="requestStudentLocations:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Dtf-p6-APm"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="tlM-wh-4wN" firstAttribute="top" secondItem="Hze-EG-gU0" secondAttribute="bottom" constant="8" symbolic="YES" id="4Ei-Jx-y1C"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tlM-wh-4wN" secondAttribute="trailing" id="7nX-qn-3NG"/>
+                            <constraint firstAttribute="centerX" secondItem="TNI-IP-YEL" secondAttribute="centerX" id="FVL-UO-bGD"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Hze-EG-gU0" secondAttribute="trailing" id="Fva-0Z-H3Y"/>
                             <constraint firstItem="NFK-53-y44" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="JbJ-h8-8GC"/>
                             <constraint firstAttribute="centerX" secondItem="i5A-UE-vtm" secondAttribute="centerX" id="Mh9-Zo-Kju"/>
                             <constraint firstAttribute="centerY" secondItem="i5A-UE-vtm" secondAttribute="centerY" id="WI0-Cz-PzB"/>
+                            <constraint firstItem="TNI-IP-YEL" firstAttribute="top" secondItem="i5A-UE-vtm" secondAttribute="bottom" constant="8" symbolic="YES" id="igp-Jc-Rod"/>
                             <constraint firstItem="zfk-WA-kjx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="mjE-hH-hwT"/>
                             <constraint firstItem="tlM-wh-4wN" firstAttribute="leading" secondItem="zfk-WA-kjx" secondAttribute="trailing" constant="8" symbolic="YES" id="oqC-7r-eGH"/>
                             <constraint firstItem="Hze-EG-gU0" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="pDR-LV-Nmc"/>
