@@ -12,18 +12,25 @@ import Foundation
 
 // UdacityWebClient
 // Provids a simple interface for interacting with the Udacity web service.
-class UdacityWebClient: WebClient {
+class UdacityService {
 
+    private var webClient: WebClient!
+    
+    init() {
+        webClient = WebClient()
+        webClient.prepareData = prepareDataForParsing
+    }
+    
     // authenticate with Udacity using a username and password.
     // the user's basic identity (userid) is returned as a UserIdentity in the completionHandler.
     func authenticateByUsername(username: String, withPassword password: String,
         completionHandler: (userIdentity: UserIdentity?, error: NSError?) -> Void) {
             
-        let request = createHttpPostRequestForUrlString(UdacityWebService.SessionUrlString,
+        let request = webClient.createHttpPostRequestForUrlString(UdacityService.SessionUrlString,
             withBody: buildUdacitySessionBody(username: username, password: password),
-            includeHeaders: UdacityWebService.StandardHeaders)
+            includeHeaders: UdacityService.StandardHeaders)
         
-        executeRequest(request)
+        webClient.executeRequest(request)
         { jsonData, error in
             if let account = jsonData?.valueForKey(UdacityJsonKey.Account) as? NSDictionary,
                 key = account[UdacityJsonKey.Key] as? String {
@@ -40,9 +47,9 @@ class UdacityWebClient: WebClient {
     func fetchUserDataForUserIdentity(userIdentity: UserIdentity,
         completionHandler: (userData: UserData?, error: NSError?) -> Void) {
             
-        let request = createHttpGetRequestForUrlString("\(UdacityWebService.UsersUrlString)/\(userIdentity)")
+        let request = webClient.createHttpGetRequestForUrlString("\(UdacityService.UsersUrlString)/\(userIdentity)")
         
-        executeRequest(request)
+        webClient.executeRequest(request)
         { jsonData, error in
             if let userObject = jsonData?.valueForKey(UdacityJsonKey.User) as? NSDictionary {
                 let key = userObject.valueForKey(UdacityJsonKey.Key) as? String
@@ -60,19 +67,17 @@ class UdacityWebClient: WebClient {
         }
     }
     
-    // MARK: Overrides
-    
-    // parseJsonFromData
-    // Override in order to verify response length and to trim extraneous characters in the response,
-    // specific to the Udacity Web Service.
-    override func parseJsonFromData(data: NSData) -> (jsonData: AnyObject?, error: NSError?) {
-        if let lengthError = validateUdacityLengthRequirement(data) {
-            return (nil, lengthError)
-        }
-        return super.parseJsonFromData(data.subdataWithRange(NSMakeRange(5, data.length - 5)))
-    }
-    
     // MARK: Private Helpers
+    
+    // Verify response length and to trim extraneous characters in the response,
+    // specific to the Udacity Web Service.
+    private func prepareDataForParsing(data: NSData) -> NSData? {
+        if let lengthError = validateUdacityLengthRequirement(data) {
+            Logger.error("Data length is to short to be parsed.")
+            return nil
+        }
+        return data.subdataWithRange(NSMakeRange(5, data.length - 5))
+    }
     
     // build the Session request body with username and password values.
     private func buildUdacitySessionBody(#username: String, password: String) -> NSData {
@@ -82,26 +87,19 @@ class UdacityWebClient: WebClient {
     // used when the json body is suspected to contain an error descrptor,
     // pulls out the error message based on the Udacity error format.
     private func produceErrorFromResponseData(jsonData: AnyObject?) -> NSError {
-        var errorObject: NSError!
-        
         if let errorMessage = jsonData?.valueForKey("error") as? String,
             errorCode = jsonData?.valueForKey("status") as? Int {
-                errorObject = createErrorWithCode(errorCode, message: errorMessage, domain: UdacityError.Domain)
+                return UdacityService.errorWithMessage(errorMessage, code: errorCode)
         } else {
-            errorObject = createErrorWithCode(UdacityError.UnexpectedResponseDataCode,
-                message: UdacityError.UnexpectedResponseDataMessage, domain: UdacityError.Domain)
+            return UdacityService.errorForCode(.UnexpectedResponseData)
         }
-        
-        return errorObject
     }
     
     // verify response data is sufficiently long enough to sub set the extraneous characters safely,
     // otherwise return an explanatory error message for why the request will appear to have failed.
     private func validateUdacityLengthRequirement(jsonData: NSData!) -> NSError? {
-        if jsonData.length <= UdacityWebService.UdacityResponsePadding {
-            let dataError = self.createErrorWithCode(UdacityError.InsufficientDataLengthCode,
-                message: UdacityError.InsufficientDataLengthMessage, domain: UdacityError.Domain)
-            return dataError
+        if jsonData.length <= UdacityService.UdacityResponsePadding {
+            return UdacityService.errorForCode(.InsufficientDataLength)
         } else {
             return nil
         }
@@ -111,34 +109,25 @@ class UdacityWebClient: WebClient {
 
 // MARK: - Constants
 
-extension UdacityWebClient {
+extension UdacityService {
     
-    struct UdacityError {
-        static let Domain = "UdacityWebClient"
-        static let UnexpectedResponseDataCode = 1
-        static let UnexpectedResponseDataMessage = "Unexpected Response Data"
-        static let InsufficientDataLengthCode = 2
-        static let InsufficientDataLengthMessage = "Insufficient Data Length In Response"
+    static let BaseUrl = "https://www.udacity.com/api"
+    static let SessionApi = "/session"
+    static let UsersApi = "/users"
+    static let UdacityResponsePadding = 5
+    static var SessionUrlString: String {
+        return BaseUrl + SessionApi
     }
-    
-    struct UdacityWebService {
-        static let BaseUrl = "https://www.udacity.com/api"
-        static let SessionApi = "/session"
-        static let UsersApi = "/users"
-        static let UdacityResponsePadding = 5
-        static var SessionUrlString: String {
-            return BaseUrl + SessionApi
-        }
-        static var UsersUrlString: String {
-            return BaseUrl + UsersApi
-        }
-        static var StandardHeaders: [String:String] {
-            return [
-                WebClientConstant.HttpHeaderAccept:WebClientConstant.JsonContentType,
-                WebClientConstant.HttpHeaderContentType:WebClientConstant.JsonContentType
-            ]
-        }
+    static var UsersUrlString: String {
+        return BaseUrl + UsersApi
     }
+    static var StandardHeaders: [String:String] {
+        return [
+            WebClient.HttpHeaderAccept:WebClient.JsonContentType,
+            WebClient.HttpHeaderContentType:WebClient.JsonContentType
+        ]
+    }
+
     
     struct UdacityJsonKey {
         static let Account = "account"
@@ -149,4 +138,35 @@ extension UdacityWebClient {
         static let Lastname = "last_name"
     }
 
+}
+
+// MARK: - Errors {
+
+extension UdacityService {
+    
+    private static let ErrorDomain = "UdacityWebClient"
+    
+    private enum ErrorCode: Int, Printable {
+        case UnexpectedResponseData, InsufficientDataLength
+        
+        var description: String {
+            switch self {
+            case UnexpectedResponseData: return "Unexpected Response Data"
+            case InsufficientDataLength: return "Insufficient Data Length In Response"
+            default: return "Unknown Error"
+            }
+        }
+    }
+    
+    // createErrorWithCode
+    // helper function to simplify creation of error object
+    private static func errorForCode(code: ErrorCode) -> NSError {
+        let userInfo = [NSLocalizedDescriptionKey : code.description]
+        return NSError(domain: UdacityService.ErrorDomain, code: code.rawValue, userInfo: userInfo)
+    }
+    
+    private static func errorWithMessage(message: String, code: Int) -> NSError {
+        let userInfo = [NSLocalizedDescriptionKey : message]
+        return NSError(domain: UdacityService.ErrorDomain, code: code, userInfo: userInfo)
+    }
 }

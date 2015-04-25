@@ -13,13 +13,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    var udacityClient: UdacityWebClient!
-    var onTheMapClient: OnTheMapParseWebClient!
+    var udacityClient: UdacityService!
+    var onTheMapClient: OnTheMapParseService!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        udacityClient = UdacityWebClient()
-        onTheMapClient = OnTheMapParseWebClient()
+        udacityClient = UdacityService()
+        onTheMapClient = OnTheMapParseService()
     }
 
 
@@ -47,9 +47,13 @@ class ViewController: UIViewController {
     
     @IBAction func requestStudentLocations(sender: UIButton) {
         println("student locations tapped")
-        onTheMapClient.fetchStudentLocations() {
-            data, error in
-            println("nothing, probably not called yet")
+        onTheMapClient.fetchStudentLocations(limit: 50, skip: 45) {
+            studentLocations, error in
+            if let studentLocations = studentLocations {
+                println("found \(studentLocations.count) locations")
+                println("First item name is \(studentLocations[0].firstname)")
+            }
+            
         }
         println("student locations request sent")
     }

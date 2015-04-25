@@ -14,18 +14,31 @@ import Foundation
 // Base Class for general interactions with any Web Service API that produces JSON data.
 public class WebClient {
     
+    // optional data maniupation function
+    // if set will modify the data before handing it off to the parser.
+    // Common Use Case: some web services include extraneous content 
+    //                  before or after the desired JSON content in response data.
+    public var prepareData: ((NSData) -> NSData?)?
+    
     // createHttpGetRequestForUrlString
     // Creates fully configured NSURLRequest for making HTTP GET requests.
     // urlString: properly formatted URL string
     // includeHeaders: field-name / value pairs for request headers.
-    public func createHttpGetRequestForUrlString(urlString: String, includeHeaders requestHeaders: [String:String]? = nil) -> NSURLRequest {
-        // TODO: this should do something smarter if the urlString is malformed
-        var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
-        request.HTTPMethod = WebClientConstant.HttpGet
-        if let requestHeaders = requestHeaders {
-            request = addRequestHeaders(requestHeaders, toRequest: request)
-        }
-        return request
+    public func createHttpGetRequestForUrlString(var urlString: String,
+        includeHeaders requestHeaders: [String:String]? = nil,
+        includeParameters requestParameters: [String:AnyObject]? = nil) -> NSURLRequest {
+
+            if let requestParameters = requestParameters {
+                urlString = "\(urlString)?\(encodeParameters(requestParameters))"
+            }
+
+            // TODO: this should do something smarter if the urlString is malformed
+            var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
+            request.HTTPMethod = WebClient.HttpGet
+            if let requestHeaders = requestHeaders {
+                request = addRequestHeaders(requestHeaders, toRequest: request)
+            }
+            return request
     }
     
     // createHttpPostRequestForUrlString
@@ -33,36 +46,27 @@ public class WebClient {
     // urlString: properly formatted URL string
     // withBody: body of the post request, not necessarily JSON or any particular format.
     // includeHeaders: field-name / value pairs for request headers.
-    public func createHttpPostRequestForUrlString(urlString: String, withBody body: NSData, includeHeaders requestHeaders: [String:String]?) -> NSURLRequest {
-        var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
-        request.HTTPMethod = WebClientConstant.HttpPost
-        if let requestHeaders = requestHeaders {
-            request = addRequestHeaders(requestHeaders, toRequest: request)
-        }
-        request.HTTPBody = body
-        return request
-    }
-    
-    // parseJsonFromData
-    // Produces usable JSON object from the raw data.
-    func parseJsonFromData(data: NSData) -> (jsonData: AnyObject?, error: NSError?) {
-        var parsingError: NSError? = nil
-        let jsonData: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
-        return (jsonData, parsingError)
-    }
-    
-    // createErrorWithCode
-    // helper function to simplify creation of error object
-    func createErrorWithCode(code: Int, message: String, domain: String) -> NSError {
-        let userInfo = [NSLocalizedDescriptionKey : message]
-        return NSError(domain: domain, code: code, userInfo: userInfo)
+    public func createHttpPostRequestForUrlString(var urlString: String, withBody body: NSData,
+        includeHeaders requestHeaders: [String:String]? = nil,
+        includeParameters requestParameters: [String:AnyObject]? = nil) -> NSURLRequest {
+            
+            if let requestParameters = requestParameters {
+                urlString = "\(urlString)?\(encodeParameters(requestParameters))"
+            }
+            var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
+            request.HTTPMethod = WebClient.HttpPost
+            if let requestHeaders = requestHeaders {
+                request = addRequestHeaders(requestHeaders, toRequest: request)
+            }
+            request.HTTPBody = body
+            return request
     }
     
     // executeRequest
     // Execute the request in a background thread, and call completionHandler when done.
     // Performs the work of checking for general errors and then
     // turning raw data into JSON data to feed to completionHandler.
-    func executeRequest(request: NSURLRequest, completionHandler: (jsonData: AnyObject?, error: NSError?) -> Void) {
+    public func executeRequest(request: NSURLRequest, completionHandler: (jsonData: AnyObject?, error: NSError?) -> Void) {
                             
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
@@ -89,6 +93,18 @@ public class WebClient {
     
     // MARK: Private Helpers
     
+    // Produces usable JSON object from the raw data.
+    private func parseJsonFromData(data: NSData) -> (jsonData: AnyObject?, error: NSError?) {
+        var mutableData = data
+        var parsingError: NSError? = nil
+        if let prepareData = prepareData,
+            modifiedData = prepareData(data) {
+                mutableData = modifiedData
+        }
+        let jsonData: AnyObject? = NSJSONSerialization.JSONObjectWithData(mutableData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
+        return (jsonData, parsingError)
+    }
+    
     // helper function adds request headers to request
     private func addRequestHeaders(requestHeaders: [String:String], toRequest request: NSMutableURLRequest) -> NSMutableURLRequest {
         var request = request
@@ -97,16 +113,27 @@ public class WebClient {
         }
         return request
     }
+    
+    // encodeParameters
+    // convert dictionary to parameterized String appropriate for use in an HTTP URL
+    private func encodeParameters(params: [String: AnyObject]) -> String {
+        var queryItems = map(params) { NSURLQueryItem(name:$0, value:"\($1)")}
+        var components = NSURLComponents()
+        components.queryItems = queryItems
+        return components.percentEncodedQuery ?? ""
+    }
+    
 }
 
 // MARK: - Constants
 
 extension WebClient {
-    struct WebClientConstant {
-        static let JsonContentType = "application/json"
-        static let HttpHeaderAccept = "Accept"
-        static let HttpHeaderContentType = "Content-Type"
-        static let HttpPost = "POST"
-        static let HttpGet = "GET"
-    }
+    
+    static let JsonContentType = "application/json"
+    static let HttpHeaderAccept = "Accept"
+    static let HttpHeaderContentType = "Content-Type"
+    static let HttpPost = "POST"
+    static let HttpGet = "GET"
+
 }
+
