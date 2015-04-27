@@ -12,10 +12,10 @@ struct StudentLocation {
     
     let objectId: String
     let studentKey: String
-    let firstname: String
     let latitude: Float
     let longitude: Float
     
+    let firstname: String?
     let lastname: String?
     let mediaUrl: String?
     let mapString: String?
@@ -25,18 +25,17 @@ struct StudentLocation {
     init?(data: [String:AnyObject]) {
         if let inObjectId = data[JsonKey.ObjectId] as? String,
             let inStudentKey = data[JsonKey.UniqueKey] as? String,
-            let inFirstname = data[JsonKey.Firstname] as? String,
             let inLatitude = data[JsonKey.Latitude] as? Float,
             let inLongitude = data[JsonKey.Longitude] as? Float {
                 
                 // set the required attributes
                 objectId = inObjectId
                 studentKey = inStudentKey
-                firstname = inFirstname
                 latitude = inLatitude
                 longitude = inLongitude
         
                 // set the optional attributes
+                firstname = data[JsonKey.Firstname] as? String
                 lastname = data[JsonKey.Lastname] as? String
                 mapString = data[JsonKey.MapString] as? String
                 updatedAt = data[JsonKey.UpdatedAt] as? String

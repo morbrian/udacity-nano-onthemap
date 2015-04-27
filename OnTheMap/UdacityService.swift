@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 // MARK: Class UdacityWebClient
 
 // UdacityWebClient
@@ -24,7 +25,7 @@ class UdacityService {
     // authenticate with Udacity using a username and password.
     // the user's basic identity (userid) is returned as a UserIdentity in the completionHandler.
     func authenticateByUsername(username: String, withPassword password: String,
-        completionHandler: (userIdentity: UserIdentity?, error: NSError?) -> Void) {
+        completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
             
         let request = webClient.createHttpPostRequestForUrlString(UdacityService.SessionUrlString,
             withBody: buildUdacitySessionBody(username: username, password: password),
@@ -34,7 +35,7 @@ class UdacityService {
         { jsonData, error in
             if let account = jsonData?.valueForKey(UdacityJsonKey.Account) as? NSDictionary,
                 key = account[UdacityJsonKey.Key] as? String {
-                    completionHandler(userIdentity: UserIdentity(key), error: nil)
+                    completionHandler(userIdentity: StudentIdentity(key), error: nil)
             } else {
                 completionHandler(userIdentity: nil, error: self.produceErrorFromResponseData(jsonData))
             }
@@ -44,10 +45,10 @@ class UdacityService {
     // fetch available data for the user identified by userIdentity.
     // For the logged in user, the service returns most of the available data on the user.
     // For any non-logged in user, this will return just the public data for the specified user.
-    func fetchUserDataForUserIdentity(userIdentity: UserIdentity,
-        completionHandler: (userData: UserData?, error: NSError?) -> Void) {
+    func fetchInformationForStudentIdentity(studentIdentity: StudentIdentity,
+        completionHandler: (studentInformation: StudentInformation?, error: NSError?) -> Void) {
             
-        let request = webClient.createHttpGetRequestForUrlString("\(UdacityService.UsersUrlString)/\(userIdentity)")
+        let request = webClient.createHttpGetRequestForUrlString("\(UdacityService.UsersUrlString)/\(studentIdentity)")
         
         webClient.executeRequest(request)
         { jsonData, error in
@@ -57,12 +58,12 @@ class UdacityService {
                 let firstname = userObject.valueForKey(UdacityJsonKey.Firstname) as? String
                 let lastname = userObject.valueForKey(UdacityJsonKey.Lastname) as? String
                 
-                let userData = UserData(userIdentity: userIdentity, nickname: nickname,
+                let userData = StudentInformation(studentIdentity: studentIdentity, nickname: nickname,
                     firstname: firstname, lastname: lastname, imageUrl: nil)
                 
-                completionHandler(userData: userData, error: nil)
+                completionHandler(studentInformation: userData, error: nil)
             } else {
-                completionHandler(userData: nil, error: self.produceErrorFromResponseData(jsonData))
+                completionHandler(studentInformation: nil, error: self.produceErrorFromResponseData(jsonData))
             }
         }
     }

@@ -5,10 +5,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -49,12 +49,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TNI-IP-YEL">
-                                <rect key="frame" x="223" y="323" width="155" height="30"/>
-                                <state key="normal" title="Get Student Locations">
+                                <rect key="frame" x="238" y="323" width="125" height="30"/>
+                                <state key="normal" title="Proceed As Guest">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="requestStudentLocations:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Dtf-p6-APm"/>
+                                    <action selector="proceedAsGuest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0kM-N3-Whm"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -85,10 +85,85 @@
                     <connections>
                         <outlet property="passwordTextField" destination="tlM-wh-4wN" id="Gsl-lb-pM6"/>
                         <outlet property="usernameTextField" destination="Hze-EG-gU0" id="8Kd-qH-GXY"/>
+                        <segue destination="ZUW-H4-Yvj" kind="show" identifier="SuccessfulLoginSegue" id="xNy-8N-cjM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="208" y="242"/>
+        </scene>
+        <!--Managing Tab Bar Controller-->
+        <scene sceneID="oto-WP-Cg6">
+            <objects>
+                <tabBarController id="ZUW-H4-Yvj" customClass="ManagingTabBarController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="g6G-z7-hA7">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BEh-Lm-rwq" kind="relationship" relationship="viewControllers" id="lPy-25-p6x"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rd5-he-o7v" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="967" y="242"/>
+        </scene>
+        <!--List-->
+        <scene sceneID="UZU-6P-Bt6">
+            <objects>
+                <viewController id="BEh-Lm-rwq" customClass="StudentLocationsTableViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JyZ-LP-ysd"/>
+                        <viewControllerLayoutGuide type="bottom" id="F8b-WI-5tQ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yJf-gW-Rta">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Umg-RY-yRb">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StudentLocationCell" id="sje-js-CIk">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sje-js-CIk" id="eUw-Os-9NM">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BEh-Lm-rwq" id="h52-tM-fF1"/>
+                                    <outlet property="delegate" destination="BEh-Lm-rwq" id="o6a-f2-AnS"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Umg-RY-yRb" firstAttribute="leading" secondItem="yJf-gW-Rta" secondAttribute="leadingMargin" constant="-16" id="7Vr-pU-XAw"/>
+                            <constraint firstAttribute="bottom" secondItem="Umg-RY-yRb" secondAttribute="bottom" constant="20" symbolic="YES" id="JKU-Kt-odc"/>
+                            <constraint firstItem="F8b-WI-5tQ" firstAttribute="top" secondItem="Umg-RY-yRb" secondAttribute="bottom" id="KCG-me-MhZ"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Umg-RY-yRb" secondAttribute="bottom" id="RTr-nT-Kxe"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Umg-RY-yRb" secondAttribute="trailing" constant="-16" id="SZQ-9U-N8V"/>
+                            <constraint firstItem="Umg-RY-yRb" firstAttribute="top" secondItem="yJf-gW-Rta" secondAttribute="topMargin" id="fzV-O9-PP4"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="JKU-Kt-odc"/>
+                                <exclude reference="RTr-nT-Kxe"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="List" id="uu6-LK-0mi"/>
+                    <connections>
+                        <outlet property="tableView" destination="Umg-RY-yRb" id="UmY-nI-1fV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wmR-Pe-PMy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1795" y="242"/>
         </scene>
     </scenes>
 </document>

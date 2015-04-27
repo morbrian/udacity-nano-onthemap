@@ -8,14 +8,14 @@
 
 import Foundation
 
-typealias UserIdentity = String
+typealias StudentIdentity = String
 
 // represents the current user of our application.
 // only the useridentifier is required as the user may not have set other information.
-struct UserData: Printable {
+struct StudentInformation: Printable {
     
     // name or id identifying this user to the remote system
-    var userIdentity: UserIdentity
+    var studentIdentity: StudentIdentity
     
     // nickname
     var nickname: String?
@@ -34,7 +34,7 @@ struct UserData: Printable {
         let firstnameVal = firstname ?? "null"
         let lastnameVal = lastname ?? "null"
         let imageUrlVal = imageUrl?.description ?? "null"
-        return "{ userIdentity: \"\(userIdentity)\", nickname: \"\(nicknameVal)\", firstname: \"\(firstnameVal)\", lastname: \"\(lastnameVal)\", imageUrl: \"\(imageUrlVal)\" }"
+        return "{ userIdentity: \"\(studentIdentity)\", nickname: \"\(nicknameVal)\", firstname: \"\(firstnameVal)\", lastname: \"\(lastnameVal)\", imageUrl: \"\(imageUrlVal)\" }"
     }
     
 }
