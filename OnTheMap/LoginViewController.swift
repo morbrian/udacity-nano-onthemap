@@ -22,11 +22,9 @@ class LoginViewController: UIViewController {
 
 
     @IBAction func performLogin(sender: UIButton) {
-        
         let username = usernameTextField.text
         let password = passwordTextField.text
         
-        println("login tapped")
         dataManager.authenticateByUsername(username, withPassword: password) {
             success, error in
             if success {
@@ -34,29 +32,21 @@ class LoginViewController: UIViewController {
                     self.performSegueWithIdentifier("SuccessfulLoginSegue", sender: self.dataManager)
                 }
             } else {
-                println("Login failed with code \(error?.code) \(error?.description)")
+                Logger.info("Login failed with code \(error?.code) \(error?.description)")
             }
         }
-        println("login request sent")
-        
     }
     
     @IBAction func proceedAsGuest(sender: UIButton) {
-        println("proceed as guest")
         self.performSegueWithIdentifier("SuccessfulLoginSegue", sender: self.dataManager)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let destination = segue.destinationViewController as? ManagingTabBarController {
-            println("dest ok")
-        } else {
-            println("dest misunderstood")
-        }
         if let destination = segue.destinationViewController as? ManagingTabBarController,
             dataManager = sender as? StudentDataAccessManager {
             destination.dataManager = dataManager
         } else {
-            println("expecting crash... why though?")
+            Logger.error("Unrecognized Segue Destination Class For Segue: \(segue.identifier ?? nil)")
         }
     }
 

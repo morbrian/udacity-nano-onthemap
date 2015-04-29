@@ -62,7 +62,7 @@ class StudentDataAccessManager {
             if let newLocations = studentLocations {
                 let pageRange = subset.startIndex..<(skip + newLocations.count)
                 self.pageCache.storePage(Page(pageRange: pageRange, pagedItems: newLocations))
-                println("asked for items \(skip) - \(subset.endIndex) and found \(newLocations.count)")
+                Logger.info("asked for items \(skip) - \(subset.endIndex) and found \(newLocations.count)")
                 completionHandler(success: true, error: nil)
             } else {
                 completionHandler(success: false, error: error)

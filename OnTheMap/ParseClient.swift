@@ -36,7 +36,6 @@ public class ParseClient {
             
             webClient.executeRequest(request) { jsonData, error in
                 if let resultsArray = jsonData?.valueForKey(ParseJsonKey.Results) as? [[String:AnyObject]] {
-                    Logger.info("Found resultArray of size: \(resultsArray.count)")
                     completionHandler(resultsArray: resultsArray, error: nil)
                 } else {
                     completionHandler(resultsArray: nil, error: ParseClient.errorForCode(.ResponseContainedNoResultObject))

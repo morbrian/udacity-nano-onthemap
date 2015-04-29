@@ -104,6 +104,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="BEh-Lm-rwq" kind="relationship" relationship="viewControllers" id="lPy-25-p6x"/>
+                        <segue destination="ID9-zk-Dts" kind="relationship" relationship="viewControllers" id="SQw-v8-icQ"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rd5-he-o7v" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -126,7 +127,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StudentLocationCell" id="sje-js-CIk">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StudentLocationCell" rowHeight="44" id="sje-js-CIk">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sje-js-CIk" id="eUw-Os-9NM">
@@ -164,6 +165,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wmR-Pe-PMy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1795" y="242"/>
+        </scene>
+        <!--Map-->
+        <scene sceneID="hkf-nw-uvE">
+            <objects>
+                <viewController id="ID9-zk-Dts" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ph6-XN-ZK9"/>
+                        <viewControllerLayoutGuide type="bottom" id="9lZ-Eh-E10"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BmD-t3-cyj">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="gPq-jY-HZI">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="gPq-jY-HZI" secondAttribute="trailing" constant="-16" id="Efh-yR-Nwj"/>
+                            <constraint firstItem="gPq-jY-HZI" firstAttribute="top" secondItem="BmD-t3-cyj" secondAttribute="topMargin" id="MNv-qb-QLx"/>
+                            <constraint firstItem="gPq-jY-HZI" firstAttribute="leading" secondItem="BmD-t3-cyj" secondAttribute="leadingMargin" constant="-16" id="Qaf-kW-xcZ"/>
+                            <constraint firstItem="9lZ-Eh-E10" firstAttribute="top" secondItem="gPq-jY-HZI" secondAttribute="bottom" id="dYO-SI-saD"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Map" id="twH-yf-CNd"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NSd-TQ-0eU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1795" y="990"/>
         </scene>
     </scenes>
 </document>
