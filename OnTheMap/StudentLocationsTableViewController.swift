@@ -10,11 +10,8 @@ import UIKit
 
 class StudentLocationsTableViewController: UIViewController {
     
-    // how many items we request at a time
-    private let FetchLimit = 100
-    
-    // how close we can get to end of list before fetching more items
-    private let PreFetchTrigger = 60
+    let FetchLimit = 100
+    let PreFetchTrigger = 20
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -24,28 +21,10 @@ class StudentLocationsTableViewController: UIViewController {
     
     override func viewDidLoad() {
         if let tabBarController = self.tabBarController as? ManagingTabBarController {
-            self.dataManager = tabBarController.dataManager
+            dataManager = tabBarController.dataManager
+            dataManager?.fetchLimit = FetchLimit
             println("on load locs are \(self.dataManager?.studentLocationCount)")
             fetchNextPage()
-        }
-    }
-    
-    private func fetchNextPage() {
-        if !preFetchEnabled {
-            return
-        }
-        
-        let start = dataManager?.studentLocationCount ?? 0
-        let end = start + FetchLimit
-        let oldCount = start
-        dataManager?.preFetchStudentLocationSubset(start..<end) {
-            success, error in
-            if let newCount = self.dataManager?.studentLocationCount where newCount > 0 {
-                self.preFetchEnabled = newCount - oldCount > self.PreFetchTrigger
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.tableView.reloadData()
-                }
-            }
         }
     }
     
@@ -56,14 +35,42 @@ class StudentLocationsTableViewController: UIViewController {
         }
     }
     
+    private func fetchNextPage() {
+        if !preFetchEnabled {
+            return
+        }
+        
+        let oldCount = self.dataManager?.studentLocationCount ?? 0
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        dataManager?.fetchNextPage() {
+            success, error in
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            if let newCount = self.dataManager?.studentLocationCount {
+                if newCount - oldCount > 0 {
+                    // if we received any new data, update the table
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.tableView.reloadData()
+                    }
+                } else if success {
+                    // if we received no new data, we are likely at the end of the stream and shouldn't ask again
+                    // until the user explicitly asks us to with a refresh.
+                    self.preFetchEnabled = false
+                }
+            }
+        }
+    }
+    
 }
 
 // MARK: - UITableViewDelegate
 extension StudentLocationsTableViewController: UITableViewDelegate {
     
-//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        //handleSelectionEventForMemeAtIndex(indexPath.item)
-//    }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let item = dataManager?.studentLocationAtIndex(indexPath.item),
+            updatedAt = item.updatedAt {
+                Logger.info("Student Updated At: " + updatedAt)
+        }
+    }
     
 //    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
 //        handleDeselectionEventForMemeAtIndex(indexPath.item)
@@ -86,14 +93,8 @@ extension StudentLocationsTableViewController: UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var studentLocationData = dataManager?.studentLocationAtIndex(indexPath.item)
         let cell = tableView.dequeueReusableCellWithIdentifier("StudentLocationCell", forIndexPath: indexPath) as! UITableViewCell
-        var labelText = ""
-        if let firstname = studentLocationData?.firstname {
-            labelText += firstname + " "
-        }
-        if let lastname = studentLocationData?.lastname {
-            labelText += lastname
-        }
-        cell.textLabel?.text = labelText
+ 
+        cell.textLabel?.text = studentLocationData?.fullname
         return cell
     }
 }

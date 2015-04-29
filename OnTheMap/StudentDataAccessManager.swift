@@ -10,6 +10,9 @@ import Foundation
 
 class StudentDataAccessManager {
     
+    // how many items we request at a time
+    var fetchLimit = 100
+    
     var udacityClient: UdacityService!
     var onTheMapClient: OnTheMapParseService!
     
@@ -37,6 +40,10 @@ class StudentDataAccessManager {
         return pageCache.pageItemAtIndex(index)
     }
     
+    var studentLocations: [StudentLocation] {
+        return pageCache.pagedItems
+    }
+    
     func authenticateByUsername(username: String, withPassword password: String,
         completionHandler: (success: Bool, error: NSError?) -> Void) {
         udacityClient.authenticateByUsername(username, withPassword: password) {
@@ -60,8 +67,8 @@ class StudentDataAccessManager {
         onTheMapClient.fetchStudentLocations(limit: limit, skip: skip) {
             studentLocations, error in
             if let newLocations = studentLocations {
-                let pageRange = subset.startIndex..<(skip + newLocations.count)
-                self.pageCache.storePage(Page(pageRange: pageRange, pagedItems: newLocations))
+                //let pageRange = subset.startIndex..<(skip + newLocations.count)
+                self.pageCache.storeItems(newLocations)
                 Logger.info("asked for items \(skip) - \(subset.endIndex) and found \(newLocations.count)")
                 completionHandler(success: true, error: nil)
             } else {
@@ -70,42 +77,42 @@ class StudentDataAccessManager {
         }
     }
     
-}
-
-struct Page {
-    let pageRange: Range<Int>
-    var pagedItems:[StudentLocation]
+    private var lastSuccessfulRange: Range<Int>?
+    func fetchNextPage(completionHandler: (success: Bool, error: NSError?) -> Void) {
+        let start = lastSuccessfulRange?.endIndex ?? 0
+        let end = start + fetchLimit
+        let attemptRange = start..<end
+        preFetchStudentLocationSubset(attemptRange) {
+            success, error in
+            if success {
+                self.lastSuccessfulRange = attemptRange
+            }
+            completionHandler(success: success, error: error)
+        }
+    }
+    
 }
 
 struct PageCache {
     
-    private var itemReferences = [String:[Page]]()
-    private let maxPages = 6
-    
-    private var pages = [Page]()
+    private var pagedItems = [StudentLocation]()
     
     var pageItemCount: Int {
-        return pages.reduce(0) {return $0 + $1.pagedItems.count}
+        return pagedItems.count
     }
     
     func pageItemAtIndex(var index: Int) -> StudentLocation? {
-        // pages may not be the same size, so we have to do a small iteration
-        for page in pages {
-            if index >= 0 && index < page.pagedItems.count {
-                return page.pagedItems[index]
-            } else {
-                index -= page.pagedItems.count
-            }
+        if index >= 0 && index < pagedItems.count {
+            return pagedItems[index]
+        } else {
+            return nil
         }
-        return nil
     }
     
-    mutating func storePage(var page: Page) {
-        if pages.count == 0 || page.pageRange.startIndex < pages[0].pageRange.startIndex {
-            pages.insert(page, atIndex: 0)
-        } else {
-            pages.append(page)
-        }
+    mutating func storeItems(items: [StudentLocation]) {
+        // TODO: keep the array sorted... smartly, but some parameterized sorting option to match the query used.
+        // TODO: requires parsing the data strings since I like to use Last Updated Time.
+        pagedItems.extend(items)
     }
     
 }

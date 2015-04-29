@@ -28,11 +28,11 @@ public class ParseClient {
         self.restApiKey = restApiKey
     }
     
-    public func fetchResultsForClassName(className: String, limit: Int = 50, skip: Int = 0,
+    public func fetchResultsForClassName(className: String, limit: Int = 50, skip: Int = 0, orderedBy: String = ParseJsonKey.UpdatedAt,
         completionHandler: (resultsArray: [[String:AnyObject]]?, error: NSError?) -> Void) {
             let request = webClient.createHttpGetRequestForUrlString("\(ParseClient.ObjectUrl)/\(className)",
                 includeHeaders: StandardHeaders,
-                includeParameters: [ParseParameter.Limit:limit, ParseParameter.Skip: skip])
+                includeParameters: [ParseParameter.Limit:limit, ParseParameter.Skip: skip, ParseParameter.Order: orderedBy])
             
             webClient.executeRequest(request) { jsonData, error in
                 if let resultsArray = jsonData?.valueForKey(ParseJsonKey.Results) as? [[String:AnyObject]] {
@@ -51,14 +51,21 @@ extension ParseClient {
     static let BaseUrl = "https://api.parse.com/1/"
     static let ObjectUrl = BaseUrl + "classes/"
     
+    // use reverse-sort by Updated time as default
+    static let DefaultSortOrder = "-\(ParseJsonKey.UpdatedAt)"
+    
     struct ParseParameter {
         static let Limit = "limit"
         static let Skip = "skip"
+        static let Order = "order"
     }
 
     struct ParseJsonKey {
         static let Results = "results"
         static let Count = "count"
+        static let ObjectId = "objectId"
+        static let CreateAt = "createdAt"
+        static let UpdatedAt = "updatedAt"
     }
     
 }

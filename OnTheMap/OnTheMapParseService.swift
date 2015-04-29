@@ -16,9 +16,9 @@ class OnTheMapParseService {
         parseClient = ParseClient(client: WebClient(), applicationId: AppDelegate.ParseApplicationId, restApiKey: AppDelegate.ParseRestApiKey)
     }
     
-    func fetchStudentLocations(limit: Int = 50, skip: Int = 0,
+    func fetchStudentLocations(limit: Int = 50, skip: Int = 0, orderedBy: String = ParseClient.DefaultSortOrder,
         completionHandler: (studentLocations: [StudentLocation]?, error: NSError?) -> Void) {
-            parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName, limit: limit, skip: skip) {
+            parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName, limit: limit, skip: skip, orderedBy: orderedBy) {
             resultsArray, error in
             completionHandler(studentLocations: self.parseResults(resultsArray), error: error)
         }

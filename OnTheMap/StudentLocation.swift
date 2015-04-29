@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct StudentLocation {
+class StudentLocation: NSObject {
     
     let objectId: String
     let studentKey: String
@@ -22,37 +22,61 @@ struct StudentLocation {
     let updatedAt: String?
     let createdAt: String?
     
+    var fullname: String {
+        var fullname = ""
+        if let firstname = firstname {
+            fullname += firstname + " "
+        }
+        if let lastname = lastname {
+            fullname += lastname
+        }
+        return fullname
+    }
+    
     init?(data: [String:AnyObject]) {
-        if let inObjectId = data[JsonKey.ObjectId] as? String,
-            let inStudentKey = data[JsonKey.UniqueKey] as? String,
-            let inLatitude = data[JsonKey.Latitude] as? Float,
-            let inLongitude = data[JsonKey.Longitude] as? Float {
-                
-                // set the required attributes
-                objectId = inObjectId
-                studentKey = inStudentKey
-                latitude = inLatitude
-                longitude = inLongitude
+
+        // set the required attributes
+        objectId = data[JsonKey.ObjectId] as? String ?? ""
+        studentKey = data[JsonKey.UniqueKey] as? String ?? ""
+        latitude = data[JsonKey.Latitude] as? Float ?? Float.NaN
+        longitude = data[JsonKey.Longitude] as? Float ?? Float.NaN
+
+        // set the optional attributes
+        firstname = data[JsonKey.Firstname] as? String
+        lastname = data[JsonKey.Lastname] as? String
+        mapString = data[JsonKey.MapString] as? String
+        updatedAt = data[JsonKey.UpdatedAt] as? String
+        createdAt = data[JsonKey.CreateAt] as? String
+        mediaUrl = data[JsonKey.MediaUrl] as? String
         
-                // set the optional attributes
-                firstname = data[JsonKey.Firstname] as? String
-                lastname = data[JsonKey.Lastname] as? String
-                mapString = data[JsonKey.MapString] as? String
-                updatedAt = data[JsonKey.UpdatedAt] as? String
-                createdAt = data[JsonKey.CreateAt] as? String
-                mediaUrl = data[JsonKey.MediaUrl] as? String
-        } else {
+        super.init()
+        if !validState() {
             return nil
         }
+    }
+    
+    private func validState() -> Bool {
+        return !objectId.isEmpty
+        && !studentKey.isEmpty
+        && validLatitude(latitude)
+        && validLongitude(longitude)
+    }
+    
+    private func validLatitude(latitude: Float) -> Bool {
+        return latitude <= 90.0 && latitude >= -90.0
+    }
+    
+    private func validLongitude(longitude: Float) -> Bool {
+        return longitude <= 180.0 && longitude >= -180.0
     }
 }
 
 extension StudentLocation {
     struct JsonKey {
-        static let ObjectId = "objectId"
+        static let ObjectId = ParseClient.ParseJsonKey.ObjectId
+        static let CreateAt = ParseClient.ParseJsonKey.CreateAt
+        static let UpdatedAt = ParseClient.ParseJsonKey.UpdatedAt
         static let UniqueKey = "uniqueKey"
-        static let CreateAt = "createdAt"
-        static let UpdatedAt = "updatedAt"
         static let MapString = "mapString"
         static let MediaUrl = "mediaURL"
         static let Firstname = "firstName"
