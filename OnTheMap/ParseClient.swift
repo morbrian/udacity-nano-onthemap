@@ -7,7 +7,9 @@
 //
 
 import Foundation
-
+// ParseClient
+// Provides simple api layer on top of WebClient designed to encapsulate
+// the common patterns associated with REST apis based on the Parse framework.
 public class ParseClient {
 
     private var applicationId: String!
@@ -22,12 +24,19 @@ public class ParseClient {
     
     private var webClient: WebClient!
     
+    // client: insteance of a WebClient
+    // applicationId: valid ID provided to this App for use with the Parse service.
+    // restApiKey: a developer API Key provided by registering with the Parse service.
     public init(client: WebClient, applicationId: String, restApiKey: String) {
         self.webClient = client
         self.applicationId = applicationId
         self.restApiKey = restApiKey
     }
     
+    // className: the object model classname of the data type on Parse
+    // limit: maximum number of objects to fetch
+    // skip: number of objects to skip before fetching the limit.
+    // orderedBy: name of an attribute on the object model to sort results by.
     public func fetchResultsForClassName(className: String, limit: Int = 50, skip: Int = 0, orderedBy: String = ParseJsonKey.UpdatedAt,
         completionHandler: (resultsArray: [[String:AnyObject]]?, error: NSError?) -> Void) {
             let request = webClient.createHttpGetRequestForUrlString("\(ParseClient.ObjectUrl)/\(className)",
@@ -35,6 +44,7 @@ public class ParseClient {
                 includeParameters: [ParseParameter.Limit:limit, ParseParameter.Skip: skip, ParseParameter.Order: orderedBy])
             
             webClient.executeRequest(request) { jsonData, error in
+                
                 if let resultsArray = jsonData?.valueForKey(ParseJsonKey.Results) as? [[String:AnyObject]] {
                     completionHandler(resultsArray: resultsArray, error: nil)
                 } else {

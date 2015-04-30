@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class StudentMapViewController: UIViewController, MKMapViewDelegate {
+class StudentMapViewController: OnTheMapBaseViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView! {
         didSet {
@@ -18,21 +18,17 @@ class StudentMapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    var dataManager: StudentDataAccessManager?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if let tabBarController = self.tabBarController as? ManagingTabBarController {
-            self.dataManager = tabBarController.dataManager
-            println("on load locs are \(self.dataManager?.studentLocationCount)")
-            //fetchNextPage()
-        }
-
+    override func updateDisplayFromModel() {
+        mapView.removeAnnotations(mapView.annotations)
         if let studentLocations = dataManager?.studentLocations {
             mapView.addAnnotations(studentLocations)
             mapView.showAnnotations(studentLocations, animated: true)
         }
-        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        updateDisplayFromModel()
     }
 }
 
