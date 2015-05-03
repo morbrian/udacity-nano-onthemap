@@ -12,7 +12,7 @@ class OnTheMapBaseViewController: UIViewController {
     
     let FetchLimit = 100
     let PreFetchTrigger = 20
-   
+
     var dataManager: StudentDataAccessManager?
     
     var preFetchEnabled = true
@@ -20,10 +20,15 @@ class OnTheMapBaseViewController: UIViewController {
     override func viewDidLoad() {
         if let tabBarController = self.tabBarController as? ManagingTabBarController {
             dataManager = tabBarController.dataManager
-            dataManager?.fetchLimit = FetchLimit
-            // only fetch on load if we are empty
-            if let count = dataManager?.studentLocationCount where count == 0 {
-                fetchNextPage()
+            if let dm = dataManager {
+                dm.fetchLimit = FetchLimit
+                if dm.studentLocationCount == 0 {
+                    fetchNextPage()
+                }
+                var refreshButton = produceRefreshButton()
+                var addLocationButton = produceAddLocationButton()
+                addLocationButton.enabled = dm.authenticated
+                navigationItem.rightBarButtonItems = [refreshButton, addLocationButton]
             }
         }
     }
@@ -32,9 +37,25 @@ class OnTheMapBaseViewController: UIViewController {
         preFetchEnabled = true
     }
     
+    // MARK: UIBarButonItem Producers
+    
+    // return configured Add Location button
+    private func produceAddLocationButton() -> UIBarButtonItem {
+        return UIBarButtonItem(image: UIImage(named: "Pin"), style: UIBarButtonItemStyle.Plain, target: self, action: "addLocationAction:")
+    }
+    
+    // return configured Refresh button
+    private func produceRefreshButton() -> UIBarButtonItem {
+        return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refreshAction:")
+    }
+    
+    // MARK: Subclass Should Override
+    
     // perform work that must be done to keep display in sync with model
     // basically an abstract method that should be implemented by subclasses
     func updateDisplayFromModel() {}
+    
+    // MARK: Base Functionality
     
     func fetchNextPage() {
         if !preFetchEnabled {
@@ -61,4 +82,17 @@ class OnTheMapBaseViewController: UIViewController {
         }
     }
     
+    func refreshAction(sender: AnyObject!) {
+        fetchNextPage()
+    }
+    
+    func addLocationAction(sender: AnyObject!) {
+        performSegueWithIdentifier("ReverseGeocodeSegue", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let destination = segue.destinationViewController as? ReverseGeocodeViewController {
+            destination.dataManager = dataManager
+        }
+    }
 }

@@ -35,7 +35,8 @@ class StudentDataAccessManager {
     
     // return true if the user has authenticated
     var authenticated: Bool {
-        return currentUser != nil
+        //TODO: Fix Login Status When Ready
+        return true //currentUser != nil
     }
     
     // number of items downloaded so far

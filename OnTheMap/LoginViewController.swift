@@ -29,7 +29,7 @@ class LoginViewController: UIViewController {
             success, error in
             if success {
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.performSegueWithIdentifier("SuccessfulLoginSegue", sender: self.dataManager)
+                    self.performSegueWithIdentifier(Constants.SuccessfulLoginSegue, sender: self.dataManager)
                 }
             } else {
                 Logger.info("Login failed with code \(error?.code) \(error?.description)")
@@ -38,7 +38,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func proceedAsGuest(sender: UIButton) {
-        self.performSegueWithIdentifier("SuccessfulLoginSegue", sender: self.dataManager)
+        self.performSegueWithIdentifier(Constants.SuccessfulLoginSegue, sender: self.dataManager)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

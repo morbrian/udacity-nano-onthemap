@@ -55,7 +55,7 @@ extension StudentLocationsTableViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var studentLocationData = dataManager?.studentLocationAtIndex(indexPath.item)
-        let cell = tableView.dequeueReusableCellWithIdentifier("StudentLocationCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(Constants.StudentLocationCell, forIndexPath: indexPath) as! UITableViewCell
  
         cell.textLabel?.text = studentLocationData?.fullname
         return cell

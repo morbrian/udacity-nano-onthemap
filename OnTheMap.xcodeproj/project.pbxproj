@@ -19,6 +19,8 @@
 		4E67D5A21AEF2A2B00652693 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E67D5A11AEF2A2B00652693 /* MapKit.framework */; };
 		4E67D5A41AF0818300652693 /* StudentMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D5A31AF0818300652693 /* StudentMapViewController.swift */; };
 		4E67D5A61AF1EE3D00652693 /* OnTheMapBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D5A51AF1EE3D00652693 /* OnTheMapBaseViewController.swift */; };
+		4E67D5A81AF32F0000652693 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D5A71AF32F0000652693 /* Constants.swift */; };
+		4EA550D71AF5A378007F6BB3 /* ReverseGeocodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA550D61AF5A378007F6BB3 /* ReverseGeocodeViewController.swift */; };
 		4EE4BBB81AE35C0100FC6146 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBB71AE35C0100FC6146 /* AppDelegate.swift */; };
 		4EE4BBBA1AE35C0100FC6146 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBB91AE35C0100FC6146 /* LoginViewController.swift */; };
 		4EE4BBBD1AE35C0100FC6146 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EE4BBBB1AE35C0100FC6146 /* Main.storyboard */; };
@@ -26,7 +28,7 @@
 		4EE4BBC21AE35C0100FC6146 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EE4BBC01AE35C0100FC6146 /* LaunchScreen.xib */; };
 		4EE4BBCE1AE35C0200FC6146 /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBCD1AE35C0200FC6146 /* OnTheMapTests.swift */; };
 		4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBD81AE4193300FC6146 /* WebClient.swift */; };
-		4EE4BBDB1AE4197100FC6146 /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBDA1AE4197100FC6146 /* StudentInformation.swift */; };
+		4EE4BBDB1AE4197100FC6146 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBDA1AE4197100FC6146 /* AppUser.swift */; };
 		4EE4BBDD1AE4977300FC6146 /* UdacityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBDC1AE4977300FC6146 /* UdacityService.swift */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +56,8 @@
 		4E67D5A11AEF2A2B00652693 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		4E67D5A31AF0818300652693 /* StudentMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentMapViewController.swift; sourceTree = "<group>"; };
 		4E67D5A51AF1EE3D00652693 /* OnTheMapBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnTheMapBaseViewController.swift; sourceTree = "<group>"; };
+		4E67D5A71AF32F0000652693 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		4EA550D61AF5A378007F6BB3 /* ReverseGeocodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReverseGeocodeViewController.swift; sourceTree = "<group>"; };
 		4EE4BBB21AE35C0100FC6146 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EE4BBB61AE35C0100FC6146 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EE4BBB71AE35C0100FC6146 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -65,7 +69,7 @@
 		4EE4BBCC1AE35C0200FC6146 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EE4BBCD1AE35C0200FC6146 /* OnTheMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapTests.swift; sourceTree = "<group>"; };
 		4EE4BBD81AE4193300FC6146 /* WebClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebClient.swift; sourceTree = "<group>"; };
-		4EE4BBDA1AE4197100FC6146 /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
+		4EE4BBDA1AE4197100FC6146 /* AppUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
 		4EE4BBDC1AE4977300FC6146 /* UdacityService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,11 +132,13 @@
 		4E67D59A1AED6CCB00652693 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4E67D5A71AF32F0000652693 /* Constants.swift */,
 				4EE4BBB91AE35C0100FC6146 /* LoginViewController.swift */,
 				4E67D5A51AF1EE3D00652693 /* OnTheMapBaseViewController.swift */,
 				4E67D59B1AED6D8400652693 /* StudentLocationsTableViewController.swift */,
 				4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */,
 				4E67D5A31AF0818300652693 /* StudentMapViewController.swift */,
+				4EA550D61AF5A378007F6BB3 /* ReverseGeocodeViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -202,7 +208,7 @@
 		4EE4BBD71AE4188A00FC6146 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4EE4BBDA1AE4197100FC6146 /* StudentInformation.swift */,
+				4EE4BBDA1AE4197100FC6146 /* AppUser.swift */,
 				4E0B0E881AE9D5F000744C52 /* StudentLocation.swift */,
 				4E67D59D1AED6FF200652693 /* StudentDataAccessManager.swift */,
 			);
@@ -317,9 +323,11 @@
 			files = (
 				4E0B0E8D1AEB3EDF00744C52 /* ParseClient.swift in Sources */,
 				4E0B0E891AE9D5F000744C52 /* StudentLocation.swift in Sources */,
-				4EE4BBDB1AE4197100FC6146 /* StudentInformation.swift in Sources */,
+				4EE4BBDB1AE4197100FC6146 /* AppUser.swift in Sources */,
 				4E01DAAD1AE8895D001A476E /* OnTheMapParseService.swift in Sources */,
 				4E67D5A61AF1EE3D00652693 /* OnTheMapBaseViewController.swift in Sources */,
+				4E67D5A81AF32F0000652693 /* Constants.swift in Sources */,
+				4EA550D71AF5A378007F6BB3 /* ReverseGeocodeViewController.swift in Sources */,
 				4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */,
 				4EE4BBBA1AE35C0100FC6146 /* LoginViewController.swift in Sources */,
 				4E67D5A01AED978C00652693 /* ManagingTabBarController.swift in Sources */,

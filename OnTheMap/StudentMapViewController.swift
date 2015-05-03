@@ -18,6 +18,15 @@ class StudentMapViewController: OnTheMapBaseViewController, MKMapViewDelegate {
         }
     }
     
+    // MARK: ViewController Lifecycle
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        updateDisplayFromModel()
+    }
+    
+    // MARK: Overrides From OnTheMapBaseViewController
+    
     override func updateDisplayFromModel() {
         mapView.removeAnnotations(mapView.annotations)
         if let studentLocations = dataManager?.studentLocations {
@@ -25,14 +34,42 @@ class StudentMapViewController: OnTheMapBaseViewController, MKMapViewDelegate {
             mapView.showAnnotations(studentLocations, animated: true)
         }
     }
+
+    // MARK: MKMapViewDelegate
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        updateDisplayFromModel()
+    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+        var view = mapView.dequeueReusableAnnotationViewWithIdentifier(Constants.StudentLocationAnnotationReuseIdentifier)
+        if view == nil {
+            view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: Constants.StudentLocationAnnotationReuseIdentifier)
+            view.canShowCallout = true
+        } else {
+            view.annotation = annotation
+        }
+        
+        if let studentLocation = annotation as? StudentLocation {
+            if let urlString = studentLocation.mediaUrl,
+                url = NSURL(string: urlString) {
+                    var detailButton = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
+                    var detailDisclosure = UIImageView(image: detailButton.imageForState(UIControlState.Highlighted))
+                    view.rightCalloutAccessoryView = detailButton
+                    
+            }
+        }
+        return view
     }
+    
+    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
+        if let studentLocation = view.annotation as? StudentLocation,
+            urlString = studentLocation.mediaUrl,
+            url = NSURL(string: urlString) {
+            UIApplication.sharedApplication().openURL(url)
+        }
+    }
+    
 }
 
 // MARK: - Extension StudentLocation 
+
 extension StudentLocation: MKAnnotation {
     
     @objc var coordinate: CLLocationCoordinate2D {
@@ -44,7 +81,7 @@ extension StudentLocation: MKAnnotation {
     }
     
     var subtitle: String! {
-        return ""
+        return mediaUrl
     }
     
 }

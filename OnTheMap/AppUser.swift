@@ -12,7 +12,7 @@ typealias StudentIdentity = String
 
 // represents the current user of our application.
 // only the useridentifier is required as the user may not have set other information.
-struct StudentInformation: Printable {
+struct StudentInformation {
     
     // name or id identifying this user to the remote system
     var studentIdentity: StudentIdentity
@@ -28,14 +28,6 @@ struct StudentInformation: Printable {
     
     // produce either gravatar or robohash
     var imageUrl: NSURL?
-    
-    var description: String {
-        let nicknameVal = nickname ?? "null"
-        let firstnameVal = firstname ?? "null"
-        let lastnameVal = lastname ?? "null"
-        let imageUrlVal = imageUrl?.description ?? "null"
-        return "{ userIdentity: \"\(studentIdentity)\", nickname: \"\(nicknameVal)\", firstname: \"\(firstnameVal)\", lastname: \"\(lastnameVal)\", imageUrl: \"\(imageUrlVal)\" }"
-    }
     
 }
 
