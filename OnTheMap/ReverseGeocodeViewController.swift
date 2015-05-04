@@ -26,13 +26,19 @@ class ReverseGeocodeViewController: UIViewController {
         Logger.info("Find \(placeNameTextField.text)")
         var geocoder = CLGeocoder()
         
-        
-        geocoder.geocodeAddressString(placeNameTextField.text) {
-            placemarks, error in
-            for anyObject in placemarks {
-                if let placemark = anyObject as? CLPlacemark {
-                    println("\(placemark)")
-                    placemark.location.coordinate
+        if let placename = placeNameTextField.text {
+            geocoder.geocodeAddressString(placename) {
+                placemarks, error in
+                if let placemarks = placemarks {
+                    for anyObject in placemarks {
+                        if let placemark = anyObject as? CLPlacemark {
+                            println("\(placemark)")
+                            placemark.location.coordinate.latitude
+                            
+                        }
+                    }
+                } else {
+                    Logger.info("No place found for the text type in")
                 }
             }
         }

@@ -52,16 +52,8 @@ class UdacityService {
         
         webClient.executeRequest(request)
         { jsonData, error in
-            if let userObject = jsonData?.valueForKey(UdacityJsonKey.User) as? NSDictionary {
-                let key = userObject.valueForKey(UdacityJsonKey.Key) as? String
-                let nickname = userObject.valueForKey(UdacityJsonKey.Nickname) as? String
-                let firstname = userObject.valueForKey(UdacityJsonKey.Firstname) as? String
-                let lastname = userObject.valueForKey(UdacityJsonKey.Lastname) as? String
-                
-                let userData = StudentInformation(studentIdentity: studentIdentity, nickname: nickname,
-                    firstname: firstname, lastname: lastname, imageUrl: nil)
-                
-                completionHandler(studentInformation: userData, error: nil)
+            if let userObject = jsonData?.valueForKey(UdacityJsonKey.User) as? [String:AnyObject] {
+                completionHandler(studentInformation: StudentInformation(udacityData: userObject), error: nil)
             } else {
                 completionHandler(studentInformation: nil, error: self.produceErrorFromResponseData(jsonData))
             }

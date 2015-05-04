@@ -45,12 +45,12 @@ class StudentDataAccessManager {
     }
     
     // return the student location for the specified index
-    func studentLocationAtIndex(index: Int) -> StudentLocation? {
+    func studentLocationAtIndex(index: Int) -> StudentInformation? {
         return itemCache.itemAtIndex(index)
     }
     
     // return the entire list of student locations
-    var studentLocations: [StudentLocation] {
+    var studentLocations: [StudentInformation] {
         return itemCache.items
     }
     
@@ -69,16 +69,15 @@ class StudentDataAccessManager {
                 completionHandler(success: false, error: error)
             }
         }
-            
     }
     
     // fetch the requested range of data from the OnTheMap Parse Web Service
-    func preFetchStudentLocationSubset(subset: Range<Int>, completionHandler: (success: Bool, error: NSError?) -> Void) {
+    func preFetchStudentInformationSubset(subset: Range<Int>, completionHandler: (success: Bool, error: NSError?) -> Void) {
         let skip = subset.startIndex
         let limit = subset.endIndex - skip
-        onTheMapClient.fetchStudentLocations(limit: limit, skip: skip) {
-            studentLocations, error in
-            if let newLocations = studentLocations {
+        onTheMapClient.fetchStudents(limit: limit, skip: skip) {
+            students, error in
+            if let newLocations = students {
                 //let pageRange = subset.startIndex..<(skip + newLocations.count)
                 self.itemCache.storeItems(newLocations)
                 Logger.info("asked for items \(skip) - \(subset.endIndex) and found \(newLocations.count)")
@@ -96,14 +95,16 @@ class StudentDataAccessManager {
         let start = lastSuccessfulRange?.endIndex ?? 0
         let end = start + fetchLimit
         let attemptRange = start..<end
-        preFetchStudentLocationSubset(attemptRange) {
+        let beforeCount = studentLocationCount
+        preFetchStudentInformationSubset(attemptRange) {
             success, error in
-            if success {
+            if success && self.studentLocationCount > beforeCount {
                 self.lastSuccessfulRange = attemptRange
             }
             completionHandler(success: success, error: error)
         }
     }
+    
     
 }
 
@@ -113,13 +114,13 @@ class StudentDataAccessManager {
 // Simple structure for storing and accessing previously downloaded data items.
 struct ItemCache {
     
-    private var items = [StudentLocation]()
+    private var items = [StudentInformation]()
     
     var itemCount: Int {
         return items.count
     }
     
-    func itemAtIndex(var index: Int) -> StudentLocation? {
+    func itemAtIndex(var index: Int) -> StudentInformation? {
         if index >= 0 && index < items.count {
             return items[index]
         } else {
@@ -127,7 +128,7 @@ struct ItemCache {
         }
     }
     
-    mutating func storeItems(newItems: [StudentLocation]) {
+    mutating func storeItems(newItems: [StudentInformation]) {
         // TODO: keep the array sorted... smartly, but some parameterized sorting option to match the query used.
         items.extend(newItems)
     }

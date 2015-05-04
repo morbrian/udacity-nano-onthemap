@@ -16,8 +16,8 @@ class OnTheMapParseService {
         parseClient = ParseClient(client: WebClient(), applicationId: AppDelegate.ParseApplicationId, restApiKey: AppDelegate.ParseRestApiKey)
     }
     
-    func fetchStudentLocations(limit: Int = 50, skip: Int = 0, orderedBy: String = ParseClient.DefaultSortOrder,
-        completionHandler: (studentLocations: [StudentLocation]?, error: NSError?) -> Void) {
+    func fetchStudents(limit: Int = 50, skip: Int = 0, orderedBy: String = ParseClient.DefaultSortOrder,
+        completionHandler: (studentLocations: [StudentInformation]?, error: NSError?) -> Void) {
             parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName, limit: limit, skip: skip, orderedBy: orderedBy) {
             resultsArray, error in
             completionHandler(studentLocations: self.parseResults(resultsArray), error: error)
@@ -26,16 +26,12 @@ class OnTheMapParseService {
     
     // MARK: - Data Parsers
     
-    private func parseResults(resultsArray: [[String:AnyObject]]?) -> [StudentLocation]? {
+    private func parseResults(resultsArray: [[String:AnyObject]]?) -> [StudentInformation]? {
         if let resultsArray = resultsArray {
-            let optionalStudentLocations = resultsArray.map(){StudentLocation(data: $0)}
-            var studentLocations = [StudentLocation]()
-            for item in optionalStudentLocations {
-                if let location = item {
-                    studentLocations.append(location)
-                }
-            }
-            return studentLocations
+            let optionalStudentLocations = resultsArray.map(){StudentInformation(parseData: $0)}
+            let filteredStudents = optionalStudentLocations.filter() { $0 != nil }
+            let students = filteredStudents.map() { $0! as StudentInformation }
+            return students
         } else {
             return nil
         }
@@ -73,3 +69,19 @@ extension OnTheMapParseService {
         return NSError(domain: OnTheMapParseService.ErrorDomain, code: code.rawValue, userInfo: userInfo)
     }
 }
+
+extension OnTheMapParseService {
+    struct ParseJsonKey {
+        static let ObjectId = ParseClient.ParseJsonKey.ObjectId
+        static let CreateAt = ParseClient.ParseJsonKey.CreateAt
+        static let UpdatedAt = ParseClient.ParseJsonKey.UpdatedAt
+        static let UniqueKey = "uniqueKey"
+        static let MapString = "mapString"
+        static let MediaUrl = "mediaURL"
+        static let Firstname = "firstName"
+        static let Lastname = "lastName"
+        static let Latitude = "latitude"
+        static let Longitude = "longitude"
+    }
+}
+
