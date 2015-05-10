@@ -20,7 +20,9 @@
 		4E67D5A41AF0818300652693 /* StudentMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D5A31AF0818300652693 /* StudentMapViewController.swift */; };
 		4E67D5A61AF1EE3D00652693 /* OnTheMapBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D5A51AF1EE3D00652693 /* OnTheMapBaseViewController.swift */; };
 		4E67D5A81AF32F0000652693 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D5A71AF32F0000652693 /* Constants.swift */; };
-		4EA550D71AF5A378007F6BB3 /* ReverseGeocodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA550D61AF5A378007F6BB3 /* ReverseGeocodeViewController.swift */; };
+		4EA550D71AF5A378007F6BB3 /* GeocodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA550D61AF5A378007F6BB3 /* GeocodeViewController.swift */; };
+		4EB5BF841AFE62B2006ADEF5 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB5BF831AFE62B2006ADEF5 /* AccountViewController.swift */; };
+		4EC9C2EA1AFB193D00CABDEE /* InfoPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC9C2E91AFB193D00CABDEE /* InfoPool.swift */; };
 		4EE4BBB81AE35C0100FC6146 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBB71AE35C0100FC6146 /* AppDelegate.swift */; };
 		4EE4BBBA1AE35C0100FC6146 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBB91AE35C0100FC6146 /* LoginViewController.swift */; };
 		4EE4BBBD1AE35C0100FC6146 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EE4BBBB1AE35C0100FC6146 /* Main.storyboard */; };
@@ -56,7 +58,9 @@
 		4E67D5A31AF0818300652693 /* StudentMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentMapViewController.swift; sourceTree = "<group>"; };
 		4E67D5A51AF1EE3D00652693 /* OnTheMapBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnTheMapBaseViewController.swift; sourceTree = "<group>"; };
 		4E67D5A71AF32F0000652693 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		4EA550D61AF5A378007F6BB3 /* ReverseGeocodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReverseGeocodeViewController.swift; sourceTree = "<group>"; };
+		4EA550D61AF5A378007F6BB3 /* GeocodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeocodeViewController.swift; sourceTree = "<group>"; };
+		4EB5BF831AFE62B2006ADEF5 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		4EC9C2E91AFB193D00CABDEE /* InfoPool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoPool.swift; sourceTree = "<group>"; };
 		4EE4BBB21AE35C0100FC6146 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EE4BBB61AE35C0100FC6146 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EE4BBB71AE35C0100FC6146 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -114,6 +118,7 @@
 				4E0B0E811AE8A46800744C52 /* Logger.swift */,
 				4EE4BBD81AE4193300FC6146 /* WebClient.swift */,
 				4E0B0E8C1AEB3EDF00744C52 /* ParseClient.swift */,
+				4EC9C2E91AFB193D00CABDEE /* InfoPool.swift */,
 			);
 			name = Public;
 			sourceTree = "<group>";
@@ -132,11 +137,12 @@
 			children = (
 				4E67D5A71AF32F0000652693 /* Constants.swift */,
 				4EE4BBB91AE35C0100FC6146 /* LoginViewController.swift */,
+				4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */,
 				4E67D5A51AF1EE3D00652693 /* OnTheMapBaseViewController.swift */,
 				4E67D59B1AED6D8400652693 /* StudentLocationsTableViewController.swift */,
-				4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */,
 				4E67D5A31AF0818300652693 /* StudentMapViewController.swift */,
-				4EA550D61AF5A378007F6BB3 /* ReverseGeocodeViewController.swift */,
+				4EB5BF831AFE62B2006ADEF5 /* AccountViewController.swift */,
+				4EA550D61AF5A378007F6BB3 /* GeocodeViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -323,11 +329,13 @@
 				4E01DAAD1AE8895D001A476E /* OnTheMapParseService.swift in Sources */,
 				4E67D5A61AF1EE3D00652693 /* OnTheMapBaseViewController.swift in Sources */,
 				4E67D5A81AF32F0000652693 /* Constants.swift in Sources */,
-				4EA550D71AF5A378007F6BB3 /* ReverseGeocodeViewController.swift in Sources */,
+				4EA550D71AF5A378007F6BB3 /* GeocodeViewController.swift in Sources */,
 				4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */,
 				4EE4BBBA1AE35C0100FC6146 /* LoginViewController.swift in Sources */,
+				4EB5BF841AFE62B2006ADEF5 /* AccountViewController.swift in Sources */,
 				4E67D5A01AED978C00652693 /* ManagingTabBarController.swift in Sources */,
 				4E67D59E1AED6FF200652693 /* StudentDataAccessManager.swift in Sources */,
+				4EC9C2EA1AFB193D00CABDEE /* InfoPool.swift in Sources */,
 				4E67D59C1AED6D8400652693 /* StudentLocationsTableViewController.swift in Sources */,
 				4E0B0E821AE8A46800744C52 /* Logger.swift in Sources */,
 				4EE4BBB81AE35C0100FC6146 /* AppDelegate.swift in Sources */,

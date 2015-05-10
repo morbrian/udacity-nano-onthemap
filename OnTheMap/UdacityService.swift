@@ -27,10 +27,10 @@ class UdacityService {
     func authenticateByUsername(username: String, withPassword password: String,
         completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
             
-        let request = webClient.createHttpPostRequestForUrlString(UdacityService.SessionUrlString,
+            let request = webClient.createHttpRequestUsingMethod(WebClient.HttpPost, forUrlString: UdacityService.SessionUrlString,
             withBody: buildUdacitySessionBody(username: username, password: password),
             includeHeaders: UdacityService.StandardHeaders)
-        
+            
         webClient.executeRequest(request)
         { jsonData, error in
             if let account = jsonData?.valueForKey(UdacityJsonKey.Account) as? NSDictionary,
@@ -48,12 +48,12 @@ class UdacityService {
     func fetchInformationForStudentIdentity(studentIdentity: StudentIdentity,
         completionHandler: (studentInformation: StudentInformation?, error: NSError?) -> Void) {
             
-        let request = webClient.createHttpGetRequestForUrlString("\(UdacityService.UsersUrlString)/\(studentIdentity)")
+            let request = webClient.createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: "\(UdacityService.UsersUrlString)/\(studentIdentity)")
         
         webClient.executeRequest(request)
         { jsonData, error in
             if let userObject = jsonData?.valueForKey(UdacityJsonKey.User) as? [String:AnyObject] {
-                completionHandler(studentInformation: StudentInformation(udacityData: userObject), error: nil)
+                completionHandler(studentInformation: translateToStudentInformationFromUdacityData(userObject), error: nil)
             } else {
                 completionHandler(studentInformation: nil, error: self.produceErrorFromResponseData(jsonData))
             }
@@ -121,7 +121,6 @@ extension UdacityService {
         ]
     }
 
-    
     struct UdacityJsonKey {
         static let Account = "account"
         static let User = "user"

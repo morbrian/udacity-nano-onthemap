@@ -12,6 +12,14 @@ struct Constants {
     
     static let SuccessfulLoginSegue = "SuccessfulLoginSegue"
     static let StudentLocationCell = "StudentLocationCell"
+    static let UserLocationCell = "UserLocationCell"
     static let StudentLocationAnnotationReuseIdentifier = "StudentLocationAnnotationReuseIdentifier"
     
+    struct DateFormat {
+        static let ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SZZZZZ"
+    }
+    
+    struct Locale {
+        static let EN_US_POSIX = "en_US_POSIX"
+    }
 }

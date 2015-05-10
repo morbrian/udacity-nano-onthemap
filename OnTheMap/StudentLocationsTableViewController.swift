@@ -8,6 +8,8 @@
 
 import UIKit
 
+// StudentLocationsTableViewController
+// Displays all student locations in a table view
 class StudentLocationsTableViewController: OnTheMapBaseViewController {
     
     @IBOutlet weak var tableView: UITableView!
@@ -16,37 +18,39 @@ class StudentLocationsTableViewController: OnTheMapBaseViewController {
         tableView.reloadData()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+}
+
+// MARK: - UITableViewDelegate
+
+extension StudentLocationsTableViewController: UITableViewDelegate {
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        Logger.info("Tapped item at \(indexPath.item)")
+        
+        if let item = dataManager?.studentLocationAtIndex(indexPath.item) {
+            Logger.info("\(item.rawData)")
+            Logger.info("\(item.updatedAt)")
+                //Logger.info("Student Updated At: \(NSDate(timeIntervalSince1970: updatedAt))")
+                
+                // TODO: open URL in Safari (assuming it's valid)
+        }
+    }
+    
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let currentCount = dataManager?.studentLocationCount
             where indexPath.item == currentCount - PreFetchTrigger {
                 fetchNextPage()
         }
     }
-    
-}
 
-// MARK: - UITableViewDelegate
-extension StudentLocationsTableViewController: UITableViewDelegate {
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let item = dataManager?.studentLocationAtIndex(indexPath.item),
-            updatedAt = item.updatedAt {
-                Logger.info("Student Updated At: " + updatedAt)
-        }
-    }
-    
-//    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-//        handleDeselectionEventForMemeAtIndex(indexPath.item)
-//    }
-    
-//    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-//        if (editingStyle == UITableViewCellEditingStyle.Delete) {
-//            deleteSingleMemeAtIndex(indexPath.item)
-//        }
-//    }
 }
 
 // MARK: - UITableViewDataSource
+
 extension StudentLocationsTableViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

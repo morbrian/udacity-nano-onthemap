@@ -17,12 +17,76 @@ class OnTheMapParseService {
     }
     
     func fetchStudents(limit: Int = 50, skip: Int = 0, orderedBy: String = ParseClient.DefaultSortOrder,
-        completionHandler: (studentLocations: [StudentInformation]?, error: NSError?) -> Void) {
+        completionHandler: (studentInformation: [StudentInformation]?, error: NSError?) -> Void) {
             parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName, limit: limit, skip: skip, orderedBy: orderedBy) {
             resultsArray, error in
-            completionHandler(studentLocations: self.parseResults(resultsArray), error: error)
+            completionHandler(studentInformation: self.parseResults(resultsArray), error: error)
         }
     }
+    
+    func fetchStudentInformationForKey(key: String,
+        completionHandler: (studentInformation: [StudentInformation]?, error: NSError?) -> Void) {
+            parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName,
+                whereClause: "{\"\(ParseJsonKey.UniqueKey)\":\"\(key)\"}") {
+                resultsArray, error in
+                completionHandler(studentInformation: self.parseResults(resultsArray), error: error)
+            }
+    }
+    
+    func createStudentInformation(studentInformation: StudentInformation,
+        completionHandler: (studentInformation: StudentInformation?, error: NSError?) -> Void) {
+     
+            parseClient.createObjectOfClassName(OnTheMapParseService.StudentLocationClassName,
+                withProperties: studentInformation.rawData) {
+                    objectId, createdAt, error in
+                    Logger.info("Retrieved back [objectId=\(objectId)][createdAt=\(createdAt)][error=\(error)]")
+                    if let objectId = objectId, createdAt = createdAt {
+                        var updatedInfo = studentInformation.rawData
+                        updatedInfo[ParseJsonKey.ObjectId] = objectId
+                        updatedInfo[ParseJsonKey.CreateAt] = createdAt
+                        completionHandler(studentInformation: StudentInformation(parseData: updatedInfo), error: nil)
+                    } else {
+                        Logger.error("Create StudentInformation Failed")
+                        completionHandler(studentInformation: nil, error: error)
+                    }
+            }
+    }
+    
+    func updateStudentInformation(studentInformation: StudentInformation,
+        completionHandler: (studentInformation: StudentInformation?, error: NSError?) -> Void) {
+            
+            parseClient.updateObjectOfClassName(OnTheMapParseService.StudentLocationClassName,
+                withProperties: studentInformation.rawData, objectId: studentInformation.objectId) {
+                    updatedAt, error in
+                    Logger.info("Retrieved back [updatedAt=\(updatedAt)][error=\(error)]")
+                    if let updatedAt = updatedAt {
+                        var updatedInfo = studentInformation.rawData
+                        updatedInfo[ParseJsonKey.UpdatedAt] = updatedAt
+                        completionHandler(studentInformation: StudentInformation(parseData: updatedInfo), error: nil)
+                    } else {
+                        Logger.error("Create StudentInformation Failed")
+                        completionHandler(studentInformation: nil, error: error)
+                    }
+            }
+    }
+    
+    func deleteStudentInformation(studentInformation: StudentInformation,
+        completionHandler: (studentInformation: StudentInformation?, error: NSError?) -> Void) {
+            
+            parseClient.deleteObjectOfClassName(OnTheMapParseService.StudentLocationClassName,
+                withProperties: [String:AnyObject](), objectId: studentInformation.objectId) {
+                    something, error in
+//                    if let updatedAt = updatedAt {
+//                        var updatedInfo = studentInformation.rawData
+//                        updatedInfo[ParseJsonKey.UpdatedAt] = updatedAt
+//                        completionHandler(studentInformation: StudentInformation(parseData: updatedInfo), error: nil)
+//                    } else {
+//                        Logger.error("Create StudentInformation Failed")
+//                        completionHandler(studentInformation: nil, error: error)
+//                    }
+            }
+    }
+
     
     // MARK: - Data Parsers
     

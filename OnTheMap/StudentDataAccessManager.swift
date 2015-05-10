@@ -15,7 +15,7 @@ import Foundation
 class StudentDataAccessManager {
     
     // how many items we request at a time
-    // this can be set by calling APIs
+    // this can be modified by users of the class
     var fetchLimit = 100
     
     private var udacityClient: UdacityService!
@@ -26,49 +26,106 @@ class StudentDataAccessManager {
     // read only access to the logged in user data reference
     var loggedInUser: StudentInformation? { return currentUser }
     
-    var itemCache = ItemCache()
+    var infoPool = InfoPool<StudentInformation>()
+    
+    func userFilter(infoItem: StudentInformation) -> Bool {
+        var result = infoItem.studentKey == currentUser?.studentKey
+        return result
+    }
     
     init() {
         udacityClient = UdacityService()
         onTheMapClient = OnTheMapParseService()
     }
     
+    // MARK: Authentication Methods
+    
     // return true if the user has authenticated
     var authenticated: Bool {
-        //TODO: Fix Login Status When Ready
-        return true //currentUser != nil
-    }
-    
-    // number of items downloaded so far
-    var studentLocationCount: Int {
-        return itemCache.itemCount
-    }
-    
-    // return the student location for the specified index
-    func studentLocationAtIndex(index: Int) -> StudentInformation? {
-        return itemCache.itemAtIndex(index)
-    }
-    
-    // return the entire list of student locations
-    var studentLocations: [StudentInformation] {
-        return itemCache.items
+        return currentUser != nil
     }
     
     // authenticate the user by username and password with the Udacity service.
     func authenticateByUsername(username: String, withPassword password: String,
         completionHandler: (success: Bool, error: NSError?) -> Void) {
-        udacityClient.authenticateByUsername(username, withPassword: password) {
-            userIdentity, error in
-            if let userIdentity = userIdentity {
-                self.udacityClient.fetchInformationForStudentIdentity(userIdentity) {
-                    userData, error in
-                    self.currentUser = userData
-                    completionHandler(success: true, error: nil)
+            udacityClient.authenticateByUsername(username, withPassword: password) {
+                userIdentity, error in
+                if let userIdentity = userIdentity {
+                    self.udacityClient.fetchInformationForStudentIdentity(userIdentity) {
+                        userData, error in
+                        self.currentUser = userData
+                        completionHandler(success: true, error: nil)
+                    }
+                } else {
+                    completionHandler(success: false, error: error)
                 }
-            } else {
-                completionHandler(success: false, error: error)
+            }
+    }
+    
+    // MARK: Access Data Owned by Logged In User
+    
+    var userLocationCount: Int {
+        return infoPool.count(filter: userFilter)
+    }
+    
+    // return the student location for the specified index
+    func userLocationAtIndex(index: Int) -> StudentInformation? {
+        return infoPool.infoAtIndex(index, filter: userFilter)
+    }
+    
+    // return the entire list of student locations
+    var userLocations: [StudentInformation] {
+        return infoPool.infoItemsAsArray(filter: userFilter)
+    }
+    
+    func loggedInUserDoesHaveLocation() -> Bool {
+        if let identity = currentUser?.studentKey {
+            return infoPool.infoExistsForOwner(identity)
+        } else {
+            return false
+        }
+    }
+    
+    // MARK: Access Data from All Students
+    
+    // number of items downloaded so far
+    var studentLocationCount: Int {
+        return infoPool.count()
+    }
+    
+    // return the student location for the specified index
+    func studentLocationAtIndex(index: Int) -> StudentInformation? {
+        return infoPool.infoAtIndex(index)
+    }
+    
+    // return the entire list of student locations
+    var studentLocations: [StudentInformation] {
+        return infoPool.infoItemsAsArray()
+    }
+    
+    // MARK: Fetch and Manage Student Data
+    
+    // store student information item in the info pool and create or update the same change on server
+    func storeStudentInformation(studentInformation: StudentInformation) {
+        func handleStorage(studentInformation: StudentInformation?, error: NSError?) {
+            if let studentInformation = studentInformation {
+                self.infoPool.storeInfoItem(studentInformation)
+            } else if error != nil {
+                Logger.error(error!.description)
             }
         }
+        
+        //let testExistingData = itemCache.
+        if infoPool.infoExistsForOwner(studentInformation.studentKey) {
+           onTheMapClient.updateStudentInformation(studentInformation, completionHandler: handleStorage)
+        } else {
+           onTheMapClient.createStudentInformation(studentInformation, completionHandler: handleStorage)
+        }
+    }
+    
+    func deleteStudentInformation(studentInformation: StudentInformation) {
+        infoPool.deleteInfoItem(studentInformation)
+        onTheMapClient.deleteStudentInformation(studentInformation) { something, error in Logger.debug("called me") }
     }
     
     // fetch the requested range of data from the OnTheMap Parse Web Service
@@ -78,10 +135,15 @@ class StudentDataAccessManager {
         onTheMapClient.fetchStudents(limit: limit, skip: skip) {
             students, error in
             if let newLocations = students {
-                //let pageRange = subset.startIndex..<(skip + newLocations.count)
-                self.itemCache.storeItems(newLocations)
-                Logger.info("asked for items \(skip) - \(subset.endIndex) and found \(newLocations.count)")
-                completionHandler(success: true, error: nil)
+                dispatch_async(dispatch_get_main_queue()) {
+                    // manipulate the data store on the main thread
+                    self.infoPool.storeInfoItems(newLocations)
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                        // but we don't know how expensive the completion handler is, so put it on off the main thread
+                        Logger.info("asked for items \(skip) - \(subset.endIndex) and found \(newLocations.count)")
+                        completionHandler(success: true, error: nil)
+                    }
+                }
             } else {
                 completionHandler(success: false, error: error)
             }
@@ -105,32 +167,57 @@ class StudentDataAccessManager {
         }
     }
     
-    
-}
-
-// MARK: - ItemCache
-
-// ItemCache
-// Simple structure for storing and accessing previously downloaded data items.
-struct ItemCache {
-    
-    private var items = [StudentInformation]()
-    
-    var itemCount: Int {
-        return items.count
-    }
-    
-    func itemAtIndex(var index: Int) -> StudentInformation? {
-        if index >= 0 && index < items.count {
-            return items[index]
-        } else {
-            return nil
+    func fetchDataForCurrentUser(completionHandler: (success: Bool, error: NSError?) -> Void) {
+        if let studentKey = currentUser?.studentKey {
+            Logger.debug("Will fetch student info for student: \(studentKey)")
+            onTheMapClient.fetchStudentInformationForKey(studentKey) {
+                students, error in
+                if let newLocations = students {
+                    Logger.debug("Completed first phase of fetchDataFor Current User")
+                    dispatch_async(dispatch_get_main_queue()) {
+                        // manipulate the data store on the main thread
+                        Logger.info("Found \(newLocations.count) locations for current user.")
+                        if newLocations.count > 0 {
+                            let defaultInfo = newLocations[0]
+                            var test = self.currentUser?.objectId
+                            self.currentUser?.objectId = defaultInfo.objectId
+                            self.currentUser?.mediaUrl = defaultInfo.mediaUrl
+                            self.currentUser?.mapString = defaultInfo.mapString
+                            self.currentUser?.latitude = defaultInfo.latitude
+                            self.currentUser?.longitude = defaultInfo.longitude
+                            self.currentUser?.updatedAt = defaultInfo.updatedAt
+                            self.currentUser?.createdAt = defaultInfo.createdAt
+                            Logger.debug("FETCHED CURRENT USER DATA: \(self.currentUser?.rawData)")
+                        }
+                        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                            completionHandler(success: true, error: nil)
+                        }
+                    }
+                } else {
+                    Logger.error("Something is messed up, need to find out what: \(error)")
+                    completionHandler(success: false, error: error)
+                }
+        
+            }
         }
     }
-    
-    mutating func storeItems(newItems: [StudentInformation]) {
-        // TODO: keep the array sorted... smartly, but some parameterized sorting option to match the query used.
-        items.extend(newItems)
-    }
-    
 }
+
+// MARK: - Data Translator
+
+private func putValue(value: AnyObject?, var intoDictionary dictionary: [String:AnyObject], forKey key: String) -> [String:AnyObject] {
+    if let value: AnyObject = value {
+        dictionary[key] = value
+    }
+    return dictionary
+}
+
+func translateToStudentInformationFromUdacityData(udacityData: [String:AnyObject]) -> StudentInformation? {
+    var parseData = Dictionary<String, AnyObject>()
+    parseData = putValue(udacityData[UdacityService.UdacityJsonKey.Key], intoDictionary: parseData, forKey: OnTheMapParseService.ParseJsonKey.UniqueKey)
+    parseData = putValue(udacityData[UdacityService.UdacityJsonKey.Firstname], intoDictionary: parseData, forKey: OnTheMapParseService.ParseJsonKey.Firstname)
+    parseData = putValue(udacityData[UdacityService.UdacityJsonKey.Lastname], intoDictionary: parseData, forKey: OnTheMapParseService.ParseJsonKey.Lastname)
+    
+    return StudentInformation(parseData: parseData)
+}
+

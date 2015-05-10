@@ -20,46 +20,34 @@ public class WebClient {
     //                  before or after the desired JSON content in response data.
     public var prepareData: ((NSData) -> NSData?)?
     
-    // createHttpGetRequestForUrlString
-    // Creates fully configured NSURLRequest for making HTTP GET requests.
-    // urlString: properly formatted URL string
-    // includeHeaders: field-name / value pairs for request headers.
-    public func createHttpGetRequestForUrlString(var urlString: String,
-        includeHeaders requestHeaders: [String:String]? = nil,
-        includeParameters requestParameters: [String:AnyObject]? = nil) -> NSURLRequest {
-
-            if let requestParameters = requestParameters {
-                urlString = "\(urlString)?\(encodeParameters(requestParameters))"
-            }
-
-            // TODO: this should do something smarter if the urlString is malformed
-            var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
-            request.HTTPMethod = WebClient.HttpGet
-            if let requestHeaders = requestHeaders {
-                request = addRequestHeaders(requestHeaders, toRequest: request)
-            }
-            return request
-    }
-    
-    // createHttpPostRequestForUrlString
+    // createHttpRequestUsingMethod
     // Creates fuly configured NSURLRequest for making HTTP POST requests.
     // urlString: properly formatted URL string
     // withBody: body of the post request, not necessarily JSON or any particular format.
     // includeHeaders: field-name / value pairs for request headers.
-    public func createHttpPostRequestForUrlString(var urlString: String, withBody body: NSData,
+    public func createHttpRequestUsingMethod(method: String, var forUrlString urlString: String, withBody body: NSData? = nil,
         includeHeaders requestHeaders: [String:String]? = nil,
         includeParameters requestParameters: [String:AnyObject]? = nil) -> NSURLRequest {
+            if (method == WebClient.HttpGet && body != nil) {
+                Logger.error("Programmer Error: Http GET request created with non nil body.")
+            }
+            if ((method == WebClient.HttpPost || method == WebClient.HttpPut) && body == nil) {
+                Logger.error("Programmer Error: Http \(method) request created but no content body specified")
+            }
             
             if let requestParameters = requestParameters {
                 urlString = "\(urlString)?\(encodeParameters(requestParameters))"
             }
             var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
-            request.HTTPMethod = WebClient.HttpPost
+            request.HTTPMethod = method
             if let requestHeaders = requestHeaders {
                 request = addRequestHeaders(requestHeaders, toRequest: request)
             }
-            request.HTTPBody = body
+            if let body = body {
+                request.HTTPBody = body
+            }
             return request
+            
     }
     
     // executeRequest
@@ -134,6 +122,8 @@ extension WebClient {
     static let HttpHeaderContentType = "Content-Type"
     static let HttpPost = "POST"
     static let HttpGet = "GET"
+    static let HttpPut = "PUT"
+    static let HttpDelete = "DELETE"
 
 }
 
