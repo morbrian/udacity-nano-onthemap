@@ -20,12 +20,22 @@ class UdacityService {
     init() {
         webClient = WebClient()
         webClient.prepareData = prepareDataForParsing
+
     }
     
     // authenticate with Udacity using a username and password.
     // the user's basic identity (userid) is returned as a UserIdentity in the completionHandler.
     func authenticateByUsername(username: String, withPassword password: String,
         completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
+            // first check the basic requirements
+            if username.isEmpty {
+                completionHandler(userIdentity: nil, error: UdacityService.errorForCode(.UsernameRequired))
+                return
+            }
+            if password.isEmpty {
+                completionHandler(userIdentity: nil, error: UdacityService.errorForCode(.PasswordRequired))
+                return
+            }
             
             let request = webClient.createHttpRequestUsingMethod(WebClient.HttpPost, forUrlString: UdacityService.SessionUrlString,
             withBody: buildUdacitySessionBody(username: username, password: password),
@@ -36,6 +46,8 @@ class UdacityService {
             if let account = jsonData?.valueForKey(UdacityJsonKey.Account) as? NSDictionary,
                 key = account[UdacityJsonKey.Key] as? String {
                     completionHandler(userIdentity: StudentIdentity(key), error: nil)
+            } else if let error = error {
+                completionHandler(userIdentity: nil, error: error)
             } else {
                 completionHandler(userIdentity: nil, error: self.produceErrorFromResponseData(jsonData))
             }
@@ -139,12 +151,15 @@ extension UdacityService {
     private static let ErrorDomain = "UdacityWebClient"
     
     private enum ErrorCode: Int, Printable {
-        case UnexpectedResponseData, InsufficientDataLength
+        case UnexpectedResponseData, InsufficientDataLength, UsernameRequired, PasswordRequired
+
         
         var description: String {
             switch self {
             case UnexpectedResponseData: return "Unexpected Response Data"
             case InsufficientDataLength: return "Insufficient Data Length In Response"
+            case UsernameRequired: return "Must specify a username"
+            case PasswordRequired: return "Must specify a password"
             default: return "Unknown Error"
             }
         }

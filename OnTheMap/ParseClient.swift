@@ -50,9 +50,12 @@ public class ParseClient {
                 includeParameters: parameterList)
             
             webClient.executeRequest(request) { jsonData, error in
-                
                 if let resultsArray = jsonData?.valueForKey(ParseJsonKey.Results) as? [[String:AnyObject]] {
                     completionHandler(resultsArray: resultsArray, error: nil)
+                } else if let error = error {
+                    completionHandler(resultsArray: nil, error: error)
+                } else if let errorMessage = jsonData?.valueForKey(ParseJsonKey.Error) as? String {
+                    completionHandler(resultsArray: nil, error: ParseClient.errorForCode(.ParseServerError, message: errorMessage))
                 } else {
                     completionHandler(resultsArray: nil, error: ParseClient.errorForCode(.ResponseContainedNoResultObject))
                 }
@@ -68,8 +71,10 @@ public class ParseClient {
                     if let objectId = jsonData?.valueForKey(ParseJsonKey.ObjectId) as? String,
                         createdAt = jsonData?.valueForKey(ParseJsonKey.CreateAt) as? String {
                             completionHandler(objectId: objectId, createdAt: createdAt, error: nil)
-                    } else if error != nil {
+                    } else if let error = error {
                         completionHandler(objectId: nil, createdAt: nil, error: error)
+                    } else if let errorMessage = jsonData?.valueForKey(ParseJsonKey.Error) as? String {
+                        completionHandler(objectId: nil, createdAt: nil, error: ParseClient.errorForCode(.ParseServerError, message: errorMessage))
                     } else {
                         var responseError = ParseClient.errorForCode(.ResponseForCreateIsMissingExpectedValues)
                         completionHandler(objectId: nil, createdAt: nil, error: responseError)
@@ -173,6 +178,7 @@ extension ParseClient {
 
     struct ParseJsonKey {
         static let Results = "results"
+        static let Error = "error"
         static let Count = "count"
         static let ObjectId = "objectId"
         static let CreateAt = "createdAt"
@@ -191,10 +197,11 @@ extension ParseClient {
         case ResponseContainedNoResultObject = 1
         case ResponseForCreateIsMissingExpectedValues
         case ResponseForUpdateIsMissingExpectedValues
+        case ParseServerError
         
         var description: String {
             switch self {
-            case ResponseContainedNoResultObject: return "Response data did not provide a results object."
+            case ResponseContainedNoResultObject: return "Server did not send any results."
             case ResponseForCreateIsMissingExpectedValues: return "Response for Creating Object did not return an error but did not contain expected properties either."
             case ResponseForUpdateIsMissingExpectedValues: return "Response for Updating Object did not return an error but did not contain expected properties either."
             default: return "Unknown Error"
@@ -204,8 +211,11 @@ extension ParseClient {
     
     // createErrorWithCode
     // helper function to simplify creation of error object
-    private static func errorForCode(code: ErrorCode) -> NSError {
-        let userInfo = [NSLocalizedDescriptionKey : code.description]
+    private static func errorForCode(code: ErrorCode, var message: String? = nil) -> NSError {
+        if message == nil {
+            message = code.description
+        }
+        let userInfo = [NSLocalizedDescriptionKey : message!]
         return NSError(domain: ParseClient.ErrorDomain, code: code.rawValue, userInfo: userInfo)
     }
 }

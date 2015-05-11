@@ -46,7 +46,6 @@ class OnTheMapBaseViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         preFetchEnabled = true
-        
     }
     
     // MARK: UIBarButonItem Producers
@@ -67,15 +66,23 @@ class OnTheMapBaseViewController: UIViewController {
     // basically an abstract method that should be implemented by subclasses
     func updateDisplayFromModel() {}
     
+    // provide basic status bar activity indicator.
+    // subclasses can call super, then perform any additional work as appropriate.
+    func networkActivity(active: Bool) {
+        dispatch_async(dispatch_get_main_queue()) {
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = active
+        }
+    }
+    
     // MARK: Base Functionality
     
     // fetch all items created by the currently logged in user
     // this helps us get items for the current user that may not
     // be in the top 100.
     func fetchCurrentUserLocationData() {
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        networkActivity(true)
         dataManager?.fetchDataForCurrentUser() { success, error in
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            self.networkActivity(false)
         }
     }
     
@@ -87,20 +94,23 @@ class OnTheMapBaseViewController: UIViewController {
         }
         
         let oldCount = self.dataManager?.studentLocationCount ?? 0
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        networkActivity(true)
         dataManager?.fetchNextPage() {
             success, error in
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            self.networkActivity(false)
             if let newCount = self.dataManager?.studentLocationCount {
                 if newCount - oldCount > 0 {
                     // if we received any new data, update the table
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.updateDisplayFromModel()
-                    }
+                    self.updateDisplayFromModel()
                 } else if success {
                     // if we received no new data, we are likely at the end of the stream and shouldn't ask again
                     // until the user explicitly asks us to with a refresh.
                     self.preFetchEnabled = false
+                } else if let error = error {
+                    self.showErrorAlert(title: "Failed to Fetch Data", message: error.localizedDescription)
+                } else {
+                    // this message should never occur, we think we differentiate all errors with a non-nil error object.
+                    self.showErrorAlert(title: "Uh Oh, Spaghettios!", message: "An unspecified error occurred, Please take a moment to 'Like' us on Facebook.")
                 }
             }
         }
@@ -109,6 +119,30 @@ class OnTheMapBaseViewController: UIViewController {
     // fetch additional data, includes recent updates or data older than
     func refreshAction(sender: AnyObject!) {
         fetchNextPage()
+    }
+    
+    // informs user of error status
+    func showErrorAlert(#title: String, message: String) {
+        var alert = UIAlertController(
+            title: title,
+            message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default) {
+            action -> Void in
+            // nothing to do
+        })
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func sendToUrlString(urlString: String) {
+        dataManager?.validateUrlString(urlString) { success, errorMessage in
+            if success {
+                UIApplication.sharedApplication().openURL(NSURL(string: urlString)!)
+            } else if let errorMessage = errorMessage {
+                self.showErrorAlert(title: "URL Inaccessible", message: errorMessage)
+            } else {
+                self.showErrorAlert(title: "URL Inaccessible", message: "Unidentified Failure Connecting To \(urlString)")
+            }
+        }
     }
     
     // action when "Add Location" button is tapped

@@ -18,7 +18,10 @@ class StudentDataAccessManager {
     // this can be modified by users of the class
     var fetchLimit = 100
     
+    // udacity service operations
     private var udacityClient: UdacityService!
+    
+    // application specific operations for OnTheMap Parse Service
     private var onTheMapClient: OnTheMapParseService!
     
     private var currentUser: StudentInformation?
@@ -173,10 +176,8 @@ class StudentDataAccessManager {
             onTheMapClient.fetchStudentInformationForKey(studentKey) {
                 students, error in
                 if let newLocations = students {
-                    Logger.debug("Completed first phase of fetchDataFor Current User")
                     dispatch_async(dispatch_get_main_queue()) {
                         // manipulate the data store on the main thread
-                        Logger.info("Found \(newLocations.count) locations for current user.")
                         if newLocations.count > 0 {
                             let defaultInfo = newLocations[0]
                             var test = self.currentUser?.objectId
@@ -187,20 +188,33 @@ class StudentDataAccessManager {
                             self.currentUser?.longitude = defaultInfo.longitude
                             self.currentUser?.updatedAt = defaultInfo.updatedAt
                             self.currentUser?.createdAt = defaultInfo.createdAt
-                            Logger.debug("FETCHED CURRENT USER DATA: \(self.currentUser?.rawData)")
                         }
                         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
                             completionHandler(success: true, error: nil)
                         }
                     }
                 } else {
-                    Logger.error("Something is messed up, need to find out what: \(error)")
                     completionHandler(success: false, error: error)
                 }
         
             }
         }
     }
+    
+    func validateUrlString(urlString: String, completionHandler: (success: Bool, errorMessage: String?) -> Void) {
+        WebClient().pingUrl(urlString) { reply, error in
+            if reply {
+                completionHandler(success: true, errorMessage: nil)
+            } else if let error = error {
+                completionHandler(success: false, errorMessage: error.localizedDescription)
+            } else {
+                completionHandler(success: false, errorMessage: "Unspecified Error Connecting to \(urlString)")
+            }
+        }
+    }
+    
+    
+    
 }
 
 // MARK: - Data Translator

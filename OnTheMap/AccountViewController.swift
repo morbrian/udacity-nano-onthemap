@@ -13,7 +13,9 @@ class AccountViewController: OnTheMapBaseViewController {
     @IBOutlet weak var tableView: UITableView!
     
     override func updateDisplayFromModel() {
-        tableView.reloadData()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.reloadData()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {

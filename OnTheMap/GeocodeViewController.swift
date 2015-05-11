@@ -37,7 +37,7 @@ class GeocodeViewController: UIViewController {
                                 updatedInformation.latitude = Float(placemark.location.coordinate.latitude)
                                 updatedInformation.longitude = Float(placemark.location.coordinate.longitude)
                                 updatedInformation.mapString = placename
-                                updatedInformation.mediaUrl = "http://sometimesredsometimesblue.com"
+                                updatedInformation.mediaUrl = "asdf://blurp.totally.fake.domain.giberish"
                                 dataManager.storeStudentInformation(updatedInformation)
                                 self.dismissViewControllerAnimated(true, completion: nil)
                         }

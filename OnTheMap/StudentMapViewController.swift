@@ -20,6 +20,8 @@ class StudentMapViewController: OnTheMapBaseViewController {
         }
     }
     
+    @IBOutlet weak var mapActivityIndicator: UIActivityIndicatorView!
+    
     // MARK: ViewController Lifecycle
     
     override func viewWillAppear(animated: Bool) {
@@ -31,13 +33,26 @@ class StudentMapViewController: OnTheMapBaseViewController {
     
     // clear existing annotations and reload from datamanager cache
     override func updateDisplayFromModel() {
-        mapView.removeAnnotations(mapView.annotations)
         if let studentLocations = dataManager?.studentLocations {
             let optionalAnnotations = studentLocations.map() { StudentAnnotation(student: $0) }
             let filteredAnnotations = optionalAnnotations.filter() { $0 != nil }
             let studentAnnotations = filteredAnnotations.map() { $0! as StudentAnnotation }
-            mapView.addAnnotations(studentAnnotations)
-            mapView.showAnnotations(studentAnnotations, animated: true)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.mapView.removeAnnotations(self.mapView.annotations)
+                self.mapView.addAnnotations(studentAnnotations)
+                self.mapView.showAnnotations(studentAnnotations, animated: true)
+            }
+        }
+    }
+    
+    override func networkActivity(active: Bool) {
+        super.networkActivity(active)
+        dispatch_async(dispatch_get_main_queue()) {
+            if active {
+                self.mapActivityIndicator.startAnimating()
+            } else {
+                self.mapActivityIndicator.stopAnimating()
+            }
         }
     }
 }
@@ -70,9 +85,8 @@ extension StudentMapViewController: MKMapViewDelegate {
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
         // TODO: verify URL and network connectivity before sending to Safari
         if let studentAnnotation = view.annotation as? StudentAnnotation,
-            urlString = studentAnnotation.student.mediaUrl,
-            url = NSURL(string: urlString) {
-                UIApplication.sharedApplication().openURL(url)
+            urlString = studentAnnotation.student.mediaUrl {
+                self.sendToUrlString(urlString)
         }
     }
 }

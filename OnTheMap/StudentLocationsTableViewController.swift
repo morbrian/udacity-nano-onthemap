@@ -13,9 +13,17 @@ import UIKit
 class StudentLocationsTableViewController: OnTheMapBaseViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    var pinImage: UIImage!
+    
+    override func viewDidLoad() {
+        pinImage = UIImage(named: "Pin")
+        super.viewDidLoad()
+    }
     
     override func updateDisplayFromModel() {
-        tableView.reloadData()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.reloadData()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -29,14 +37,9 @@ class StudentLocationsTableViewController: OnTheMapBaseViewController {
 extension StudentLocationsTableViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        Logger.info("Tapped item at \(indexPath.item)")
-        
-        if let item = dataManager?.studentLocationAtIndex(indexPath.item) {
-            Logger.info("\(item.rawData)")
-            Logger.info("\(item.updatedAt)")
-                //Logger.info("Student Updated At: \(NSDate(timeIntervalSince1970: updatedAt))")
-                
-                // TODO: open URL in Safari (assuming it's valid)
+        if let item = dataManager?.studentLocationAtIndex(indexPath.item),
+            urlString = item.mediaUrl {
+            self.sendToUrlString(urlString)
         }
     }
     
@@ -62,6 +65,7 @@ extension StudentLocationsTableViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier(Constants.StudentLocationCell, forIndexPath: indexPath) as! UITableViewCell
  
         cell.textLabel?.text = studentLocationData?.fullname
+        cell.imageView?.image = pinImage
         return cell
     }
 }

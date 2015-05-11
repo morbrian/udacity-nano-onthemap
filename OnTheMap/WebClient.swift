@@ -70,6 +70,7 @@ public class WebClient {
             
             if let parsingError = parsingError {
                 Logger.debug(parsingError.description)
+                Logger.debug("\(data)")
                 completionHandler(jsonData: nil, error: parsingError)
                 return
             }
@@ -77,6 +78,24 @@ public class WebClient {
             completionHandler(jsonData: jsonData, error: nil)
         }
         task.resume()
+    }
+    
+    // quick check to see if URL is valid and responsive
+    public func pingUrl(urlString: String, completionHandler: (reply: Bool, error: NSError?) -> Void) {
+        if let url = NSURL(string: urlString) {
+            let request = createHttpRequestUsingMethod(WebClient.HttpHead, forUrlString: urlString)
+            let session = NSURLSession.sharedSession()
+            let task = session.dataTaskWithRequest(request) { data, response, error in
+                if let error = error {
+                    Logger.debug(error.description)
+                }
+                completionHandler(reply: error == nil, error: error)
+            }
+            task.resume()
+        } else {
+            // TODO: add error message
+            completionHandler(reply: false, error: nil)
+        }
     }
     
     // MARK: Private Helpers
@@ -120,6 +139,7 @@ extension WebClient {
     static let JsonContentType = "application/json"
     static let HttpHeaderAccept = "Accept"
     static let HttpHeaderContentType = "Content-Type"
+    static let HttpHead = "HEAD"
     static let HttpPost = "POST"
     static let HttpGet = "GET"
     static let HttpPut = "PUT"

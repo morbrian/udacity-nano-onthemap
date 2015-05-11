@@ -10,10 +10,14 @@ import Foundation
 
 struct Constants {
     
+    static let UdacitySignupUrlString = "https://www.udacity.com/account/auth#!/signup"
+    
     static let SuccessfulLoginSegue = "SuccessfulLoginSegue"
     static let StudentLocationCell = "StudentLocationCell"
     static let UserLocationCell = "UserLocationCell"
     static let StudentLocationAnnotationReuseIdentifier = "StudentLocationAnnotationReuseIdentifier"
+    
+    static let DeviceiPhone5Height = 568.0
     
     struct DateFormat {
         static let ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SZZZZZ"
