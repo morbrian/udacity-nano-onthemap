@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Pods-OnTheMap-Bolts.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-OnTheMap-FBSDKCoreKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-OnTheMap-FBSDKLoginKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-OnTheMap-FBSDKShareKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-OnTheMap.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>3292D3DC4A1C53EEF0E980DD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5AC4AA09053007C1A312CD78</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5E1FCAD8786CF5C37F55E693</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6C6F5B3AE77EAE585930E1BA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A0146D2A9E9BCCA721C62B1B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

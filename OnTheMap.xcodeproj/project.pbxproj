@@ -15,7 +15,6 @@
 		4E3536831B000E4E00667322 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3536801B000E4E00667322 /* Roboto-Medium.ttf */; };
 		4E3536841B000E4E00667322 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3536811B000E4E00667322 /* Roboto-Regular.ttf */; };
 		4E3536851B000E4E00667322 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3536821B000E4E00667322 /* Roboto-Thin.ttf */; };
-		4E67D5941AEC0F2F00652693 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E67D5931AEC0F2F00652693 /* FBSDKCoreKit.framework */; };
 		4E67D59C1AED6D8400652693 /* StudentLocationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59B1AED6D8400652693 /* StudentLocationsTableViewController.swift */; };
 		4E67D59E1AED6FF200652693 /* StudentDataAccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59D1AED6FF200652693 /* StudentDataAccessManager.swift */; };
 		4E67D5A01AED978C00652693 /* ManagingTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */; };
@@ -34,6 +33,7 @@
 		4EE4BBCE1AE35C0200FC6146 /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBCD1AE35C0200FC6146 /* OnTheMapTests.swift */; };
 		4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBD81AE4193300FC6146 /* WebClient.swift */; };
 		4EE4BBDD1AE4977300FC6146 /* UdacityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBDC1AE4977300FC6146 /* UdacityService.swift */; };
+		8E7E2C990CCD870746D8BD0C /* libPods-OnTheMap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 280EF06F98A6E0D2E8C2944A /* libPods-OnTheMap.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		280EF06F98A6E0D2E8C2944A /* libPods-OnTheMap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheMap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E01DAAC1AE8895D001A476E /* OnTheMapParseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnTheMapParseService.swift; sourceTree = "<group>"; };
 		4E0B0E811AE8A46800744C52 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4E0B0E841AE8BB9F00744C52 /* StudentLocationList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = StudentLocationList.json; sourceTree = "<group>"; };
@@ -55,8 +56,6 @@
 		4E3536801B000E4E00667322 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		4E3536811B000E4E00667322 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		4E3536821B000E4E00667322 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
-		4E67D5931AEC0F2F00652693 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		4E67D5951AEC123C00652693 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		4E67D59B1AED6D8400652693 /* StudentLocationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationsTableViewController.swift; sourceTree = "<group>"; };
 		4E67D59D1AED6FF200652693 /* StudentDataAccessManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentDataAccessManager.swift; sourceTree = "<group>"; };
 		4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagingTabBarController.swift; sourceTree = "<group>"; };
@@ -79,6 +78,8 @@
 		4EE4BBCD1AE35C0200FC6146 /* OnTheMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapTests.swift; sourceTree = "<group>"; };
 		4EE4BBD81AE4193300FC6146 /* WebClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebClient.swift; sourceTree = "<group>"; };
 		4EE4BBDC1AE4977300FC6146 /* UdacityService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityService.swift; sourceTree = "<group>"; };
+		93E8E99A90B156CDDEFDA077 /* Pods-OnTheMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheMap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheMap/Pods-OnTheMap.debug.xcconfig"; sourceTree = "<group>"; };
+		D6D0833429E23D1A9CC88DA1 /* Pods-OnTheMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheMap.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheMap/Pods-OnTheMap.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +88,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E67D5A21AEF2A2B00652693 /* MapKit.framework in Frameworks */,
-				4E67D5941AEC0F2F00652693 /* FBSDKCoreKit.framework in Frameworks */,
+				8E7E2C990CCD870746D8BD0C /* libPods-OnTheMap.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,7 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				4E67D5A11AEF2A2B00652693 /* MapKit.framework */,
-				4E67D5931AEC0F2F00652693 /* FBSDKCoreKit.framework */,
+				280EF06F98A6E0D2E8C2944A /* libPods-OnTheMap.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -170,6 +171,7 @@
 				4EE4BBCA1AE35C0200FC6146 /* OnTheMapTests */,
 				4E67D5921AEC0E9700652693 /* Frameworks */,
 				4EE4BBB31AE35C0100FC6146 /* Products */,
+				7FB20AD491A44AC70A2B8213 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -203,7 +205,6 @@
 				4EE4BBB71AE35C0100FC6146 /* AppDelegate.swift */,
 				4EE4BBBE1AE35C0100FC6146 /* Images.xcassets */,
 				4EE4BBB61AE35C0100FC6146 /* Info.plist */,
-				4E67D5951AEC123C00652693 /* Bridging-Header.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -235,6 +236,15 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		7FB20AD491A44AC70A2B8213 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				93E8E99A90B156CDDEFDA077 /* Pods-OnTheMap.debug.xcconfig */,
+				D6D0833429E23D1A9CC88DA1 /* Pods-OnTheMap.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -242,9 +252,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4EE4BBD11AE35C0200FC6146 /* Build configuration list for PBXNativeTarget "OnTheMap" */;
 			buildPhases = (
+				77E22BF317503E537FB65D9E /* Check Pods Manifest.lock */,
 				4EE4BBAE1AE35C0100FC6146 /* Sources */,
 				4EE4BBAF1AE35C0100FC6146 /* Frameworks */,
 				4EE4BBB01AE35C0100FC6146 /* Resources */,
+				6C163ABF6F676FF2DDC73B78 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -338,6 +350,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6C163ABF6F676FF2DDC73B78 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OnTheMap/Pods-OnTheMap-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		77E22BF317503E537FB65D9E /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4EE4BBAE1AE35C0100FC6146 /* Sources */ = {
@@ -487,6 +532,7 @@
 		};
 		4EE4BBD21AE35C0200FC6146 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 93E8E99A90B156CDDEFDA077 /* Pods-OnTheMap.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
@@ -503,6 +549,7 @@
 		};
 		4EE4BBD31AE35C0200FC6146 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D6D0833429E23D1A9CC88DA1 /* Pods-OnTheMap.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
