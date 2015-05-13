@@ -26,6 +26,8 @@ class StudentDataAccessManager {
     
     private var currentUser: StudentInformation?
     
+    private var authType: AuthenticationType = .NotAuthenticated
+    
     // read only access to the logged in user data reference
     var loggedInUser: StudentInformation? { return currentUser }
     
@@ -48,6 +50,10 @@ class StudentDataAccessManager {
         return currentUser != nil
     }
     
+    var authenticationTypeUsed: AuthenticationType {
+        return authType
+    }
+    
     // authenticate the user by username and password with the Udacity service.
     func authenticateByUsername(username: String, withPassword password: String,
         completionHandler: (success: Bool, error: NSError?) -> Void) {
@@ -57,12 +63,22 @@ class StudentDataAccessManager {
                     self.udacityClient.fetchInformationForStudentIdentity(userIdentity) {
                         userData, error in
                         self.currentUser = userData
+                        self.authType = .UdacityUsernameAndPassword
                         completionHandler(success: true, error: nil)
                     }
                 } else {
                     completionHandler(success: false, error: error)
                 }
             }
+    }
+    
+    // authenticate with Udacity using the token provided by facebook login
+    func authenticateByFacebookToken(token: String,
+        completionHandler: (success: Bool, error: NSError?) -> Void) {
+        
+            // TODO: must actually authenticate....
+            self.authType = .FacebookToken
+            completionHandler(success: true, error: nil)
     }
     
     // MARK: Access Data Owned by Logged In User
@@ -235,3 +251,10 @@ func translateToStudentInformationFromUdacityData(udacityData: [String:AnyObject
     return StudentInformation(parseData: parseData)
 }
 
+// MARK: - Authentication Type
+
+enum AuthenticationType {
+    case NotAuthenticated
+    case UdacityUsernameAndPassword
+    case FacebookToken
+}

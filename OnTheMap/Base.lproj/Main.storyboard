@@ -108,19 +108,31 @@
                                     <rect key="frame" x="16" y="329" width="568" height="22"/>
                                 </variation>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vBh-GW-Rqj" customClass="FBSDKLoginButton">
+                                <rect key="frame" x="16" y="551" width="568" height="41"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="Custom Facebook Button">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="tintColor" red="1" green="0.5" blue="0.0" alpha="0.89000000000000001" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="xND-3U-0pd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="0S3-py-Lfa"/>
                             <constraint firstItem="IGl-iX-Tpd" firstAttribute="top" secondItem="Acj-96-S8i" secondAttribute="bottom" constant="8" symbolic="YES" id="2ou-hv-0Mn"/>
+                            <constraint firstItem="vBh-GW-Rqj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="305-65-ZIR"/>
                             <constraint firstItem="WX3-qC-B0O" firstAttribute="height" secondItem="Acj-96-S8i" secondAttribute="height" id="3DO-Xs-eR5"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="vBh-GW-Rqj" secondAttribute="bottom" constant="8" symbolic="YES" id="4OT-1N-mVX"/>
                             <constraint firstItem="qK2-RO-HeN" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="5Ji-3U-DXK"/>
                             <constraint firstItem="IGl-iX-Tpd" firstAttribute="centerX" secondItem="Acj-96-S8i" secondAttribute="centerX" id="9zL-iR-Wlc"/>
                             <constraint firstItem="WX3-qC-B0O" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="DsK-M8-BaX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Acj-96-S8i" secondAttribute="trailing" constant="181" id="FNJ-jT-cYN"/>
                             <constraint firstItem="xND-3U-0pd" firstAttribute="top" secondItem="IGl-iX-Tpd" secondAttribute="bottom" constant="8" symbolic="YES" id="FPq-70-jba"/>
                             <constraint firstItem="WX3-qC-B0O" firstAttribute="width" secondItem="U9v-I1-0AU" secondAttribute="width" id="MMj-pI-s46"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="vBh-GW-Rqj" secondAttribute="trailing" id="PvG-Vq-MtU"/>
                             <constraint firstItem="WX3-qC-B0O" firstAttribute="top" secondItem="qK2-RO-HeN" secondAttribute="bottom" constant="8" symbolic="YES" id="QtV-Ue-dfX"/>
                             <constraint firstItem="Acj-96-S8i" firstAttribute="top" secondItem="U9v-I1-0AU" secondAttribute="bottom" constant="8" symbolic="YES" id="asp-KQ-8R2"/>
                             <constraint firstItem="U9v-I1-0AU" firstAttribute="top" secondItem="WX3-qC-B0O" secondAttribute="bottom" constant="8" symbolic="YES" id="bN9-o1-vsp"/>
@@ -140,6 +152,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="facebookButton" destination="vBh-GW-Rqj" id="Fla-mx-2V4"/>
                         <outlet property="imageView" destination="MQU-Wa-3ww" id="qcV-6v-p4X"/>
                         <outlet property="loginButton" destination="Acj-96-S8i" id="1j7-4b-giy"/>
                         <outlet property="loginStatusLabel" destination="xND-3U-0pd" id="5Qs-lE-hI6"/>
@@ -566,6 +579,6 @@
         <image name="Udacity" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gTx-t8-r62"/>
+        <segue reference="hF6-Wf-mjd"/>
     </inferredMetricsTieBreakers>
 </document>

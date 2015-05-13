@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
 // LoginViewController
 // Presents username / password enabling user to login to appliction.
@@ -19,7 +20,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signupButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
-   
+    @IBOutlet weak var facebookButton: FBSDKLoginButton!
+    
     private var dataManager: StudentDataAccessManager!
     
     private var viewShiftDistance: CGFloat? = nil
@@ -30,7 +32,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dataManager = StudentDataAccessManager()
-        
+
         // TODO: Consider using GBDeviceInfo, although this check is sufficient for our simple need
         if view.bounds.height <= CGFloat(Constants.DeviceiPhone5Height) {
             // for iPhone5 or smaller, make some of the fonts smaller
@@ -42,6 +44,8 @@ class LoginViewController: UIViewController {
         view.addGestureRecognizer(tapRecognizer)
         
         defaultTransform = self.imageView.transform
+        
+        facebookButton.delegate = self
     }
     
     // MARK: ViewController Lifecycle
@@ -51,6 +55,13 @@ class LoginViewController: UIViewController {
         // register action if keyboard will show
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        if let token = FBSDKAccessToken.currentAccessToken() {
+            dataManager.authenticateByFacebookToken(FBSDKAccessToken.currentAccessToken().tokenString,
+                completionHandler: handleAuthenticationResponse)
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -98,26 +109,8 @@ class LoginViewController: UIViewController {
         let password = passwordTextField.text
         
         networkActivity(true)
-        dataManager.authenticateByUsername(username, withPassword: password) {
-            success, error in
-            self.networkActivity(false)
-            if success {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.performSegueWithIdentifier(Constants.SuccessfulLoginSegue, sender: self.dataManager)
-                }
-            } else {
-                Logger.info("Login failed with code \(error?.code) \(error?.description)")
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    if let reason = error?.localizedDescription {
-                        self.loginStatusLabel?.text = "!! \(reason)"
-                    } else {
-                        self.loginStatusLabel?.text = "!! Login failed"
-                    }
-                    self.loginStatusLabel.hidden = false
-                }
-            }
-        }
+        dataManager.authenticateByUsername(username, withPassword: password,
+            completionHandler: handleAuthenticationResponse)
     }
     
     @IBAction func gotoAccountSignup(sender: UIButton) {
@@ -125,10 +118,16 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func proceedAsGuest(sender: UIButton) {
-        self.performSegueWithIdentifier(Constants.SuccessfulLoginSegue, sender: self.dataManager)
+        transitionSucessfulLoginSegue()
     }
     
     // MARK: Segue Transition
+    
+    private func transitionSucessfulLoginSegue() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.performSegueWithIdentifier(Constants.SuccessfulLoginSegue, sender: self.dataManager)
+        }
+    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let destination = segue.destinationViewController as? ManagingTabBarController,
@@ -186,5 +185,51 @@ class LoginViewController: UIViewController {
     func handleTap(sender: UIGestureRecognizer) {
         endTextEditing()
     }
+    
+    // MARK: Authentication
+    
+    func handleAuthenticationResponse(#success: Bool, error: NSError?) {
+        self.networkActivity(false)
+        if success {
+            self.transitionSucessfulLoginSegue()
+        } else {
+            Logger.info("Login failed with code \(error?.code) \(error?.description)")
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                if let reason = error?.localizedDescription {
+                    self.loginStatusLabel?.text = "!! \(reason)"
+                } else {
+                    self.loginStatusLabel?.text = "!! Login failed"
+                }
+                self.loginStatusLabel.hidden = false
+            }
+        }
+    }
+    
+    func resetStateAfterUserLogout() {
+        Logger.info("Logging out...")
+        dataManager = StudentDataAccessManager()
+        resetLoginStatusLabel()
+    }
+    
+    @IBAction func testme(segue: UIStoryboardSegue) {
+        Logger.info("unwind or something?")
+    }
+}
 
+// MARK: - FBSDKLoginButtonDelegate
+
+extension LoginViewController: FBSDKLoginButtonDelegate {
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        if let token = result.token {
+            dataManager.authenticateByFacebookToken(token.tokenString,
+            completionHandler: handleAuthenticationResponse)
+        } else if let error = error {
+            handleAuthenticationResponse(success: false, error: error)
+        }
+    }
+    
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+        resetStateAfterUserLogout()
+    }
 }

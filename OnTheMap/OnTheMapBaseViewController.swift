@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
 // OnTheMapBaseViewController
 // Base class for each view of the On The Map TabBar Controller.
@@ -16,6 +17,8 @@ class OnTheMapBaseViewController: UIViewController {
     // default max number of items per fetch
     let FetchLimit = 100
     let PreFetchTrigger = 20
+    
+    @IBOutlet weak var facebookButton: FBSDKLoginButton!
 
     // access point for all data loading and in memory cache
     var dataManager: StudentDataAccessManager?
@@ -40,6 +43,9 @@ class OnTheMapBaseViewController: UIViewController {
                 var addLocationButton = produceAddLocationButton()
                 addLocationButton.enabled = dm.authenticated
                 navigationItem.rightBarButtonItems = [refreshButton, addLocationButton]
+                
+                //navigationItem.leftBarButtonItem = produceLogoutBarButtonItem()
+                navigationItem.leftBarButtonItem?.customView = produceLogoutButton()
             }
         }
     }
@@ -58,6 +64,38 @@ class OnTheMapBaseViewController: UIViewController {
     // return configured Refresh button
     private func produceRefreshButton() -> UIBarButtonItem {
         return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refreshAction:")
+    }
+    
+    private func produceLogoutBarButtonItem() -> UIBarButtonItem? {
+        var logoutBarButtonItem: UIBarButtonItem? = nil
+        if let dm = dataManager {
+            switch dm.authenticationTypeUsed {
+            case .UdacityUsernameAndPassword:
+                logoutBarButtonItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.Done, target: self, action: "returnToLoginScreen:")
+            case .NotAuthenticated:
+                logoutBarButtonItem = UIBarButtonItem(title: "Login", style: UIBarButtonItemStyle.Done, target: nil, action: nil)
+            case .FacebookToken:
+                logoutBarButtonItem = UIBarButtonItem(customView: FBSDKLoginButton())
+            }
+        }
+        return logoutBarButtonItem
+    }
+    
+    private func produceLogoutButton() -> UIButton? {
+        var logoutBarButtonItem: UIButton? = nil
+        if let dm = dataManager {
+            switch dm.authenticationTypeUsed {
+            case .UdacityUsernameAndPassword:
+                logoutBarButtonItem = UIButton()
+                logoutBarButtonItem?.setTitle("Logout", forState: UIControlState.Normal)
+                    //UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.Done, target: self, action: "returnToLoginScreen:")
+            case .NotAuthenticated:
+                logoutBarButtonItem = nil
+            case .FacebookToken:
+                logoutBarButtonItem = FBSDKLoginButton()
+            }
+        }
+        return logoutBarButtonItem
     }
     
     // MARK: Methods for Subclass to Override
@@ -169,6 +207,16 @@ class OnTheMapBaseViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let destination = segue.destinationViewController as? GeocodeViewController {
             destination.dataManager = dataManager
+        } else if let destination = segue.destinationViewController as? LoginViewController {
+            destination.resetStateAfterUserLogout()
         }
     }
+    
+    // log out and pop to root login viewcontroller
+    func returnToLoginScreen(sender: AnyObject) {
+        performSegueWithIdentifier("TestmeSegue", sender: self)
+        //dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    
 }
