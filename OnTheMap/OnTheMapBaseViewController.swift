@@ -44,8 +44,7 @@ class OnTheMapBaseViewController: UIViewController {
                 addLocationButton.enabled = dm.authenticated
                 navigationItem.rightBarButtonItems = [refreshButton, addLocationButton]
                 
-                //navigationItem.leftBarButtonItem = produceLogoutBarButtonItem()
-                navigationItem.leftBarButtonItem?.customView = produceLogoutButton()
+                navigationItem.leftBarButtonItem = produceLogoutBarButtonItem()
             }
         }
     }
@@ -76,23 +75,6 @@ class OnTheMapBaseViewController: UIViewController {
                 logoutBarButtonItem = UIBarButtonItem(title: "Login", style: UIBarButtonItemStyle.Done, target: nil, action: nil)
             case .FacebookToken:
                 logoutBarButtonItem = UIBarButtonItem(customView: FBSDKLoginButton())
-            }
-        }
-        return logoutBarButtonItem
-    }
-    
-    private func produceLogoutButton() -> UIButton? {
-        var logoutBarButtonItem: UIButton? = nil
-        if let dm = dataManager {
-            switch dm.authenticationTypeUsed {
-            case .UdacityUsernameAndPassword:
-                logoutBarButtonItem = UIButton()
-                logoutBarButtonItem?.setTitle("Logout", forState: UIControlState.Normal)
-                    //UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.Done, target: self, action: "returnToLoginScreen:")
-            case .NotAuthenticated:
-                logoutBarButtonItem = nil
-            case .FacebookToken:
-                logoutBarButtonItem = FBSDKLoginButton()
             }
         }
         return logoutBarButtonItem
@@ -207,15 +189,12 @@ class OnTheMapBaseViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let destination = segue.destinationViewController as? GeocodeViewController {
             destination.dataManager = dataManager
-        } else if let destination = segue.destinationViewController as? LoginViewController {
-            destination.resetStateAfterUserLogout()
         }
     }
     
     // log out and pop to root login viewcontroller
     func returnToLoginScreen(sender: AnyObject) {
-        performSegueWithIdentifier("TestmeSegue", sender: self)
-        //dismissViewControllerAnimated(true, completion: nil)
+        performSegueWithIdentifier("ReturnToLoginScreenSegue", sender: self)
     }
 
     

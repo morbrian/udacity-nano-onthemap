@@ -32,7 +32,8 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dataManager = StudentDataAccessManager()
-
+        navigationController?.navigationBar.hidden = true
+        
         // TODO: Consider using GBDeviceInfo, although this check is sufficient for our simple need
         if view.bounds.height <= CGFloat(Constants.DeviceiPhone5Height) {
             // for iPhone5 or smaller, make some of the fonts smaller
@@ -212,8 +213,8 @@ class LoginViewController: UIViewController {
         resetLoginStatusLabel()
     }
     
-    @IBAction func testme(segue: UIStoryboardSegue) {
-        Logger.info("unwind or something?")
+    @IBAction func segueToLoginScreen(segue: UIStoryboardSegue) {
+        resetStateAfterUserLogout()
     }
 }
 

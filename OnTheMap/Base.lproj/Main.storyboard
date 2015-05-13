@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="0Ek-1C-qKi">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -151,6 +151,9 @@
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="ZSz-oW-gjI"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="facebookButton" destination="vBh-GW-Rqj" id="Fla-mx-2V4"/>
                         <outlet property="imageView" destination="MQU-Wa-3ww" id="qcV-6v-p4X"/>
@@ -164,7 +167,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="208" y="242"/>
+            <point key="canvasLocation" x="1020" y="242"/>
         </scene>
         <!--Managing Tab Bar Controller-->
         <scene sceneID="oto-WP-Cg6">
@@ -184,7 +187,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rd5-he-o7v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1049" y="242"/>
+            <point key="canvasLocation" x="1861" y="242"/>
         </scene>
         <!--On The Map-->
         <scene sceneID="UZU-6P-Bt6">
@@ -247,11 +250,13 @@
                     <connections>
                         <outlet property="tableView" destination="Umg-RY-yRb" id="UmY-nI-1fV"/>
                         <segue destination="e2o-jI-nQE" kind="presentation" identifier="ReverseGeocodeSegue" id="hF6-Wf-mjd"/>
+                        <segue destination="ig8-7g-Hzd" kind="unwind" identifier="ReturnToLoginScreenSegue" unwindAction="segueToLoginScreen:" id="VTU-1F-vRj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wmR-Pe-PMy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="ig8-7g-Hzd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2691" y="-149"/>
+            <point key="canvasLocation" x="3503" y="-149"/>
         </scene>
         <!--List-->
         <scene sceneID="tbA-eY-j04">
@@ -268,7 +273,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ChX-sE-7jQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1886" y="-149"/>
+            <point key="canvasLocation" x="2698" y="-149"/>
         </scene>
         <!--Map-->
         <scene sceneID="9jo-mk-m27">
@@ -285,7 +290,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dt0-HE-jmu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1886" y="636"/>
+            <point key="canvasLocation" x="2698" y="636"/>
         </scene>
         <!--Geocode View Controller-->
         <scene sceneID="tvc-Ph-sgQ">
@@ -417,7 +422,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fPk-fy-pg4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3454" y="236"/>
+            <point key="canvasLocation" x="4266" y="236"/>
         </scene>
         <!--On The Map-->
         <scene sceneID="hkf-nw-uvE">
@@ -457,11 +462,13 @@
                         <outlet property="mapActivityIndicator" destination="IYb-Cc-LXb" id="JDt-ng-Lve"/>
                         <outlet property="mapView" destination="gPq-jY-HZI" id="uY2-89-rBh"/>
                         <segue destination="e2o-jI-nQE" kind="presentation" identifier="ReverseGeocodeSegue" id="gTx-t8-r62"/>
+                        <segue destination="yIv-uj-3yu" kind="unwind" identifier="ReturnToLoginScreenSegue" unwindAction="segueToLoginScreen:" id="seX-KC-6Yl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NSd-TQ-0eU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="yIv-uj-3yu" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2691" y="636"/>
+            <point key="canvasLocation" x="3503" y="636"/>
         </scene>
         <!--Account View Controller-->
         <scene sceneID="4ko-OY-rz9">
@@ -549,9 +556,11 @@
                     <navigationItem key="navigationItem" id="Kcz-T4-Vkk"/>
                     <connections>
                         <outlet property="tableView" destination="RBA-mn-m4c" id="6lV-iU-UA5"/>
+                        <segue destination="WIe-ld-ko5" kind="unwind" identifier="ReturnToLoginScreenSegue" unwindAction="segueToLoginScreen:" id="3Yz-40-aEi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vGa-GA-eJh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="WIe-ld-ko5" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2691" y="1433"/>
         </scene>
@@ -572,6 +581,24 @@
             </objects>
             <point key="canvasLocation" x="1886" y="1433"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Xbh-qp-afp">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0Ek-1C-qKi" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Pi0-Vu-onj">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="6iW-Zm-nX8"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yrC-3S-BS1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="208" y="242"/>
+        </scene>
     </scenes>
     <resources>
         <image name="List" width="32" height="32"/>
@@ -579,6 +606,6 @@
         <image name="Udacity" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hF6-Wf-mjd"/>
+        <segue reference="gTx-t8-r62"/>
     </inferredMetricsTieBreakers>
 </document>
