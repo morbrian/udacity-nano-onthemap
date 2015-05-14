@@ -43,6 +43,7 @@ class OnTheMapBaseViewController: UIViewController {
                 navigationItem.rightBarButtonItems = [refreshButton, addLocationButton]
                 
                 navigationItem.leftBarButtonItem = produceLogoutBarButtonItem()
+
             }
         }
     }
@@ -63,18 +64,15 @@ class OnTheMapBaseViewController: UIViewController {
         return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refreshAction:")
     }
     
+    // return a button with appropriate label for the logout position on the navigation bar
     private func produceLogoutBarButtonItem() -> UIBarButtonItem? {
         var logoutBarButtonItem: UIBarButtonItem? = nil
         if let dm = dataManager {
             switch dm.authenticationTypeUsed {
-            case .UdacityUsernameAndPassword:
+            case .UdacityUsernameAndPassword, .FacebookToken:
                 logoutBarButtonItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.Done, target: self, action: "returnToLoginScreen:")
             case .NotAuthenticated:
                 logoutBarButtonItem = UIBarButtonItem(title: "Login", style: UIBarButtonItemStyle.Done, target: self, action: "returnToLoginScreen:")
-            case .FacebookToken:
-                var facebookButton = FBSDKLoginButton()
-                facebookButton.delegate = self
-                logoutBarButtonItem = UIBarButtonItem(customView: facebookButton)
             }
         }
         return logoutBarButtonItem
@@ -194,22 +192,11 @@ class OnTheMapBaseViewController: UIViewController {
     
     // log out and pop to root login viewcontroller
     func returnToLoginScreen(sender: AnyObject) {
+        if dataManager?.authenticationTypeUsed == .FacebookToken {
+            FBSDKLoginManager().logOut()
+        }
         performSegueWithIdentifier("ReturnToLoginScreenSegue", sender: self)
     }
     
 }
 
-// MARK: - FBSDKLoginButtonDelegate
-
-extension OnTheMapBaseViewController: FBSDKLoginButtonDelegate {
-    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
-        // the user will always be logged in if the facebook button shows, so this should never be called
-        // (ie. the displayed button will only ever let them logout from the app)
-        // however, if it were to show up some how, we'll just redirect them back to the login screen for a moment
-        returnToLoginScreen(self)
-    }
-    
-    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
-        returnToLoginScreen(self)
-    }
-}
