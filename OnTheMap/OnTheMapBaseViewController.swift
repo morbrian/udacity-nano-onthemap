@@ -17,8 +17,6 @@ class OnTheMapBaseViewController: UIViewController {
     // default max number of items per fetch
     let FetchLimit = 100
     let PreFetchTrigger = 20
-    
-    @IBOutlet weak var facebookButton: FBSDKLoginButton!
 
     // access point for all data loading and in memory cache
     var dataManager: StudentDataAccessManager?
@@ -72,9 +70,11 @@ class OnTheMapBaseViewController: UIViewController {
             case .UdacityUsernameAndPassword:
                 logoutBarButtonItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItemStyle.Done, target: self, action: "returnToLoginScreen:")
             case .NotAuthenticated:
-                logoutBarButtonItem = UIBarButtonItem(title: "Login", style: UIBarButtonItemStyle.Done, target: nil, action: nil)
+                logoutBarButtonItem = UIBarButtonItem(title: "Login", style: UIBarButtonItemStyle.Done, target: self, action: "returnToLoginScreen:")
             case .FacebookToken:
-                logoutBarButtonItem = UIBarButtonItem(customView: FBSDKLoginButton())
+                var facebookButton = FBSDKLoginButton()
+                facebookButton.delegate = self
+                logoutBarButtonItem = UIBarButtonItem(customView: facebookButton)
             }
         }
         return logoutBarButtonItem
@@ -196,6 +196,20 @@ class OnTheMapBaseViewController: UIViewController {
     func returnToLoginScreen(sender: AnyObject) {
         performSegueWithIdentifier("ReturnToLoginScreenSegue", sender: self)
     }
-
     
+}
+
+// MARK: - FBSDKLoginButtonDelegate
+
+extension OnTheMapBaseViewController: FBSDKLoginButtonDelegate {
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        // the user will always be logged in if the facebook button shows, so this should never be called
+        // (ie. the displayed button will only ever let them logout from the app)
+        // however, if it were to show up some how, we'll just redirect them back to the login screen for a moment
+        returnToLoginScreen(self)
+    }
+    
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+        returnToLoginScreen(self)
+    }
 }

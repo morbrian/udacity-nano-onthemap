@@ -222,6 +222,7 @@ class LoginViewController: UIViewController {
 
 extension LoginViewController: FBSDKLoginButtonDelegate {
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        networkActivity(true)
         if let token = result.token {
             dataManager.authenticateByFacebookToken(token.tokenString,
             completionHandler: handleAuthenticationResponse)

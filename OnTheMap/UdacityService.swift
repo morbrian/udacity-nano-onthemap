@@ -37,21 +37,41 @@ class UdacityService {
                 return
             }
             
-            let request = webClient.createHttpRequestUsingMethod(WebClient.HttpPost, forUrlString: UdacityService.SessionUrlString,
-            withBody: buildUdacitySessionBody(username: username, password: password),
-            includeHeaders: UdacityService.StandardHeaders)
-            
-        webClient.executeRequest(request)
-        { jsonData, error in
-            if let account = jsonData?.valueForKey(UdacityJsonKey.Account) as? NSDictionary,
-                key = account[UdacityJsonKey.Key] as? String {
-                    completionHandler(userIdentity: StudentIdentity(key), error: nil)
-            } else if let error = error {
-                completionHandler(userIdentity: nil, error: error)
-            } else {
-                completionHandler(userIdentity: nil, error: self.produceErrorFromResponseData(jsonData))
+            let httpBody =  buildUdacitySessionBody(username: username, password: password)
+            authenticateUsingHttpBody(httpBody, completionHandler: completionHandler)
+    }
+    
+    // authenticate with Udacity using a username and password.
+    // the user's basic identity (userid) is returned as a UserIdentity in the completionHandler.
+    func authenticateByFacebookToken(token: String,
+        completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
+            // first check the basic requirements
+            if token.isEmpty {
+                completionHandler(userIdentity: nil, error: UdacityService.errorForCode(.MissingFacebookToken))
+                return
             }
-        }
+            let httpBody = buildUdacitySessionBody(facebookToken: token)
+            authenticateUsingHttpBody(httpBody, completionHandler: completionHandler)
+    }
+    
+    private func authenticateUsingHttpBody(httpBody: NSData,
+        completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
+            
+            let request = webClient.createHttpRequestUsingMethod(WebClient.HttpPost, forUrlString: UdacityService.SessionUrlString,
+                withBody: httpBody,
+                includeHeaders: UdacityService.StandardHeaders)
+            
+            webClient.executeRequest(request)
+                { jsonData, error in
+                    if let account = jsonData?.valueForKey(UdacityJsonKey.Account) as? NSDictionary,
+                        key = account[UdacityJsonKey.Key] as? String {
+                            completionHandler(userIdentity: StudentIdentity(key), error: nil)
+                    } else if let error = error {
+                        completionHandler(userIdentity: nil, error: error)
+                    } else {
+                        completionHandler(userIdentity: nil, error: self.produceErrorFromResponseData(jsonData))
+                    }
+            }
     }
     
     // fetch available data for the user identified by userIdentity.
@@ -87,6 +107,11 @@ class UdacityService {
     // build the Session request body with username and password values.
     private func buildUdacitySessionBody(#username: String, password: String) -> NSData {
         return "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)!
+    }
+    
+    // build the Session request body with username and password values.
+    private func buildUdacitySessionBody(#facebookToken: String) -> NSData {
+        return "{\"facebook_mobile\": {\"access_token\": \"\(facebookToken)\"}}".dataUsingEncoding(NSUTF8StringEncoding)!
     }
     
     // used when the json body is suspected to contain an error descrptor,
@@ -151,7 +176,7 @@ extension UdacityService {
     private static let ErrorDomain = "UdacityWebClient"
     
     private enum ErrorCode: Int, Printable {
-        case UnexpectedResponseData, InsufficientDataLength, UsernameRequired, PasswordRequired
+        case UnexpectedResponseData, InsufficientDataLength, UsernameRequired, PasswordRequired, MissingFacebookToken
 
         
         var description: String {
@@ -160,6 +185,7 @@ extension UdacityService {
             case InsufficientDataLength: return "Insufficient Data Length In Response"
             case UsernameRequired: return "Must specify a username"
             case PasswordRequired: return "Must specify a password"
+            case MissingFacebookToken: return "Facebook Has Not Authenticated User"
             default: return "Unknown Error"
             }
         }

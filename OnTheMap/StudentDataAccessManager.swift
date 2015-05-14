@@ -59,26 +59,33 @@ class StudentDataAccessManager {
         completionHandler: (success: Bool, error: NSError?) -> Void) {
             udacityClient.authenticateByUsername(username, withPassword: password) {
                 userIdentity, error in
-                if let userIdentity = userIdentity {
-                    self.udacityClient.fetchInformationForStudentIdentity(userIdentity) {
-                        userData, error in
-                        self.currentUser = userData
-                        self.authType = .UdacityUsernameAndPassword
-                        completionHandler(success: true, error: nil)
-                    }
-                } else {
-                    completionHandler(success: false, error: error)
-                }
+                self.handleLoginResponse(userIdentity, authType: .UdacityUsernameAndPassword,
+                    error: error, completionHandler: completionHandler)
             }
     }
     
     // authenticate with Udacity using the token provided by facebook login
     func authenticateByFacebookToken(token: String,
         completionHandler: (success: Bool, error: NSError?) -> Void) {
-        
-            // TODO: must actually authenticate....
-            self.authType = .FacebookToken
-            completionHandler(success: true, error: nil)
+            udacityClient.authenticateByFacebookToken(token) {
+                userIdentity, error in
+                self.handleLoginResponse(userIdentity, authType: .FacebookToken,
+                    error: error, completionHandler: completionHandler)
+            }
+    }
+    
+    private func handleLoginResponse(userIdentity: StudentIdentity?, authType: AuthenticationType, error: NSError?,
+        completionHandler: (success: Bool, error: NSError?) -> Void) {
+        if let userIdentity = userIdentity {
+            self.udacityClient.fetchInformationForStudentIdentity(userIdentity) {
+                userData, error in
+                self.currentUser = userData
+                self.authType = authType
+                completionHandler(success: true, error: nil)
+            }
+        } else {
+            completionHandler(success: false, error: error)
+        }
     }
     
     // MARK: Access Data Owned by Logged In User
