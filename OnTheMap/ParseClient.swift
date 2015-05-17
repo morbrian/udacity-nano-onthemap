@@ -169,6 +169,23 @@ extension ParseClient {
     // use reverse-sort by Updated time as default
     static let DefaultSortOrder = "-\(ParseJsonKey.UpdatedAt)"
     
+    
+    struct DateFormat {
+        static let ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SZZZZZ"
+    }
+    
+    struct Locale {
+        static let EN_US_POSIX = "en_US_POSIX"
+    }
+    
+    static var DateFormatter: NSDateFormatter {
+        var dateFormatter = NSDateFormatter()
+        let enUSPosixLocale = NSLocale(localeIdentifier: ParseClient.Locale.EN_US_POSIX)
+        dateFormatter.locale = enUSPosixLocale
+        dateFormatter.dateFormat = ParseClient.DateFormat.ISO8601
+        return dateFormatter
+    }
+    
     struct ParseParameter {
         static let Limit = "limit"
         static let Skip = "skip"

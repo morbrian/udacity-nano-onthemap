@@ -18,7 +18,8 @@ class OnTheMapParseService {
     
     func fetchStudents(limit: Int = 50, skip: Int = 0, orderedBy: String = ParseClient.DefaultSortOrder,
         completionHandler: (studentInformation: [StudentInformation]?, error: NSError?) -> Void) {
-            parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName, limit: limit, skip: skip, orderedBy: orderedBy) {
+            parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName,
+                limit: limit, skip: skip, orderedBy: orderedBy) {
             resultsArray, error in
             completionHandler(studentInformation: self.parseResults(resultsArray), error: error)
         }

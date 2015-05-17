@@ -32,10 +32,7 @@ struct StudentInformation {
         if uniqueKey.isEmpty {
             return nil
         }
-        dateFormatter = NSDateFormatter()
-        let enUSPosixLocale = NSLocale(localeIdentifier: Constants.Locale.EN_US_POSIX)
-        dateFormatter.locale = enUSPosixLocale
-        dateFormatter.dateFormat = Constants.DateFormat.ISO8601
+        dateFormatter = ParseClient.DateFormatter
     }
     
     var rawData: [String:AnyObject] {
