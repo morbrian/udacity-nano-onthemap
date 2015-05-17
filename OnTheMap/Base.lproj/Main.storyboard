@@ -198,11 +198,11 @@
                         <viewControllerLayoutGuide type="bottom" id="F8b-WI-5tQ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="yJf-gW-Rta">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="40" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Umg-RY-yRb">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StudentLocationCell" rowHeight="40" id="sje-js-CIk">
@@ -227,11 +227,13 @@
                             <constraint firstAttribute="bottomMargin" secondItem="Umg-RY-yRb" secondAttribute="bottom" id="RTr-nT-Kxe"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Umg-RY-yRb" secondAttribute="trailing" constant="-16" id="SZQ-9U-N8V"/>
                             <constraint firstItem="Umg-RY-yRb" firstAttribute="top" secondItem="yJf-gW-Rta" secondAttribute="top" constant="20" symbolic="YES" id="SyN-ni-9Vi"/>
+                            <constraint firstAttribute="bottom" secondItem="Umg-RY-yRb" secondAttribute="bottom" id="Txh-Vf-VEG"/>
                             <constraint firstItem="Umg-RY-yRb" firstAttribute="top" secondItem="yJf-gW-Rta" secondAttribute="top" constant="20" symbolic="YES" id="ZiV-bT-3xI"/>
                             <constraint firstItem="Umg-RY-yRb" firstAttribute="top" secondItem="yJf-gW-Rta" secondAttribute="topMargin" id="ajc-w5-Bc4"/>
                             <constraint firstItem="Umg-RY-yRb" firstAttribute="top" secondItem="yJf-gW-Rta" secondAttribute="topMargin" id="fzV-O9-PP4"/>
                             <constraint firstItem="Umg-RY-yRb" firstAttribute="top" secondItem="yJf-gW-Rta" secondAttribute="top" constant="20" symbolic="YES" id="kGg-xO-nQ1"/>
                             <constraint firstItem="Umg-RY-yRb" firstAttribute="top" secondItem="yJf-gW-Rta" secondAttribute="top" id="oDH-kY-rhX"/>
+                            <constraint firstItem="Umg-RY-yRb" firstAttribute="top" secondItem="yJf-gW-Rta" secondAttribute="top" id="x0x-RY-QoL"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -242,13 +244,15 @@
                                 <exclude reference="ajc-w5-Bc4"/>
                                 <exclude reference="fzV-O9-PP4"/>
                                 <exclude reference="kGg-xO-nQ1"/>
+                                <exclude reference="x0x-RY-QoL"/>
+                                <exclude reference="KCG-me-MhZ"/>
                             </mask>
                         </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="List" id="uu6-LK-0mi"/>
                     <navigationItem key="navigationItem" title="On The Map" id="Zqu-Ew-Y2h"/>
                     <connections>
-                        <outlet property="tableView" destination="Umg-RY-yRb" id="UmY-nI-1fV"/>
+                        <outlet property="tableView" destination="Umg-RY-yRb" id="0fw-u8-yuR"/>
                         <segue destination="e2o-jI-nQE" kind="presentation" identifier="ReverseGeocodeSegue" id="hF6-Wf-mjd"/>
                         <segue destination="ig8-7g-Hzd" kind="unwind" identifier="ReturnToLoginScreenSegue" unwindAction="segueToLoginScreen:" id="VTU-1F-vRj"/>
                     </connections>
@@ -606,6 +610,6 @@
         <image name="Udacity" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gTx-t8-r62"/>
+        <segue reference="hF6-Wf-mjd"/>
     </inferredMetricsTieBreakers>
 </document>

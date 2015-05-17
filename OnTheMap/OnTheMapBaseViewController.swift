@@ -13,7 +13,7 @@ import FBSDKLoginKit
 // Base class for each view of the On The Map TabBar Controller.
 // Configures top-bar buttons, and provides basic data loading capabilities to child view controllers.
 class OnTheMapBaseViewController: UIViewController {
-    
+        
     // default max number of items per fetch
     let FetchLimit = 100
     let PreFetchTrigger = 20
@@ -41,9 +41,7 @@ class OnTheMapBaseViewController: UIViewController {
                 var addLocationButton = produceAddLocationButton()
                 addLocationButton.enabled = dm.authenticated
                 navigationItem.rightBarButtonItems = [refreshButton, addLocationButton]
-                
                 navigationItem.leftBarButtonItem = produceLogoutBarButtonItem()
-
             }
         }
     }
@@ -105,17 +103,16 @@ class OnTheMapBaseViewController: UIViewController {
     }
     
     // Make another fetch request for the next available data
-    // TODO: this will not detect DELETE operations made by other users after initial load.
-    func fetchNextPage() {
-        if !preFetchEnabled {
-            return
-        }
-        
+    // TODO: [limitaion] this will not detect DELETE operations made by other users after initial load.
+    func fetchNextPage(completionHandler: (() -> Void)? = nil) {
         let oldCount = self.dataManager?.studentLocationCount ?? 0
         networkActivity(true)
         dataManager?.fetchNextPage() {
             success, error in
             self.networkActivity(false)
+            if let completionHandler = completionHandler {
+                completionHandler()
+            }
             if let newCount = self.dataManager?.studentLocationCount {
                 if newCount - oldCount > 0 {
                     // if we received any new data, update the table

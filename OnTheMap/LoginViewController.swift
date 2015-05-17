@@ -60,6 +60,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         if let token = FBSDKAccessToken.currentAccessToken() {
+            networkActivity(true)
             dataManager.authenticateByFacebookToken(FBSDKAccessToken.currentAccessToken().tokenString,
                 completionHandler: handleAuthenticationResponse)
         }

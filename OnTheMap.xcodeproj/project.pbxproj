@@ -15,6 +15,7 @@
 		4E3536831B000E4E00667322 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3536801B000E4E00667322 /* Roboto-Medium.ttf */; };
 		4E3536841B000E4E00667322 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3536811B000E4E00667322 /* Roboto-Regular.ttf */; };
 		4E3536851B000E4E00667322 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3536821B000E4E00667322 /* Roboto-Thin.ttf */; };
+		4E4A3D201B07A3D40007AA61 /* RefreshItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4A3D1F1B07A3D40007AA61 /* RefreshItem.swift */; };
 		4E67D59C1AED6D8400652693 /* StudentLocationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59B1AED6D8400652693 /* StudentLocationsTableViewController.swift */; };
 		4E67D59E1AED6FF200652693 /* StudentDataAccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59D1AED6FF200652693 /* StudentDataAccessManager.swift */; };
 		4E67D5A01AED978C00652693 /* ManagingTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */; };
@@ -24,6 +25,7 @@
 		4E67D5A81AF32F0000652693 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D5A71AF32F0000652693 /* Constants.swift */; };
 		4EA550D71AF5A378007F6BB3 /* GeocodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA550D61AF5A378007F6BB3 /* GeocodeViewController.swift */; };
 		4EB5BF841AFE62B2006ADEF5 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB5BF831AFE62B2006ADEF5 /* AccountViewController.swift */; };
+		4EB6EE001B06DA9E00D3522E /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB6EDFF1B06DA9E00D3522E /* RefreshView.swift */; };
 		4EC9C2EA1AFB193D00CABDEE /* InfoPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC9C2E91AFB193D00CABDEE /* InfoPool.swift */; };
 		4EE4BBB81AE35C0100FC6146 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBB71AE35C0100FC6146 /* AppDelegate.swift */; };
 		4EE4BBBA1AE35C0100FC6146 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBB91AE35C0100FC6146 /* LoginViewController.swift */; };
@@ -56,6 +58,7 @@
 		4E3536801B000E4E00667322 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		4E3536811B000E4E00667322 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		4E3536821B000E4E00667322 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
+		4E4A3D1F1B07A3D40007AA61 /* RefreshItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshItem.swift; sourceTree = "<group>"; };
 		4E67D59B1AED6D8400652693 /* StudentLocationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationsTableViewController.swift; sourceTree = "<group>"; };
 		4E67D59D1AED6FF200652693 /* StudentDataAccessManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentDataAccessManager.swift; sourceTree = "<group>"; };
 		4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagingTabBarController.swift; sourceTree = "<group>"; };
@@ -65,6 +68,7 @@
 		4E67D5A71AF32F0000652693 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4EA550D61AF5A378007F6BB3 /* GeocodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeocodeViewController.swift; sourceTree = "<group>"; };
 		4EB5BF831AFE62B2006ADEF5 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		4EB6EDFF1B06DA9E00D3522E /* RefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		4EC9C2E91AFB193D00CABDEE /* InfoPool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoPool.swift; sourceTree = "<group>"; };
 		4EE4BBB21AE35C0100FC6146 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EE4BBB61AE35C0100FC6146 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -164,6 +168,15 @@
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
+		4EB6EDFE1B06DA5F00D3522E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4EB6EDFF1B06DA9E00D3522E /* RefreshView.swift */,
+				4E4A3D1F1B07A3D40007AA61 /* RefreshItem.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		4EE4BBA91AE35C0100FC6146 = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +205,7 @@
 				4E0B0E861AE9D16A00744C52 /* Clients */,
 				4EE4BBD71AE4188A00FC6146 /* Model */,
 				4E67D59A1AED6CCB00652693 /* ViewControllers */,
+				4EB6EDFE1B06DA5F00D3522E /* Views */,
 				4EE4BBBB1AE35C0100FC6146 /* Main.storyboard */,
 				4EE4BBC01AE35C0100FC6146 /* LaunchScreen.xib */,
 				4EE4BBB51AE35C0100FC6146 /* Supporting Files */,
@@ -395,6 +409,7 @@
 				4E67D5A61AF1EE3D00652693 /* OnTheMapBaseViewController.swift in Sources */,
 				4E67D5A81AF32F0000652693 /* Constants.swift in Sources */,
 				4EA550D71AF5A378007F6BB3 /* GeocodeViewController.swift in Sources */,
+				4EB6EE001B06DA9E00D3522E /* RefreshView.swift in Sources */,
 				4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */,
 				4EE4BBBA1AE35C0100FC6146 /* LoginViewController.swift in Sources */,
 				4EB5BF841AFE62B2006ADEF5 /* AccountViewController.swift in Sources */,
@@ -403,6 +418,7 @@
 				4EC9C2EA1AFB193D00CABDEE /* InfoPool.swift in Sources */,
 				4E67D59C1AED6D8400652693 /* StudentLocationsTableViewController.swift in Sources */,
 				4E0B0E821AE8A46800744C52 /* Logger.swift in Sources */,
+				4E4A3D201B07A3D40007AA61 /* RefreshItem.swift in Sources */,
 				4EE4BBB81AE35C0100FC6146 /* AppDelegate.swift in Sources */,
 				4EE4BBDD1AE4977300FC6146 /* UdacityService.swift in Sources */,
 				4E67D5A41AF0818300652693 /* StudentMapViewController.swift in Sources */,

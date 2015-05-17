@@ -11,13 +11,30 @@ import UIKit
 // StudentLocationsTableViewController
 // Displays all student locations in a table view
 class StudentLocationsTableViewController: OnTheMapBaseViewController {
+
+    var topRefreshView: RefreshView!
     
     @IBOutlet weak var tableView: UITableView!
+
     var pinImage: UIImage!
     
     override func viewDidLoad() {
         pinImage = UIImage(named: "Pin")
         super.viewDidLoad()
+
+        if let navigationBar = navigationController?.navigationBar {
+            navigationBar.translucent = false
+            topRefreshView = produceRefreshViewWithHeight(navigationBar.bounds.height)
+        }
+    }
+    
+    private func produceRefreshViewWithHeight(spinnerAreaHeight: CGFloat) -> RefreshView {
+        let refreshViewHeight = view.bounds.height
+        var refreshView = RefreshView(frame: CGRect(x: 0, y: -refreshViewHeight, width: CGRectGetWidth(view.bounds), height: refreshViewHeight), spinnerAreaHeight: spinnerAreaHeight, scrollView: tableView)
+        refreshView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        refreshView.delegate = self
+        tableView.insertSubview(refreshView, atIndex: 0)
+        return refreshView
     }
     
     override func updateDisplayFromModel() {
@@ -30,6 +47,7 @@ class StudentLocationsTableViewController: OnTheMapBaseViewController {
         super.viewWillAppear(animated)
         tableView.reloadData()
     }
+    
 }
 
 // MARK: - UITableViewDelegate
@@ -46,7 +64,9 @@ extension StudentLocationsTableViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         if let currentCount = dataManager?.studentLocationCount
             where indexPath.item == currentCount - PreFetchTrigger {
-                fetchNextPage()
+                if preFetchEnabled {
+                    fetchNextPage()
+                }
         }
     }
 
@@ -69,3 +89,26 @@ extension StudentLocationsTableViewController: UITableViewDataSource {
         return cell
     }
 }
+
+// MARK: - UIScrollViewDelegate
+
+extension StudentLocationsTableViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        topRefreshView.scrollViewDidScroll(scrollView)
+    }
+    
+    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        topRefreshView.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
+    }
+}
+
+// MARK: - RefreshViewDelegate
+
+extension StudentLocationsTableViewController: RefreshViewDelegate {
+    func refreshViewDidRefresh(refreshView: RefreshView) {
+        fetchNextPage(completionHandler: refreshView.endRefreshing)
+    }
+}
+
+
+
