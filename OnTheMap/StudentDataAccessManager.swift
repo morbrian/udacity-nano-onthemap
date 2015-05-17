@@ -187,7 +187,7 @@ class StudentDataAccessManager {
         preFetchStudentInformationSubset(attemptRange) {
             success, error in
             if success && self.studentLocationCount > beforeCount {
-                self.lastSuccessfulRange =  attemptRange.startIndex..<(self.studentLocationCount - beforeCount)     //attemptRange
+                self.lastSuccessfulRange =  attemptRange.startIndex..<(self.studentLocationCount)
             }
             completionHandler(success: success, error: error)
         }

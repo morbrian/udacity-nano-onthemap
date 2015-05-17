@@ -29,6 +29,9 @@ class LoginViewController: UIViewController {
     private var networkActivityInProgress = false
     private var defaultTransform: CGAffineTransform?
     
+    
+    // MARK: ViewController Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         dataManager = StudentDataAccessManager()
@@ -48,8 +51,6 @@ class LoginViewController: UIViewController {
         
         facebookButton.delegate = self
     }
-    
-    // MARK: ViewController Lifecycle
     
     override func viewWillAppear(animated: Bool) {
         resetLoginStatusLabel()
@@ -183,7 +184,6 @@ class LoginViewController: UIViewController {
     
     // MARK: Gestures
     
-    // When a user taps the view, hide the navigation bar and tabbar and animate background color change.
     func handleTap(sender: UIGestureRecognizer) {
         endTextEditing()
     }
