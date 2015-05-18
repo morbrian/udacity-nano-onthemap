@@ -132,16 +132,27 @@ class StudentDataAccessManager {
     // MARK: Fetch and Manage Student Data
     
     // store student information item in the info pool and create or update the same change on server
-    func storeStudentInformation(studentInformation: StudentInformation) {
+    func storeStudentInformation(studentInformation: StudentInformation, completionHandler: (success: Bool, error: NSError?) -> Void) {
         func handleStorage(studentInformation: StudentInformation?, error: NSError?) {
             if let studentInformation = studentInformation {
-                self.infoPool.storeInfoItem(studentInformation)
+                // this isn't always a super cheap operation, but we put it on the main thread to
+                // make sure the UI isn't asking for indices while we're manipulating the data structure
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.infoPool.storeInfoItem(studentInformation)
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                        // back on background thread just in case the handler passed in is expensive
+                        completionHandler(success: true, error: nil)
+                    }
+                }
             } else if error != nil {
                 Logger.error(error!.description)
+                completionHandler(success: false, error: error)
+            } else {
+                Logger.error("Failed to store student information, but error not handled properly.")
+                completionHandler(success: false, error: nil)
             }
         }
         
-        //let testExistingData = itemCache.
         if infoPool.infoExistsForOwner(studentInformation.studentKey) {
            onTheMapClient.updateStudentInformation(studentInformation, completionHandler: handleStorage)
         } else {
@@ -187,7 +198,7 @@ class StudentDataAccessManager {
         preFetchStudentInformationSubset(attemptRange) {
             success, error in
             if success && self.studentLocationCount > beforeCount {
-                self.lastSuccessfulRange =  attemptRange.startIndex..<(self.studentLocationCount)
+                self.lastSuccessfulRange =  attemptRange.startIndex..<(self.studentLocationCount + 1)
             }
             completionHandler(success: success, error: error)
         }

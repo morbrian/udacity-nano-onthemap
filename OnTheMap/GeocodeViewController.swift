@@ -16,13 +16,19 @@ class GeocodeViewController: UIViewController {
     @IBOutlet weak var findOnMapButton: UIButton!
     @IBOutlet weak var placeNameTextField: UITextField!
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var cancelButton: UIButton!
     
     private var viewShiftDistance: CGFloat? = nil
     
     var dataManager: StudentDataAccessManager?
     
+    private var updatedInformation: StudentInformation?
+    
     override func viewDidLoad() {
+        navigationController?.navigationBar.hidden = true
+        tabBarController?.tabBar.hidden = true
         findOnMapButton.layer.cornerRadius = 8.0
+        cancelButton.layer.cornerRadius = 8.0
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -68,6 +74,11 @@ class GeocodeViewController: UIViewController {
         return keyboardSize.CGRectValue().height
     }
     
+    @IBAction func cancelAction(sender: UIButton) {
+        navigationController?.popToRootViewControllerAnimated(true)
+    }
+    
+    
     @IBAction func reverseGeocodeAction(sender: UIButton) {
         placeNameTextField.endEditing(false)
         var geocoder = CLGeocoder()
@@ -84,10 +95,9 @@ class GeocodeViewController: UIViewController {
                                 updatedInformation.latitude = Float(placemark.location.coordinate.latitude)
                                 updatedInformation.longitude = Float(placemark.location.coordinate.longitude)
                                 updatedInformation.mapString = placename
-                                updatedInformation.mediaUrl = "asdf://blurp.totally.fake.domain.giberish"
-                                dataManager.storeStudentInformation(updatedInformation)
+                                self.updatedInformation = updatedInformation
                                 dispatch_async(dispatch_get_main_queue()) {
-                                    self.dismissViewControllerAnimated(true, completion: nil)
+                                    self.performSegueWithIdentifier(Constants.SubmitNewLocationSegue, sender: self)
                                 }
                         }
                     }
@@ -112,6 +122,13 @@ class GeocodeViewController: UIViewController {
     
     @IBAction func resetStatusLabel(sender: UITextField) {
         statusLabel.hidden = true
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let dest = segue.destinationViewController as? SubmitInformationUpdateViewController {
+            dest.updatedInformation = self.updatedInformation
+            dest.dataManager = self.dataManager
+        }
     }
     
 }

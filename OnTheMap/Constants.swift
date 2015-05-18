@@ -10,12 +10,23 @@ import Foundation
 
 struct Constants {
     
+    // MARK: Application Info
+    
     static let UdacitySignupUrlString = "https://www.udacity.com/account/auth#!/signup"
+    static let MapSpanDistanceMeters = 3000.0
+    
+    
+    // MARK: StoryBoard Identifiers
     
     static let SuccessfulLoginSegue = "SuccessfulLoginSegue"
+    static let ReturnToLoginScreenSegue = "ReturnToLoginScreenSegue"
+    static let ReverseGeocodeSegue = "ReverseGeocodeSegue"
+    static let SubmitNewLocationSegue = "SubmitNewLocationSegue"
     static let StudentLocationCell = "StudentLocationCell"
     static let UserLocationCell = "UserLocationCell"
     static let StudentLocationAnnotationReuseIdentifier = "StudentLocationAnnotationReuseIdentifier"
+    
+    // MARK: Physical Device Info
     
     static let DeviceiPhone5Height = 568.0
 

@@ -45,6 +45,7 @@ class OnTheMapParseService {
                         var updatedInfo = studentInformation.rawData
                         updatedInfo[ParseJsonKey.ObjectId] = objectId
                         updatedInfo[ParseJsonKey.CreateAt] = createdAt
+                        updatedInfo[ParseJsonKey.UpdatedAt] = createdAt
                         completionHandler(studentInformation: StudentInformation(parseData: updatedInfo), error: nil)
                     } else {
                         Logger.error("Create StudentInformation Failed")

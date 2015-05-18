@@ -60,7 +60,12 @@ public struct InfoPool<T: InfoItem> {
     
     public mutating func storeInfoItem(newInfoItem: T) {
         //if infoIdToIndexMap
-        infoItems.append(newInfoItem)
+        if let idIndex = infoIdToIndexMap[newInfoItem.id] {
+            infoItems[idIndex] = newInfoItem
+        } else {
+            infoItems.append(newInfoItem)
+        }
+        // we resort everything, could be optimized later for larger datasets
         organizeInfoItems()
     }
     

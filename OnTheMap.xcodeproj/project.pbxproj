@@ -16,6 +16,7 @@
 		4E3536841B000E4E00667322 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3536811B000E4E00667322 /* Roboto-Regular.ttf */; };
 		4E3536851B000E4E00667322 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E3536821B000E4E00667322 /* Roboto-Thin.ttf */; };
 		4E4A3D201B07A3D40007AA61 /* RefreshItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4A3D1F1B07A3D40007AA61 /* RefreshItem.swift */; };
+		4E64D82C1B090A3600D1979E /* SubmitInformationUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E64D82B1B090A3600D1979E /* SubmitInformationUpdateViewController.swift */; };
 		4E67D59C1AED6D8400652693 /* StudentLocationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59B1AED6D8400652693 /* StudentLocationsTableViewController.swift */; };
 		4E67D59E1AED6FF200652693 /* StudentDataAccessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59D1AED6FF200652693 /* StudentDataAccessManager.swift */; };
 		4E67D5A01AED978C00652693 /* ManagingTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */; };
@@ -59,6 +60,7 @@
 		4E3536811B000E4E00667322 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		4E3536821B000E4E00667322 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		4E4A3D1F1B07A3D40007AA61 /* RefreshItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshItem.swift; sourceTree = "<group>"; };
+		4E64D82B1B090A3600D1979E /* SubmitInformationUpdateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubmitInformationUpdateViewController.swift; sourceTree = "<group>"; };
 		4E67D59B1AED6D8400652693 /* StudentLocationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationsTableViewController.swift; sourceTree = "<group>"; };
 		4E67D59D1AED6FF200652693 /* StudentDataAccessManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentDataAccessManager.swift; sourceTree = "<group>"; };
 		4E67D59F1AED978C00652693 /* ManagingTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagingTabBarController.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				4E67D5A31AF0818300652693 /* StudentMapViewController.swift */,
 				4EB5BF831AFE62B2006ADEF5 /* AccountViewController.swift */,
 				4EA550D61AF5A378007F6BB3 /* GeocodeViewController.swift */,
+				4E64D82B1B090A3600D1979E /* SubmitInformationUpdateViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -413,6 +416,7 @@
 				4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */,
 				4EE4BBBA1AE35C0100FC6146 /* LoginViewController.swift in Sources */,
 				4EB5BF841AFE62B2006ADEF5 /* AccountViewController.swift in Sources */,
+				4E64D82C1B090A3600D1979E /* SubmitInformationUpdateViewController.swift in Sources */,
 				4E67D5A01AED978C00652693 /* ManagingTabBarController.swift in Sources */,
 				4E67D59E1AED6FF200652693 /* StudentDataAccessManager.swift in Sources */,
 				4EC9C2EA1AFB193D00CABDEE /* InfoPool.swift in Sources */,

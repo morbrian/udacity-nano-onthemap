@@ -47,6 +47,8 @@ class OnTheMapBaseViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
+        navigationController?.navigationBar.hidden = false
+        tabBarController?.tabBar.hidden = false
         preFetchEnabled = true
     }
     
@@ -171,11 +173,11 @@ class OnTheMapBaseViewController: UIViewController {
                 })
             alert.addAction(UIAlertAction(title: "Continue", style: .Default) {
                 action -> Void in
-                    self.performSegueWithIdentifier("ReverseGeocodeSegue", sender: self)
+                    self.performSegueWithIdentifier(Constants.ReverseGeocodeSegue, sender: self)
                 })
             presentViewController(alert, animated: true, completion: nil)
         } else {
-            performSegueWithIdentifier("ReverseGeocodeSegue", sender: self)
+            performSegueWithIdentifier(Constants.ReverseGeocodeSegue, sender: self)
         }
         
     }
@@ -192,7 +194,7 @@ class OnTheMapBaseViewController: UIViewController {
         if dataManager?.authenticationTypeUsed == .FacebookToken {
             FBSDKLoginManager().logOut()
         }
-        performSegueWithIdentifier("ReturnToLoginScreenSegue", sender: self)
+        performSegueWithIdentifier(Constants.ReturnToLoginScreenSegue, sender: self)
     }
     
 }
