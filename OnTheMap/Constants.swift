@@ -20,7 +20,7 @@ struct Constants {
     
     static let SuccessfulLoginSegue = "SuccessfulLoginSegue"
     static let ReturnToLoginScreenSegue = "ReturnToLoginScreenSegue"
-    static let ReverseGeocodeSegue = "ReverseGeocodeSegue"
+    static let GeocodeSegue = "GeocodeSegue"
     static let SubmitNewLocationSegue = "SubmitNewLocationSegue"
     static let StudentLocationCell = "StudentLocationCell"
     static let UserLocationCell = "UserLocationCell"

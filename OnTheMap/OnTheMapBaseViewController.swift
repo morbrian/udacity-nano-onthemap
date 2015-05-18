@@ -173,11 +173,11 @@ class OnTheMapBaseViewController: UIViewController {
                 })
             alert.addAction(UIAlertAction(title: "Continue", style: .Default) {
                 action -> Void in
-                    self.performSegueWithIdentifier(Constants.ReverseGeocodeSegue, sender: self)
+                    self.performSegueWithIdentifier(Constants.GeocodeSegue, sender: self)
                 })
             presentViewController(alert, animated: true, completion: nil)
         } else {
-            performSegueWithIdentifier(Constants.ReverseGeocodeSegue, sender: self)
+            performSegueWithIdentifier(Constants.GeocodeSegue, sender: self)
         }
         
     }
