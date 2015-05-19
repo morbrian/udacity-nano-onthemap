@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E0195A41B0B33D900F13287 /* ToolKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0195A31B0B33D900F13287 /* ToolKit.swift */; };
+		4E0195A61B0B384400F13287 /* SpinnerPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0195A51B0B384400F13287 /* SpinnerPanelView.swift */; };
 		4E01DAAD1AE8895D001A476E /* OnTheMapParseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E01DAAC1AE8895D001A476E /* OnTheMapParseService.swift */; };
 		4E0B0E821AE8A46800744C52 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0B0E811AE8A46800744C52 /* Logger.swift */; };
 		4E0B0E851AE8BB9F00744C52 /* StudentLocationList.json in Resources */ = {isa = PBXBuildFile; fileRef = 4E0B0E841AE8BB9F00744C52 /* StudentLocationList.json */; };
@@ -50,6 +52,8 @@
 
 /* Begin PBXFileReference section */
 		280EF06F98A6E0D2E8C2944A /* libPods-OnTheMap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheMap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E0195A31B0B33D900F13287 /* ToolKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolKit.swift; sourceTree = "<group>"; };
+		4E0195A51B0B384400F13287 /* SpinnerPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerPanelView.swift; sourceTree = "<group>"; };
 		4E01DAAC1AE8895D001A476E /* OnTheMapParseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnTheMapParseService.swift; sourceTree = "<group>"; };
 		4E0B0E811AE8A46800744C52 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		4E0B0E841AE8BB9F00744C52 /* StudentLocationList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = StudentLocationList.json; sourceTree = "<group>"; };
@@ -164,6 +168,7 @@
 				4E67D5A31AF0818300652693 /* StudentMapViewController.swift */,
 				4EB5BF831AFE62B2006ADEF5 /* AccountViewController.swift */,
 				4EA550D61AF5A378007F6BB3 /* GeocodeViewController.swift */,
+				4E0195A31B0B33D900F13287 /* ToolKit.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -171,6 +176,7 @@
 		4EB6EDFE1B06DA5F00D3522E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4E0195A51B0B384400F13287 /* SpinnerPanelView.swift */,
 				4EB6EDFF1B06DA9E00D3522E /* RefreshView.swift */,
 				4E4A3D1F1B07A3D40007AA61 /* RefreshItem.swift */,
 			);
@@ -407,8 +413,10 @@
 				4E0B0E891AE9D5F000744C52 /* StudentInformation.swift in Sources */,
 				4E01DAAD1AE8895D001A476E /* OnTheMapParseService.swift in Sources */,
 				4E67D5A61AF1EE3D00652693 /* OnTheMapBaseViewController.swift in Sources */,
+				4E0195A61B0B384400F13287 /* SpinnerPanelView.swift in Sources */,
 				4E67D5A81AF32F0000652693 /* Constants.swift in Sources */,
 				4EA550D71AF5A378007F6BB3 /* GeocodeViewController.swift in Sources */,
+				4E0195A41B0B33D900F13287 /* ToolKit.swift in Sources */,
 				4EB6EE001B06DA9E00D3522E /* RefreshView.swift in Sources */,
 				4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */,
 				4EE4BBBA1AE35C0100FC6146 /* LoginViewController.swift in Sources */,

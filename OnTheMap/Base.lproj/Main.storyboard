@@ -530,37 +530,16 @@
                                             <constraint firstItem="Tyv-lf-dqv" firstAttribute="centerX" secondItem="JOL-cN-CoC" secondAttribute="centerX" id="oqs-0I-vtc"/>
                                         </constraints>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RR6-ic-RL4" userLabel="Spinner Panel">
-                                        <rect key="frame" x="-16" y="0.0" width="632" height="422"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Udacity" translatesAutoresizingMaskIntoConstraints="NO" id="dWB-u4-ZOX">
-                                                <rect key="frame" x="294" y="189" width="44" height="44"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="44" id="0we-pB-aDX"/>
-                                                    <constraint firstAttribute="width" constant="44" id="M84-uQ-gsL"/>
-                                                </constraints>
-                                            </imageView>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.92495328190000003" green="0.71460241079999998" blue="0.21033945679999999" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="centerY" secondItem="dWB-u4-ZOX" secondAttribute="centerY" id="A7H-jC-fqv"/>
-                                            <constraint firstAttribute="centerX" secondItem="dWB-u4-ZOX" secondAttribute="centerX" id="EuP-Gc-KRq"/>
-                                        </constraints>
-                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="lhK-4Q-vLd" firstAttribute="leading" secondItem="ett-wd-EbG" secondAttribute="leading" constant="-16" id="444-2Q-oFn"/>
                                     <constraint firstItem="uDg-zM-izl" firstAttribute="leading" secondItem="ett-wd-EbG" secondAttribute="leading" constant="-16" id="90n-v8-xjg"/>
-                                    <constraint firstAttribute="bottom" secondItem="RR6-ic-RL4" secondAttribute="bottom" id="D5e-LI-Onh"/>
                                     <constraint firstItem="VOl-mV-Sbr" firstAttribute="leading" secondItem="ett-wd-EbG" secondAttribute="leading" constant="-16" id="ON5-q6-avv"/>
-                                    <constraint firstItem="RR6-ic-RL4" firstAttribute="leading" secondItem="ett-wd-EbG" secondAttribute="leading" constant="-16" id="VTP-D1-UkB"/>
                                     <constraint firstAttribute="trailing" secondItem="VOl-mV-Sbr" secondAttribute="trailing" constant="-16" id="WuP-B1-idf"/>
-                                    <constraint firstAttribute="trailing" secondItem="RR6-ic-RL4" secondAttribute="trailing" constant="-16" id="XFQ-W2-Q9M"/>
                                     <constraint firstItem="VqF-A0-Rq5" firstAttribute="top" secondItem="VOl-mV-Sbr" secondAttribute="bottom" id="aZL-cz-9jl"/>
                                     <constraint firstAttribute="centerY" secondItem="VOl-mV-Sbr" secondAttribute="centerY" id="csl-HW-EZI"/>
                                     <constraint firstAttribute="trailing" secondItem="lhK-4Q-vLd" secondAttribute="trailing" constant="-16" id="ebO-OI-OrW"/>
-                                    <constraint firstItem="RR6-ic-RL4" firstAttribute="top" secondItem="ett-wd-EbG" secondAttribute="top" id="h3R-2g-UeS"/>
                                     <constraint firstAttribute="bottom" secondItem="uDg-zM-izl" secondAttribute="bottom" id="jkN-G9-TxC"/>
                                     <constraint firstItem="uDg-zM-izl" firstAttribute="top" secondItem="ett-wd-EbG" secondAttribute="top" id="lfQ-Vg-kR1"/>
                                     <constraint firstItem="VOl-mV-Sbr" firstAttribute="top" secondItem="TLN-Dr-MC1" secondAttribute="bottom" id="mPZ-9G-UFp"/>
@@ -574,6 +553,7 @@
                         <color key="backgroundColor" red="0.81960784313725488" green="0.81960784313725488" blue="0.80784313725490198" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Si4-FX-Div" firstAttribute="leading" secondItem="OPM-Gj-kgw" secondAttribute="leadingMargin" constant="-16" id="2bH-Nj-JNS"/>
+                            <constraint firstAttribute="centerX" secondItem="ett-wd-EbG" secondAttribute="centerX" id="NhM-TM-oBg"/>
                             <constraint firstItem="bzQ-eX-yo2" firstAttribute="top" secondItem="ett-wd-EbG" secondAttribute="bottom" id="Oo5-mX-vCM"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Si4-FX-Div" secondAttribute="trailing" constant="-16" id="Rbx-OE-0oQ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ett-wd-EbG" secondAttribute="trailing" constant="-16" id="eRX-wU-J6W"/>
@@ -586,14 +566,13 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="activitySpinner" destination="dWB-u4-ZOX" id="Koy-Pz-wNQ"/>
+                        <outlet property="bottomSectionPanel" destination="ett-wd-EbG" id="RFg-wn-LiJ"/>
                         <outlet property="cancelButton" destination="IXc-vC-feH" id="fkK-dn-Zvd"/>
                         <outlet property="findOnMapButton" destination="s02-OV-rn1" id="RZc-7g-dbO"/>
                         <outlet property="mapContainerPanel" destination="uDg-zM-izl" id="f6n-kX-O04"/>
                         <outlet property="mapView" destination="s30-MS-daZ" id="fhs-K7-wvb"/>
                         <outlet property="placeNameEditorPanel" destination="lhK-4Q-vLd" id="xi3-tN-PCi"/>
                         <outlet property="placeNameTextField" destination="wtx-9B-oDD" id="U2s-77-Eau"/>
-                        <outlet property="spinnerPanel" destination="RR6-ic-RL4" id="CxE-7U-dtT"/>
                         <outlet property="statusLabel" destination="dqe-yw-dEX" id="oZY-wk-mR8"/>
                         <outlet property="submitButton" destination="JOL-cN-CoC" id="m0W-MR-1hF"/>
                         <outlet property="urlEditorPanel" destination="8UU-ts-VxC" id="cq8-QV-Z9O"/>
@@ -620,27 +599,18 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="gPq-jY-HZI">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                             </mapView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="IYb-Cc-LXb">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="IYb-Cc-LXb" firstAttribute="width" secondItem="gPq-jY-HZI" secondAttribute="width" id="AZS-Cd-lNx"/>
                             <constraint firstAttribute="trailingMargin" secondItem="gPq-jY-HZI" secondAttribute="trailing" constant="-16" id="Efh-yR-Nwj"/>
                             <constraint firstItem="gPq-jY-HZI" firstAttribute="top" secondItem="BmD-t3-cyj" secondAttribute="topMargin" id="MNv-qb-QLx"/>
-                            <constraint firstItem="IYb-Cc-LXb" firstAttribute="height" secondItem="gPq-jY-HZI" secondAttribute="height" id="Pk1-j0-rDe"/>
-                            <constraint firstItem="IYb-Cc-LXb" firstAttribute="centerY" secondItem="gPq-jY-HZI" secondAttribute="centerY" id="Pv5-Me-KZI"/>
                             <constraint firstItem="gPq-jY-HZI" firstAttribute="leading" secondItem="BmD-t3-cyj" secondAttribute="leadingMargin" constant="-16" id="Qaf-kW-xcZ"/>
-                            <constraint firstItem="IYb-Cc-LXb" firstAttribute="centerX" secondItem="gPq-jY-HZI" secondAttribute="centerX" id="cvq-TR-rOS"/>
                             <constraint firstItem="9lZ-Eh-E10" firstAttribute="top" secondItem="gPq-jY-HZI" secondAttribute="bottom" id="dYO-SI-saD"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" id="twH-yf-CNd"/>
                     <navigationItem key="navigationItem" title="On The Map" id="2tn-Br-Lwl"/>
                     <connections>
-                        <outlet property="mapActivityIndicator" destination="IYb-Cc-LXb" id="JDt-ng-Lve"/>
                         <outlet property="mapView" destination="gPq-jY-HZI" id="uY2-89-rBh"/>
                         <segue destination="e2o-jI-nQE" kind="presentation" identifier="GeocodeSegue" id="gTx-t8-r62"/>
                         <segue destination="yIv-uj-3yu" kind="unwind" identifier="ReturnToLoginScreenSegue" unwindAction="segueToLoginScreen:" id="seX-KC-6Yl"/>

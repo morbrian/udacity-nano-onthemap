@@ -13,20 +13,30 @@ import MapKit
 // Displays a map showing geo-positions of all student study locations
 class StudentMapViewController: OnTheMapBaseViewController {
     
-    @IBOutlet weak var mapView: MKMapView! {
-        didSet {
-            mapView.mapType = .Satellite
-            mapView.delegate = self
-        }
-    }
+    @IBOutlet weak var mapView: MKMapView!
     
-    @IBOutlet weak var mapActivityIndicator: UIActivityIndicatorView!
+    var activitySpinner: SpinnerPanelView!
     
     // MARK: ViewController Lifecycle
+    
+    override func viewDidLoad() {
+        activitySpinner = produceSpinner()
+        view.addSubview(activitySpinner)
+        mapView.mapType = .Satellite
+        mapView.delegate = self
+        super.viewDidLoad()
+    }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         updateDisplayFromModel()
+    }
+    
+    private func produceSpinner() -> SpinnerPanelView {
+        var activitySpinner = SpinnerPanelView(frame: view.bounds, spinnerImageView: UIImageView(image: UIImage(named: "Udacity")))
+        activitySpinner.backgroundColor = UIColor.orangeColor()
+        activitySpinner.alpha = CGFloat(0.5)
+        return activitySpinner
     }
     
     // MARK: Overrides From OnTheMapBaseViewController
@@ -46,13 +56,8 @@ class StudentMapViewController: OnTheMapBaseViewController {
     }
     
     override func networkActivity(active: Bool) {
-        super.networkActivity(active)
         dispatch_async(dispatch_get_main_queue()) {
-            if active {
-                self.mapActivityIndicator.startAnimating()
-            } else {
-                self.mapActivityIndicator.stopAnimating()
-            }
+            self.activitySpinner.spinnerActivity(active)
         }
     }
 }

@@ -32,13 +32,11 @@ class GeocodeViewController: UIViewController {
     @IBOutlet weak var urlTextField: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     
-    // MARK: Network Activity Outlets
     
-    @IBOutlet weak var activitySpinner: UIImageView!
-    @IBOutlet weak var spinnerPanel: UIView!
+    @IBOutlet weak var bottomSectionPanel: UIView!
+    
+    var activitySpinner: SpinnerPanelView!
 
-    private var spinnerBaseTransform: CGAffineTransform!
-    private var activityInProgress = false
     private var viewShiftDistance: CGFloat? = nil
     
     private var updatedInformation: StudentInformation?
@@ -48,7 +46,9 @@ class GeocodeViewController: UIViewController {
     // MARK: ViewController Lifecycle
     
     override func viewDidLoad() {
-        spinnerBaseTransform = activitySpinner.transform
+        activitySpinner = produceSpinner()
+        view.addSubview(activitySpinner)
+        
         configureButton(findOnMapButton)
         configureButton(cancelButton)
         configureButton(submitButton)
@@ -70,6 +70,13 @@ class GeocodeViewController: UIViewController {
     
     private func configureButton(button: UIButton) {
         button.layer.cornerRadius = 8.0
+    }
+    
+    private func produceSpinner() -> SpinnerPanelView {
+        var activitySpinner = SpinnerPanelView(frame: view.bounds, spinnerImageView: UIImageView(image: UIImage(named: "Udacity")))
+        activitySpinner.backgroundColor = UIColor.orangeColor()
+        activitySpinner.alpha = CGFloat(0.5)
+        return activitySpinner
     }
     
     // MARK: Keyboard Show/Hide Handling
@@ -168,8 +175,6 @@ class GeocodeViewController: UIViewController {
             hostname = mediaUrl.host
             where scheme.lowercaseString == "http" || scheme.lowercaseString == "https"
         {
-            // it's probably good, but maybe not accessible
-            Logger.info("Probably ok: \(enteredUrlString)")
             updatedInformation.mediaUrl = enteredUrlString
             networkActivity(true)
             dataManager?.storeStudentInformation(updatedInformation) {
@@ -179,12 +184,15 @@ class GeocodeViewController: UIViewController {
                     dispatch_async(dispatch_get_main_queue()) {
                         self.dismissViewControllerAnimated(true, completion: nil)
                     }
+                } else if let error = error {
+                    ToolKit.showErrorAlert(viewController: self, title: "Data Not Updated", message: error.localizedDescription)
                 } else {
-                    Logger.error("Failed to submit, we should show error to user.")
+                    ToolKit.showErrorAlert(viewController: self, title: "Data Not Updated", message: "We failed to store your updates, but we aren't sure why.")
                 }
             }
         } else {
             Logger.error("Bad URL: \(enteredUrlString)")
+            ToolKit.showErrorAlert(viewController: self, title: "Invalid Url", message: "Try entering a valid URL.")
         }
     }
     
@@ -192,30 +200,8 @@ class GeocodeViewController: UIViewController {
     
     func networkActivity(active: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
-            self.activityInProgress = active
-            self.spinnerPanel.hidden = !active
-            if (active) {
-                self.animate()
-            }
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = active
-            
+            self.activitySpinner?.spinnerActivity(active)
         }
-    }
-    
-    func animate() {
-        UIView.animateWithDuration(0.001,
-            delay: 0.0,
-            options: UIViewAnimationOptions.CurveEaseInOut,
-            animations: { self.activitySpinner.transform =
-                CGAffineTransformConcat(self.activitySpinner.transform, CGAffineTransformMakeRotation((CGFloat(60.0) * CGFloat(M_PI)) / CGFloat(180.0)) )},
-            completion: { something in
-                if self.activityInProgress {
-                    self.animate()
-                } else {
-                    // TODO: this snaps to position at then end, we should perform the final animation.
-                    self.activitySpinner.transform = self.spinnerBaseTransform
-                }
-        })
     }
     
     private func transitionToUrlEditing(#regionDistance: CLLocationDistance?) {

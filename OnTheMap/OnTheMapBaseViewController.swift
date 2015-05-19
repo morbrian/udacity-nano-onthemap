@@ -124,10 +124,10 @@ class OnTheMapBaseViewController: UIViewController {
                     // until the user explicitly asks us to with a refresh.
                     self.preFetchEnabled = false
                 } else if let error = error {
-                    self.showErrorAlert(title: "Failed to Fetch Data", message: error.localizedDescription)
+                    ToolKit.showErrorAlert(viewController: self, title: "Failed to Fetch Data", message: error.localizedDescription)
                 } else {
                     // this message should never occur, we think we differentiate all errors with a non-nil error object.
-                    self.showErrorAlert(title: "Uh Oh, Spaghettios!", message: "An unspecified error occurred, Please take a moment to 'Like' us on Facebook.")
+                    ToolKit.showErrorAlert(viewController: self, title: "Uh Oh, Spaghettios!", message: "An unspecified error occurred, Please take a moment to 'Like' us on Facebook.")
                 }
             }
         }
@@ -138,26 +138,14 @@ class OnTheMapBaseViewController: UIViewController {
         fetchNextPage()
     }
     
-    // informs user of error status
-    func showErrorAlert(#title: String, message: String) {
-        var alert = UIAlertController(
-            title: title,
-            message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default) {
-            action -> Void in
-            // nothing to do
-        })
-        presentViewController(alert, animated: true, completion: nil)
-    }
-    
     func sendToUrlString(urlString: String) {
         dataManager?.validateUrlString(urlString) { success, errorMessage in
             if success {
                 UIApplication.sharedApplication().openURL(NSURL(string: urlString)!)
             } else if let errorMessage = errorMessage {
-                self.showErrorAlert(title: "URL Inaccessible", message: errorMessage)
+                ToolKit.showErrorAlert(viewController: self, title: "URL Inaccessible", message: errorMessage)
             } else {
-                self.showErrorAlert(title: "URL Inaccessible", message: "Unidentified Failure Connecting To \(urlString)")
+                ToolKit.showErrorAlert(viewController:self, title: "URL Inaccessible", message: "Unidentified Failure Connecting To \(urlString)")
             }
         }
     }
