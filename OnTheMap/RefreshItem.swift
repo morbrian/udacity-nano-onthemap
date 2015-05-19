@@ -15,6 +15,7 @@ import UIKit
 class RefreshItem {
     unowned var view: UIView
     private var spinnerBaseTransform: CGAffineTransform
+    var activityInProgress = false
     
     init(view: UIView, center: CGPoint) {
         self.view = view
@@ -22,7 +23,7 @@ class RefreshItem {
         self.spinnerBaseTransform = view.transform
     }
     
-    var activityInProgress = false
+    
     
     func animate() {
         UIView.animateWithDuration(0.001,

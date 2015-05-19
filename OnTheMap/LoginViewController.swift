@@ -29,7 +29,6 @@ class LoginViewController: UIViewController {
     private var networkActivityInProgress = false
     private var defaultTransform: CGAffineTransform?
     
-    
     // MARK: ViewController Lifecycle
     
     override func viewDidLoad() {

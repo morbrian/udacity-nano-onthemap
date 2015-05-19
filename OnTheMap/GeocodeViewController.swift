@@ -17,7 +17,11 @@ class GeocodeViewController: UIViewController {
     @IBOutlet weak var placeNameTextField: UITextField!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var activitySpinner: UIImageView!
+    @IBOutlet weak var spinnerContainer: UIView!
     
+    private var spinnerBaseTransform: CGAffineTransform!
+    private var activityInProgress = false
     private var viewShiftDistance: CGFloat? = nil
     
     var dataManager: StudentDataAccessManager?
@@ -25,6 +29,7 @@ class GeocodeViewController: UIViewController {
     private var updatedInformation: StudentInformation?
     
     override func viewDidLoad() {
+        spinnerBaseTransform = activitySpinner.transform
         navigationController?.navigationBar.hidden = true
         tabBarController?.tabBar.hidden = true
         findOnMapButton.layer.cornerRadius = 8.0
@@ -84,8 +89,10 @@ class GeocodeViewController: UIViewController {
         var geocoder = CLGeocoder()
         
         if let placename = placeNameTextField.text {
+            networkActivity(true)
             geocoder.geocodeAddressString(placename) {
                 placemarks, error in
+                self.networkActivity(false)
                 if let placemarks = placemarks {
                     if placemarks.count > 0 {
                         if let placemark = placemarks[0] as? CLPlacemark,
@@ -129,6 +136,35 @@ class GeocodeViewController: UIViewController {
             dest.updatedInformation = self.updatedInformation
             dest.dataManager = self.dataManager
         }
+    }
+    
+    func networkActivity(active: Bool) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.activityInProgress = active
+            self.spinnerContainer.hidden = !active
+            self.activitySpinner.hidden = !active
+            if (active) {
+                self.animate()
+            }
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = active
+            
+        }
+    }
+    
+    func animate() {
+        UIView.animateWithDuration(0.001,
+            delay: 0.0,
+            options: UIViewAnimationOptions.CurveEaseInOut,
+            animations: { self.activitySpinner.transform =
+                CGAffineTransformConcat(self.activitySpinner.transform, CGAffineTransformMakeRotation((CGFloat(60.0) * CGFloat(M_PI)) / CGFloat(180.0)) )},
+            completion: { something in
+                if self.activityInProgress {
+                    self.animate()
+                } else {
+                    // TODO: this snaps to position at then end, we should perform the final animation.
+                    self.activitySpinner.transform = self.spinnerBaseTransform
+                }
+        })
     }
     
 }
