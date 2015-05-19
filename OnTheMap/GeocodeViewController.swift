@@ -8,32 +8,51 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
 // GeocodeViewController
 // prompts the user to add a new study location
 class GeocodeViewController: UIViewController {
     
+    @IBOutlet weak var cancelButton: UIButton!
+    
+    // MARK: Finde Place Editor Outlets
+    
+    @IBOutlet weak var whereStudyingPanel: UIView!
+    @IBOutlet weak var placeNameEditorPanel: UIView!
     @IBOutlet weak var findOnMapButton: UIButton!
     @IBOutlet weak var placeNameTextField: UITextField!
     @IBOutlet weak var statusLabel: UILabel!
-    @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var activitySpinner: UIImageView!
-    @IBOutlet weak var spinnerContainer: UIView!
     
+    // MARK: URL Editor Outlets
+    
+    @IBOutlet weak var urlEditorPanel: UIView!
+    @IBOutlet weak var mapContainerPanel: UIView!
+    @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var urlTextField: UITextField!
+    @IBOutlet weak var mapView: MKMapView!
+    
+    // MARK: Network Activity Outlets
+    
+    @IBOutlet weak var activitySpinner: UIImageView!
+    @IBOutlet weak var spinnerPanel: UIView!
+
     private var spinnerBaseTransform: CGAffineTransform!
     private var activityInProgress = false
     private var viewShiftDistance: CGFloat? = nil
     
+    private var updatedInformation: StudentInformation?
+    
     var dataManager: StudentDataAccessManager?
     
-    private var updatedInformation: StudentInformation?
+    // MARK: ViewController Lifecycle
     
     override func viewDidLoad() {
         spinnerBaseTransform = activitySpinner.transform
-        navigationController?.navigationBar.hidden = true
-        tabBarController?.tabBar.hidden = true
-        findOnMapButton.layer.cornerRadius = 8.0
-        cancelButton.layer.cornerRadius = 8.0
+        configureButton(findOnMapButton)
+        configureButton(cancelButton)
+        configureButton(submitButton)
+        mapView.mapType = .Standard
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -47,6 +66,10 @@ class GeocodeViewController: UIViewController {
         // unregister keyboard actions when view not showing
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    private func configureButton(button: UIButton) {
+        button.layer.cornerRadius = 8.0
     }
     
     // MARK: Keyboard Show/Hide Handling
@@ -79,8 +102,10 @@ class GeocodeViewController: UIViewController {
         return keyboardSize.CGRectValue().height
     }
     
+    // MARK: IBActions
+    
     @IBAction func cancelAction(sender: UIButton) {
-        navigationController?.popToRootViewControllerAnimated(true)
+       dismissViewControllerAnimated(true, completion: nil)
     }
     
     
@@ -102,9 +127,13 @@ class GeocodeViewController: UIViewController {
                                 updatedInformation.latitude = Float(placemark.location.coordinate.latitude)
                                 updatedInformation.longitude = Float(placemark.location.coordinate.longitude)
                                 updatedInformation.mapString = placename
-                                self.updatedInformation = updatedInformation
+                                var distance: CLLocationDistance?
+                                if let circularRegion = placemark.region as? CLCircularRegion {
+                                    distance = circularRegion.radius
+                                }
                                 dispatch_async(dispatch_get_main_queue()) {
-                                    self.performSegueWithIdentifier(Constants.SubmitNewLocationSegue, sender: self)
+                                    self.updatedInformation = updatedInformation
+                                    self.transitionToUrlEditing(regionDistance: distance)
                                 }
                         }
                     }
@@ -131,18 +160,40 @@ class GeocodeViewController: UIViewController {
         statusLabel.hidden = true
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let dest = segue.destinationViewController as? SubmitInformationUpdateViewController {
-            dest.updatedInformation = self.updatedInformation
-            dest.dataManager = self.dataManager
+    @IBAction func submitAction(sender: UIButton) {
+        let enteredUrlString = urlTextField.text
+        if var updatedInformation = updatedInformation,
+            mediaUrl = NSURL(string: enteredUrlString),
+            scheme = mediaUrl.scheme,
+            hostname = mediaUrl.host
+            where scheme.lowercaseString == "http" || scheme.lowercaseString == "https"
+        {
+            // it's probably good, but maybe not accessible
+            Logger.info("Probably ok: \(enteredUrlString)")
+            updatedInformation.mediaUrl = enteredUrlString
+            networkActivity(true)
+            dataManager?.storeStudentInformation(updatedInformation) {
+                success, error in
+                self.networkActivity(false)
+                if success {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    }
+                } else {
+                    Logger.error("Failed to submit, we should show error to user.")
+                }
+            }
+        } else {
+            Logger.error("Bad URL: \(enteredUrlString)")
         }
     }
+    
+    // MARK: Activity Display
     
     func networkActivity(active: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.activityInProgress = active
-            self.spinnerContainer.hidden = !active
-            self.activitySpinner.hidden = !active
+            self.spinnerPanel.hidden = !active
             if (active) {
                 self.animate()
             }
@@ -165,6 +216,20 @@ class GeocodeViewController: UIViewController {
                     self.activitySpinner.transform = self.spinnerBaseTransform
                 }
         })
+    }
+    
+    private func transitionToUrlEditing(#regionDistance: CLLocationDistance?) {
+        whereStudyingPanel.hidden = true
+        placeNameEditorPanel.hidden = true
+        urlEditorPanel.hidden = false
+        mapContainerPanel.hidden = false
+        if let updatedInformation = updatedInformation,
+            annotation = StudentAnnotation(student: updatedInformation) {
+                mapView.addAnnotation(annotation)
+                let distance = regionDistance ?? Constants.MapSpanDistanceMeters
+                var region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, distance, distance)
+                mapView.setRegion(region, animated: true)
+        }
     }
     
 }
