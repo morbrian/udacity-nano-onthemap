@@ -26,8 +26,9 @@ class LoginViewController: UIViewController {
     
     private var viewShiftDistance: CGFloat? = nil
     
-    private var networkActivityInProgress = false
-    private var defaultTransform: CGAffineTransform?
+    var activityInProgress = false
+    private var spinnerBaseTransform: CGAffineTransform!
+
     
     // MARK: ViewController Lifecycle
     
@@ -46,7 +47,7 @@ class LoginViewController: UIViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "handleTap:")
         view.addGestureRecognizer(tapRecognizer)
         
-        defaultTransform = self.imageView.transform
+        spinnerBaseTransform = self.imageView.transform
         
         facebookButton.delegate = self
     }
@@ -146,30 +147,37 @@ class LoginViewController: UIViewController {
     func networkActivity(active: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             UIApplication.sharedApplication().networkActivityIndicatorVisible = active
-            self.networkActivityInProgress = active
+            self.activityInProgress = active
             self.usernameTextField.enabled = !active
             self.passwordTextField.enabled = !active
             self.loginButton.enabled = !active
             self.signupButton.enabled = !active
             if (active) {
-                self.animateImageView(1)
-            } else if let transform = self.defaultTransform {
+                self.animate()
+            } else if let transform = self.spinnerBaseTransform {
                 self.imageView.transform = transform
             }
         }
     }
     
-    func animateImageView(interval: CGFloat) {
-        UIView.animateWithDuration(0.1,
-            delay: 0.0,
-            options: UIViewAnimationOptions.CurveEaseInOut,
-            animations: { self.imageView.transform = CGAffineTransformMakeRotation((interval * CGFloat(120.0) * CGFloat(M_PI)) / CGFloat(180.0)) },
-            completion: { something in
-                if self.networkActivityInProgress {
-                    self.animateImageView(interval + 1)
-                }
+    func animate() {
+        dispatch_async(dispatch_get_main_queue()) {
+            UIView.animateWithDuration(0.001,
+                delay: 0.0,
+                options: UIViewAnimationOptions.CurveEaseInOut,
+                animations: { self.imageView.transform =
+                    CGAffineTransformConcat(self.imageView.transform, CGAffineTransformMakeRotation((CGFloat(60.0) * CGFloat(M_PI)) / CGFloat(180.0)) )},
+                completion: { something in
+                    if self.activityInProgress {
+                        self.animate()
+                    } else {
+                        // TODO: this snaps to position at then end, we should perform the final animation.
+                        self.imageView.transform = self.spinnerBaseTransform
+                    }
             })
+        }
     }
+
     
     func resetLoginStatusLabel() {
         loginStatusLabel?.text = ""
