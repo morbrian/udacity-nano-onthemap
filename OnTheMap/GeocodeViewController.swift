@@ -16,7 +16,7 @@ class GeocodeViewController: UIViewController {
     
     @IBOutlet weak var cancelButton: UIButton!
     
-    // MARK: Finde Place Editor Outlets
+    // MARK: Find Place Editor Outlets
     
     @IBOutlet weak var whereStudyingPanel: UIView!
     @IBOutlet weak var placeNameEditorPanel: UIView!
@@ -83,20 +83,37 @@ class GeocodeViewController: UIViewController {
     
     // shift the entire view up if bottom text field being edited
     func keyboardWillShow(notification: NSNotification) {
+        var isShowingMap: Bool {
+            return !mapContainerPanel.hidden
+        }
+        var buttonOrigin: CGPoint {
+            if isShowingMap {
+                return view.convertPoint(submitButton.bounds.origin, fromView: submitButton)
+            } else {
+                return view.convertPoint(findOnMapButton.bounds.origin, fromView: findOnMapButton)
+            }
+        }
         if viewShiftDistance == nil {
             // we move the view up as far as we needed to avoid obsuring the button, but not further
-            let buttonOrigin = view.convertPoint(findOnMapButton.bounds.origin, fromView: findOnMapButton)
             let buttonBottomEdge = buttonOrigin.y + findOnMapButton.bounds.size.height
             viewShiftDistance = getKeyboardHeight(notification) - (view.bounds.maxY - buttonBottomEdge)
-            self.view.bounds.origin.y += viewShiftDistance!
+        
+            if isShowingMap {
+                mapContainerPanel.bounds.origin.y += viewShiftDistance!
+            } else {
+                view.bounds.origin.y += viewShiftDistance!
+            }
         }
     }
-    
     
     // if bottom textfield just completed editing, shift the view back down
     func keyboardWillHide(notification: NSNotification) {
         if let shiftDistance = viewShiftDistance {
-            self.view.bounds.origin.y -= shiftDistance
+            if mapContainerPanel.hidden {
+                view.bounds.origin.y -= shiftDistance
+            } else {
+                mapContainerPanel.bounds.origin.y -= viewShiftDistance!
+            }
             viewShiftDistance = nil
         }
     }
@@ -168,6 +185,7 @@ class GeocodeViewController: UIViewController {
     }
     
     @IBAction func submitAction(sender: UIButton) {
+        urlTextField.endEditing(false)
         let enteredUrlString = urlTextField.text
         if var updatedInformation = updatedInformation,
             mediaUrl = NSURL(string: enteredUrlString),
