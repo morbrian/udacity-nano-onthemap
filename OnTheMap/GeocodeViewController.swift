@@ -56,8 +56,8 @@ class GeocodeViewController: UIViewController {
         configureButton(findOnMapButton)
         configureButton(cancelButton)
         configureButton(submitButton)
+       
         mapView.mapType = .Standard
-        webView.delegate = self
         searchBar.delegate = self
     }
     
@@ -76,6 +76,7 @@ class GeocodeViewController: UIViewController {
     
     private func configureButton(button: UIButton) {
         button.layer.cornerRadius = 8.0
+        button.layer.borderColor = UIColor.darkGrayColor().CGColor
     }
     
     private func produceSpinner() -> SpinnerPanelView {
@@ -143,8 +144,6 @@ class GeocodeViewController: UIViewController {
        dismissViewControllerAnimated(true, completion: nil)
     }
     
-    
-    
     @IBAction func useCurrentWebPage(sender: UIBarButtonItem) {
         urlTextField?.text = webView.request?.URL?.absoluteString
         webBrowserPanel.hidden = true
@@ -209,16 +208,14 @@ class GeocodeViewController: UIViewController {
         // then we verify the protocol is http(s) because these should be web pages not some other link,
         // finally we'll do a lightweight HEAD check with a request.
         if var updatedInformation = updatedInformation,
-            mediaUrl = NSURL(string: enteredUrlString),
-            scheme = mediaUrl.scheme,
-            hostname = mediaUrl.host
-            where scheme.lowercaseString == "http" || scheme.lowercaseString == "https"
-        {
+            url = ToolKit.produceValidUrlFromString(enteredUrlString),
+            urlString = url.absoluteString {
+                
             self.networkActivity(true)
             WebClient().pingUrl(enteredUrlString) {
                 reply, error in
                 if reply {
-                    updatedInformation.mediaUrl = enteredUrlString
+                    updatedInformation.mediaUrl = urlString
                     self.dataManager?.storeStudentInformation(updatedInformation) {
                         success, error in
                         self.networkActivity(false)
@@ -277,42 +274,25 @@ class GeocodeViewController: UIViewController {
     
 }
 
-// MARK: - UIWebViewDelegate
-
-extension GeocodeViewController: UIWebViewDelegate {
-//    func webView(webView: UIWebView,
-//        shouldStartLoadWithRequest request: NSURLRequest,
-//        navigationType: UIWebViewNavigationType) -> Bool {
-//            
-//            Logger.info("Browse To: \(request.URL?.absoluteString)")
-//            return true
-//    }
-}
-
 // MARK: - UISearchBarDelegate
 
 extension GeocodeViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         var searchText = searchBar.text
-        
-        var searchTextAsUrlString = searchText
-        if !searchText.hasPrefix("http") || !searchText.hasPrefix("https") {
-            searchTextAsUrlString = "http://\(searchText)"
-        }
 
-        if let mediaUrl = NSURL(string: searchTextAsUrlString),
-            scheme = mediaUrl.scheme,
-            hostname = mediaUrl.host
-            where scheme.lowercaseString == "http" || scheme.lowercaseString == "https" {
-                
-                var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: searchTextAsUrlString)
+        if let url = ToolKit.produceValidUrlFromString(searchText),
+               urlString = url.absoluteString {
+                var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: urlString)
                 webView.loadRequest(request)
         } else {
-            // can we search for this at bing some how?
-            // what is the bing API ?
-            // does ios provide access to the default search engine?
-            Logger.error("we should search for the entered text somehow")
+            Logger.error("Need to do something better here.")
+            var alternateString = "http://www.bing.com"
+            var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: alternateString)
+            webView.loadRequest(request)
+//            var asQuery = searchText.su
+//            var urlString = "http://www.google.com/#q="
+//            var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: , withBody: <#NSData?#>, includeHeaders: <#[String : String]?#>, includeParameters: <#[String : AnyObject]?#>)
         }
 
         

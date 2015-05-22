@@ -139,6 +139,8 @@ extension WebClient {
     static let JsonContentType = "application/json"
     static let HttpHeaderAccept = "Accept"
     static let HttpHeaderContentType = "Content-Type"
+    static let HttpScheme = "http"
+    static let HttpsScheme = "https"
     static let HttpHead = "HEAD"
     static let HttpPost = "POST"
     static let HttpGet = "GET"

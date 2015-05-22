@@ -24,4 +24,25 @@ class ToolKit {
         }
     }
     
+    // try to manipulate the given string into a valid URL, or return nil if it can't be done.
+    // for example, "www.google.com" would produce the URL "http://www.google.com"
+    static func produceValidUrlFromString(string: String) -> NSURL? {
+        var stringWithScheme: String
+        if !string.lowercaseString.hasPrefix(WebClient.HttpScheme) || !string.lowercaseString.hasPrefix(WebClient.HttpsScheme) {
+            stringWithScheme = "\(WebClient.HttpScheme)://\(string)"
+        } else {
+            stringWithScheme = string
+        }
+        
+        if let url = NSURL(string: stringWithScheme),
+            scheme = url.scheme,
+            hostname = url.host
+            where !hostname.isEmpty
+        &&  (scheme.lowercaseString == WebClient.HttpScheme || scheme.lowercaseString == WebClient.HttpsScheme) {
+                return url
+        } else {
+            return nil
+        }
+    }
+    
 }
