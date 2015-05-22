@@ -33,6 +33,10 @@ class GeocodeViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     
+    @IBOutlet weak var webBrowserPanel: UIView!
+    @IBOutlet weak var webView: UIWebView!
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     @IBOutlet weak var bottomSectionPanel: UIView!
     
     var activitySpinner: SpinnerPanelView!
@@ -53,6 +57,8 @@ class GeocodeViewController: UIViewController {
         configureButton(cancelButton)
         configureButton(submitButton)
         mapView.mapType = .Standard
+        webView.delegate = self
+        searchBar.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -93,6 +99,11 @@ class GeocodeViewController: UIViewController {
                 return view.convertPoint(findOnMapButton.bounds.origin, fromView: findOnMapButton)
             }
         }
+        
+        if !webBrowserPanel.hidden {
+            return
+        }
+        
         if viewShiftDistance == nil {
             // we move the view up as far as we needed to avoid obsuring the button, but not further
             let buttonBottomEdge = buttonOrigin.y + findOnMapButton.bounds.size.height
@@ -132,6 +143,12 @@ class GeocodeViewController: UIViewController {
        dismissViewControllerAnimated(true, completion: nil)
     }
     
+    
+    
+    @IBAction func useCurrentWebPage(sender: UIBarButtonItem) {
+        urlTextField?.text = webView.request?.URL?.absoluteString
+        webBrowserPanel.hidden = true
+    }
     
     @IBAction func reverseGeocodeAction(sender: UIButton) {
         placeNameTextField.endEditing(false)
@@ -187,25 +204,37 @@ class GeocodeViewController: UIViewController {
     @IBAction func submitAction(sender: UIButton) {
         urlTextField.endEditing(false)
         let enteredUrlString = urlTextField.text
+        
+        // we check the basic syntax of the URL using the provided NSURL class,
+        // then we verify the protocol is http(s) because these should be web pages not some other link,
+        // finally we'll do a lightweight HEAD check with a request.
         if var updatedInformation = updatedInformation,
             mediaUrl = NSURL(string: enteredUrlString),
             scheme = mediaUrl.scheme,
             hostname = mediaUrl.host
             where scheme.lowercaseString == "http" || scheme.lowercaseString == "https"
         {
-            updatedInformation.mediaUrl = enteredUrlString
-            networkActivity(true)
-            dataManager?.storeStudentInformation(updatedInformation) {
-                success, error in
-                self.networkActivity(false)
-                if success {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.dismissViewControllerAnimated(true, completion: nil)
+            self.networkActivity(true)
+            WebClient().pingUrl(enteredUrlString) {
+                reply, error in
+                if reply {
+                    updatedInformation.mediaUrl = enteredUrlString
+                    self.dataManager?.storeStudentInformation(updatedInformation) {
+                        success, error in
+                        self.networkActivity(false)
+                        if success {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.dismissViewControllerAnimated(true, completion: nil)
+                            }
+                        } else if let error = error {
+                            ToolKit.showErrorAlert(viewController: self, title: "Data Not Updated", message: error.localizedDescription)
+                        } else {
+                            ToolKit.showErrorAlert(viewController: self, title: "Data Not Updated", message: "We failed to store your updates, but we aren't sure why.")
+                        }
                     }
                 } else if let error = error {
-                    ToolKit.showErrorAlert(viewController: self, title: "Data Not Updated", message: error.localizedDescription)
-                } else {
-                    ToolKit.showErrorAlert(viewController: self, title: "Data Not Updated", message: "We failed to store your updates, but we aren't sure why.")
+                    self.networkActivity(false)
+                    ToolKit.showErrorAlert(viewController: self, title: "Invalid Url", message: error.localizedDescription)
                 }
             }
         } else {
@@ -213,6 +242,16 @@ class GeocodeViewController: UIViewController {
             ToolKit.showErrorAlert(viewController: self, title: "Invalid Url", message: "Try entering a valid URL.")
         }
     }
+    
+    @IBAction func showWebView(sender: UIButton) {
+        urlTextField.endEditing(false)
+        var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: urlTextField.text)
+        
+        webBrowserPanel.hidden = false
+        webView.loadRequest(request)
+        
+    }
+    
     
     // MARK: Activity Display
     
@@ -236,4 +275,46 @@ class GeocodeViewController: UIViewController {
         }
     }
     
+}
+
+// MARK: - UIWebViewDelegate
+
+extension GeocodeViewController: UIWebViewDelegate {
+//    func webView(webView: UIWebView,
+//        shouldStartLoadWithRequest request: NSURLRequest,
+//        navigationType: UIWebViewNavigationType) -> Bool {
+//            
+//            Logger.info("Browse To: \(request.URL?.absoluteString)")
+//            return true
+//    }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension GeocodeViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        var searchText = searchBar.text
+        
+        var searchTextAsUrlString = searchText
+        if !searchText.hasPrefix("http") || !searchText.hasPrefix("https") {
+            searchTextAsUrlString = "http://\(searchText)"
+        }
+
+        if let mediaUrl = NSURL(string: searchTextAsUrlString),
+            scheme = mediaUrl.scheme,
+            hostname = mediaUrl.host
+            where scheme.lowercaseString == "http" || scheme.lowercaseString == "https" {
+                
+                var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: searchTextAsUrlString)
+                webView.loadRequest(request)
+        } else {
+            // can we search for this at bing some how?
+            // what is the bing API ?
+            // does ios provide access to the default search engine?
+            Logger.error("we should search for the entered text somehow")
+        }
+
+        
+    }
 }
