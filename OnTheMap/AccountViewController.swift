@@ -59,16 +59,17 @@ extension AccountViewController: UITableViewDelegate {
     }
 
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        Logger.debug("called editing method...")
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            //deleteSingleMemeAtIndex(indexPath.item)
-            Logger.debug("could call delete")
+            networkActivity(true)
             if let studentInformation = dataManager?.userLocationAtIndex(indexPath.item) {
                 dataManager?.deleteStudentInformation(studentInformation) {
                     success, error in
-                    
+                    self.networkActivity(false)
                     if success {
                         dispatch_async(dispatch_get_main_queue()) {
+                            if let objectId = studentInformation.objectId {
+                                self.dataManager?.clearUserLocationWithId(objectId)
+                            }
                             tableView.reloadData()
                         }
                     } else if let error = error {

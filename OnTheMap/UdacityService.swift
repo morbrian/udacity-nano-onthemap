@@ -57,20 +57,24 @@ class UdacityService {
     private func authenticateUsingHttpBody(httpBody: NSData,
         completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
             
-            let request = webClient.createHttpRequestUsingMethod(WebClient.HttpPost, forUrlString: UdacityService.SessionUrlString,
+           
+            if let request = webClient.createHttpRequestUsingMethod(WebClient.HttpPost, forUrlString: UdacityService.SessionUrlString,
                 withBody: httpBody,
-                includeHeaders: UdacityService.StandardHeaders)
+                includeHeaders: UdacityService.StandardHeaders) {
             
-            webClient.executeRequest(request)
-                { jsonData, error in
-                    if let account = jsonData?.valueForKey(UdacityJsonKey.Account) as? NSDictionary,
-                        key = account[UdacityJsonKey.Key] as? String {
-                            completionHandler(userIdentity: StudentIdentity(key), error: nil)
-                    } else if let error = error {
-                        completionHandler(userIdentity: nil, error: error)
-                    } else {
-                        completionHandler(userIdentity: nil, error: self.produceErrorFromResponseData(jsonData))
-                    }
+                webClient.executeRequest(request)
+                    { jsonData, error in
+                        if let account = jsonData?.valueForKey(UdacityJsonKey.Account) as? NSDictionary,
+                            key = account[UdacityJsonKey.Key] as? String {
+                                completionHandler(userIdentity: StudentIdentity(key), error: nil)
+                        } else if let error = error {
+                            completionHandler(userIdentity: nil, error: error)
+                        } else {
+                            completionHandler(userIdentity: nil, error: self.produceErrorFromResponseData(jsonData))
+                        }
+                }
+            } else {
+                completionHandler(userIdentity: nil, error: WebClient.errorForCode(.UnableToCreateRequest))
             }
     }
     
@@ -80,15 +84,18 @@ class UdacityService {
     func fetchInformationForStudentIdentity(studentIdentity: StudentIdentity,
         completionHandler: (studentInformation: StudentInformation?, error: NSError?) -> Void) {
             
-            let request = webClient.createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: "\(UdacityService.UsersUrlString)/\(studentIdentity)")
+        if let request = webClient.createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: "\(UdacityService.UsersUrlString)/\(studentIdentity)") {
         
-        webClient.executeRequest(request)
-        { jsonData, error in
-            if let userObject = jsonData?.valueForKey(UdacityJsonKey.User) as? [String:AnyObject] {
-                completionHandler(studentInformation: translateToStudentInformationFromUdacityData(userObject), error: nil)
-            } else {
-                completionHandler(studentInformation: nil, error: self.produceErrorFromResponseData(jsonData))
+            webClient.executeRequest(request)
+            { jsonData, error in
+                if let userObject = jsonData?.valueForKey(UdacityJsonKey.User) as? [String:AnyObject] {
+                    completionHandler(studentInformation: translateToStudentInformationFromUdacityData(userObject), error: nil)
+                } else {
+                    completionHandler(studentInformation: nil, error: self.produceErrorFromResponseData(jsonData))
+                }
             }
+        } else {
+            completionHandler(studentInformation: nil, error: WebClient.errorForCode(.UnableToCreateRequest))
         }
     }
     

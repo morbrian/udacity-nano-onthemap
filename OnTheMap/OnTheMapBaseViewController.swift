@@ -94,6 +94,10 @@ class OnTheMapBaseViewController: UIViewController {
     
     // MARK: Base Functionality
     
+    // called when the current user's data is loaded, does nothing by default
+    // sub-classes should override to provide custom actions
+    func currentUserDataNowAvailable() {}
+    
     // fetch all items created by the currently logged in user
     // this helps us get items for the current user that may not
     // be in the top 100.
@@ -101,6 +105,9 @@ class OnTheMapBaseViewController: UIViewController {
         networkActivity(true)
         dataManager?.fetchDataForCurrentUser() { success, error in
             self.networkActivity(false)
+            if success {
+                self.currentUserDataNowAvailable()
+            }
         }
     }
     

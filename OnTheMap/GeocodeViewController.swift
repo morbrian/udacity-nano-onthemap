@@ -33,6 +33,7 @@ class GeocodeViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     
+    @IBOutlet weak var browseButton: UIButton!
     @IBOutlet weak var webBrowserPanel: UIView!
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -56,6 +57,7 @@ class GeocodeViewController: UIViewController {
         configureButton(findOnMapButton)
         configureButton(cancelButton)
         configureButton(submitButton)
+        configureButton(browseButton)
        
         mapView.mapType = .Standard
         searchBar.delegate = self
@@ -242,11 +244,10 @@ class GeocodeViewController: UIViewController {
     
     @IBAction func showWebView(sender: UIButton) {
         urlTextField.endEditing(false)
-        var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: urlTextField.text)
-        
+        if let request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: urlTextField.text) {
+            webView.loadRequest(request)
+        }
         webBrowserPanel.hidden = false
-        webView.loadRequest(request)
-        
     }
     
     
@@ -282,17 +283,15 @@ extension GeocodeViewController: UISearchBarDelegate {
         var searchText = searchBar.text
 
         if let url = ToolKit.produceValidUrlFromString(searchText),
-               urlString = url.absoluteString {
-                var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: urlString)
+               urlString = url.absoluteString,
+            request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: urlString) {
                 webView.loadRequest(request)
         } else {
             Logger.error("Need to do something better here.")
             var alternateString = "http://www.bing.com"
-            var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: alternateString)
-            webView.loadRequest(request)
-//            var asQuery = searchText.su
-//            var urlString = "http://www.google.com/#q="
-//            var request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: , withBody: <#NSData?#>, includeHeaders: <#[String : String]?#>, includeParameters: <#[String : AnyObject]?#>)
+            if let request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: alternateString) {
+                webView.loadRequest(request)
+            }
         }
 
         

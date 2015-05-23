@@ -45,20 +45,24 @@ public class ParseClient {
             if let whereClause = whereClause {
                 parameterList[ParseParameter.Where] = whereClause
             }
-            let request = webClient.createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: "\(ParseClient.ObjectUrl)/\(className)",
-                includeHeaders: StandardHeaders,
-                includeParameters: parameterList)
             
-            webClient.executeRequest(request) { jsonData, error in
-                if let resultsArray = jsonData?.valueForKey(ParseJsonKey.Results) as? [[String:AnyObject]] {
-                    completionHandler(resultsArray: resultsArray, error: nil)
-                } else if let error = error {
-                    completionHandler(resultsArray: nil, error: error)
-                } else if let errorMessage = jsonData?.valueForKey(ParseJsonKey.Error) as? String {
-                    completionHandler(resultsArray: nil, error: ParseClient.errorForCode(.ParseServerError, message: errorMessage))
-                } else {
-                    completionHandler(resultsArray: nil, error: ParseClient.errorForCode(.ResponseContainedNoResultObject))
+            if let request = webClient.createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: "\(ParseClient.ObjectUrl)/\(className)",
+                includeHeaders: StandardHeaders,
+                includeParameters: parameterList) {
+            
+                webClient.executeRequest(request) { jsonData, error in
+                    if let resultsArray = jsonData?.valueForKey(ParseJsonKey.Results) as? [[String:AnyObject]] {
+                        completionHandler(resultsArray: resultsArray, error: nil)
+                    } else if let error = error {
+                        completionHandler(resultsArray: nil, error: error)
+                    } else if let errorMessage = jsonData?.valueForKey(ParseJsonKey.Error) as? String {
+                        completionHandler(resultsArray: nil, error: ParseClient.errorForCode(.ParseServerError, message: errorMessage))
+                    } else {
+                        completionHandler(resultsArray: nil, error: ParseClient.errorForCode(.ResponseContainedNoResultObject))
+                    }
                 }
+            } else {
+                completionHandler(resultsArray: nil, error: WebClient.errorForCode(.UnableToCreateRequest))
             }
     }
     
@@ -129,20 +133,21 @@ public class ParseClient {
         var bodyError: NSError?
         if let body = NSJSONSerialization.dataWithJSONObject(properties, options: nil, error: &bodyError)
             where bodyError == nil {
-                Logger.debug("have a body and objectId \(objectId)")
                 var targetUrlString = "\(ParseClient.ObjectUrl)/\(className)"
                 if let objectId = objectId {
                     targetUrlString += "/\(objectId)"
                 }
-                Logger.info("Sending \(method) to \(targetUrlString)")
-                let request = webClient.createHttpRequestUsingMethod(method, forUrlString: targetUrlString,
+                if let request = webClient.createHttpRequestUsingMethod(method, forUrlString: targetUrlString,
                     withBody: body,
-                    includeHeaders: StandardHeaders)
+                    includeHeaders: StandardHeaders) {
                 
-                webClient.executeRequest(request, completionHandler: requestHandler)
-                return nil
+                        webClient.executeRequest(request, completionHandler: requestHandler)
+                        
+                        return nil
+                } else {
+                    return WebClient.errorForCode(.UnableToCreateRequest)
+                }
         } else {
-            Logger.debug("we have no body")
             return bodyError
         }
     }

@@ -104,6 +104,20 @@ class StudentDataAccessManager {
         return infoPool.infoItemsAsArray(filter: userFilter)
     }
     
+    // if the location data currently associated with the current user
+    // is deleted, we must reset those attributes.
+    func clearUserLocationWithId(objectId: String) {
+        if currentUser?.objectId == objectId {
+            currentUser?.objectId = nil
+            currentUser?.latitude = nil
+            currentUser?.longitude = nil
+            currentUser?.mapString = nil
+            currentUser?.mediaUrl = nil
+            currentUser?.createdAt = nil
+            currentUser?.updatedAt = nil
+        }
+    }
+    
     func loggedInUserDoesHaveLocation() -> Bool {
         if let identity = currentUser?.studentKey {
             return infoPool.infoExistsForOwner(identity)

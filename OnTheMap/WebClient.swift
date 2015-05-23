@@ -27,7 +27,7 @@ public class WebClient {
     // includeHeaders: field-name / value pairs for request headers.
     public func createHttpRequestUsingMethod(method: String, var forUrlString urlString: String, withBody body: NSData? = nil,
         includeHeaders requestHeaders: [String:String]? = nil,
-        includeParameters requestParameters: [String:AnyObject]? = nil) -> NSURLRequest {
+        includeParameters requestParameters: [String:AnyObject]? = nil) -> NSURLRequest? {
             if (method == WebClient.HttpGet && body != nil) {
                 Logger.error("Programmer Error: Http GET request created with non nil body.")
             }
@@ -38,15 +38,19 @@ public class WebClient {
             if let requestParameters = requestParameters {
                 urlString = "\(urlString)?\(encodeParameters(requestParameters))"
             }
-            var request = NSMutableURLRequest(URL: NSURL(string: urlString)!)
-            request.HTTPMethod = method
-            if let requestHeaders = requestHeaders {
-                request = addRequestHeaders(requestHeaders, toRequest: request)
+            if let requestUrl = NSURL(string: urlString) {
+                var request = NSMutableURLRequest(URL: requestUrl)
+                request.HTTPMethod = method
+                if let requestHeaders = requestHeaders {
+                    request = addRequestHeaders(requestHeaders, toRequest: request)
+                }
+                if let body = body {
+                    request.HTTPBody = body
+                }
+                return request
+            } else {
+                return nil
             }
-            if let body = body {
-                request.HTTPBody = body
-            }
-            return request
             
     }
     
@@ -82,8 +86,7 @@ public class WebClient {
     
     // quick check to see if URL is valid and responsive
     public func pingUrl(urlString: String, completionHandler: (reply: Bool, error: NSError?) -> Void) {
-        if let url = NSURL(string: urlString) {
-            let request = createHttpRequestUsingMethod(WebClient.HttpHead, forUrlString: urlString)
+        if let request = createHttpRequestUsingMethod(WebClient.HttpHead, forUrlString: urlString) {
             let session = NSURLSession.sharedSession()
             let task = session.dataTaskWithRequest(request) { data, response, error in
                 if let error = error {
@@ -93,8 +96,7 @@ public class WebClient {
             }
             task.resume()
         } else {
-            // TODO: add error message
-            completionHandler(reply: false, error: nil)
+            completionHandler(reply: false, error: WebClient.errorForCode(.UnableToCreateRequest))
         }
     }
     
@@ -147,5 +149,35 @@ extension WebClient {
     static let HttpPut = "PUT"
     static let HttpDelete = "DELETE"
 
+}
+
+// MARK: - Error Handling
+
+extension WebClient {
+    
+    private static let ErrorDomain = "WebClient"
+    
+    enum ErrorCode: Int, Printable {
+        case UnableToCreateRequest
+        
+        var description: String {
+            switch self {
+            case UnableToCreateRequest: return "Could Not Create Request"
+            default: return "Unknown Error"
+            }
+        }
+    }
+    
+    // createErrorWithCode
+    // helper function to simplify creation of error object
+    static func errorForCode(code: ErrorCode) -> NSError {
+        let userInfo = [NSLocalizedDescriptionKey : code.description]
+        return NSError(domain: WebClient.ErrorDomain, code: code.rawValue, userInfo: userInfo)
+    }
+    
+    static func errorWithMessage(message: String, code: Int) -> NSError {
+        let userInfo = [NSLocalizedDescriptionKey : message]
+        return NSError(domain: WebClient.ErrorDomain, code: code, userInfo: userInfo)
+    }
 }
 

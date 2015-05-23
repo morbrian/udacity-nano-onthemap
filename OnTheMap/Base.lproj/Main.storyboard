@@ -396,8 +396,9 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s02-OV-rn1">
-                                                        <rect key="frame" x="276" y="91" width="113" height="30"/>
+                                                        <rect key="frame" x="260" y="89" width="145" height="34"/>
                                                         <color key="backgroundColor" red="0.94509803920000002" green="0.93333333330000001" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <inset key="contentEdgeInsets" minX="16" minY="8" maxX="16" maxY="8"/>
                                                         <state key="normal" title="Find on the Map">
                                                             <color key="titleColor" red="0.30980392159999998" green="0.46666666670000001" blue="0.65098039220000004" alpha="1" colorSpace="calibratedRGB"/>
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -494,8 +495,9 @@
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4NC-6e-mpl">
-                                                <rect key="frame" x="560" y="112" width="52" height="30"/>
+                                                <rect key="frame" x="528" y="108" width="84" height="34"/>
                                                 <color key="backgroundColor" red="0.94509803920000002" green="0.93333333330000001" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                <inset key="contentEdgeInsets" minX="16" minY="8" maxX="16" maxY="8"/>
                                                 <state key="normal" title="Browse">
                                                     <color key="titleColor" red="0.2470588235" green="0.4549019608" blue="0.6588235294" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -524,7 +526,7 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IXc-vC-feH">
+                                    <button opaque="NO" contentMode="redraw" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IXc-vC-feH">
                                         <rect key="frame" x="8" y="0.0" width="48" height="30"/>
                                         <color key="backgroundColor" red="0.94509803920000002" green="0.93333333330000001" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Cancel">
@@ -631,6 +633,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bottomSectionPanel" destination="ett-wd-EbG" id="RFg-wn-LiJ"/>
+                        <outlet property="browseButton" destination="4NC-6e-mpl" id="G41-HH-Jwx"/>
                         <outlet property="cancelButton" destination="IXc-vC-feH" id="fkK-dn-Zvd"/>
                         <outlet property="findOnMapButton" destination="s02-OV-rn1" id="RZc-7g-dbO"/>
                         <outlet property="mapContainerPanel" destination="uDg-zM-izl" id="f6n-kX-O04"/>
@@ -828,7 +831,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yrC-3S-BS1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="208" y="242"/>
+            <point key="canvasLocation" x="64" y="265"/>
         </scene>
     </scenes>
     <resources>
@@ -837,6 +840,6 @@
         <image name="Udacity" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="chx-mU-E29"/>
+        <segue reference="gTx-t8-r62"/>
     </inferredMetricsTieBreakers>
 </document>

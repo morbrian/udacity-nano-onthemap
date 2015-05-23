@@ -24,12 +24,14 @@ class StudentMapViewController: OnTheMapBaseViewController {
         view.addSubview(activitySpinner)
         mapView.mapType = .Satellite
         mapView.delegate = self
+        
         super.viewDidLoad()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         updateDisplayFromModel()
+        centerMapOnCurrentUser()
     }
     
     private func produceSpinner() -> SpinnerPanelView {
@@ -50,7 +52,10 @@ class StudentMapViewController: OnTheMapBaseViewController {
             dispatch_async(dispatch_get_main_queue()) {
                 self.mapView.removeAnnotations(self.mapView.annotations)
                 self.mapView.addAnnotations(studentAnnotations)
-                self.mapView.showAnnotations(studentAnnotations, animated: true)
+                if let willCenterOnUser = self.dataManager?.loggedInUserDoesHaveLocation()
+                    where !willCenterOnUser {
+                    self.mapView.showAnnotations(studentAnnotations, animated: true)
+                }
             }
         }
     }
@@ -58,6 +63,27 @@ class StudentMapViewController: OnTheMapBaseViewController {
     override func networkActivity(active: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.activitySpinner.spinnerActivity(active)
+        }
+    }
+    
+    override func currentUserDataNowAvailable() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.centerMapOnCurrentUser()
+        }
+    }
+    
+    func centerMapOnCurrentUser() {
+        if let currentUserLocations = self.dataManager?.userLocations
+            where currentUserLocations.count > 0 {
+                let firstLocation = currentUserLocations[0]
+                if let latitude = firstLocation.latitude,
+                    longitude = firstLocation.longitude {
+                        let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
+                        let distance = Constants.MapSpanDistanceMeters * 3
+                        var region = MKCoordinateRegionMakeWithDistance(coordinate, distance, distance)
+                        self.mapView.setRegion(region, animated: true)
+                        
+                }
         }
     }
 }
