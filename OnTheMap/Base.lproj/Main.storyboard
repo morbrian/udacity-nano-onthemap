@@ -718,11 +718,12 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="100" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="aJx-vl-a4b">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="100" placeholderIntrinsicHeight="100" image="Udacity" translatesAutoresizingMaskIntoConstraints="NO" id="aJx-vl-a4b">
                                         <rect key="frame" x="250" y="49" width="100" height="100"/>
+                                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="5kc-5H-ttp"/>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="LVe-KU-h4c"/>
+                                            <constraint firstAttribute="width" constant="100" id="5kc-5H-ttp"/>
+                                            <constraint firstAttribute="height" constant="100" id="LVe-KU-h4c"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -782,14 +783,17 @@
                     </view>
                     <navigationItem key="navigationItem" id="Kcz-T4-Vkk"/>
                     <connections>
+                        <outlet property="fullNameTextField" destination="6JX-4t-WdB" id="uHa-mP-etm"/>
+                        <outlet property="studentAvatarImageView" destination="aJx-vl-a4b" id="kyH-99-Med"/>
                         <outlet property="tableView" destination="RBA-mn-m4c" id="6lV-iU-UA5"/>
                         <segue destination="WIe-ld-ko5" kind="unwind" identifier="ReturnToLoginScreenSegue" unwindAction="segueToLoginScreen:" id="3Yz-40-aEi"/>
+                        <segue destination="e2o-jI-nQE" kind="presentation" identifier="GeocodeSegue" id="chx-mU-E29"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vGa-GA-eJh" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="WIe-ld-ko5" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2691" y="1433"/>
+            <point key="canvasLocation" x="3427" y="1641"/>
         </scene>
         <!--Account-->
         <scene sceneID="Tqw-gd-a9F">
@@ -806,7 +810,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oh9-Sh-LDW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1886" y="1433"/>
+            <point key="canvasLocation" x="2622" y="1641"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Xbh-qp-afp">
@@ -833,6 +837,6 @@
         <image name="Udacity" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gTx-t8-r62"/>
+        <segue reference="chx-mU-E29"/>
     </inferredMetricsTieBreakers>
 </document>

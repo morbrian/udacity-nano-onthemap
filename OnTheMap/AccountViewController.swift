@@ -10,7 +10,15 @@ import UIKit
 
 class AccountViewController: OnTheMapBaseViewController {
     
+    @IBOutlet weak var fullNameTextField: UILabel!
+    @IBOutlet weak var studentAvatarImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        fullNameTextField.text = dataManager?.loggedInUser?.fullname
+        showUserAvatar()
+    }
     
     override func updateDisplayFromModel() {
         dispatch_async(dispatch_get_main_queue()) {
@@ -21,6 +29,22 @@ class AccountViewController: OnTheMapBaseViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+    }
+    
+    private func showUserAvatar() {
+        networkActivity(true)
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+            if let loggedInUser = self.dataManager?.loggedInUser,
+                email = loggedInUser.email,
+                url = ToolKit.produceGravatarUrlFromEmailString(email),
+                imageData = NSData(contentsOfURL: url) {
+                    self.networkActivity(false)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.studentAvatarImageView.image = UIImage(data: imageData)
+                        self.studentAvatarImageView.backgroundColor = nil
+                    }
+            }
+        }
     }
 }
 
@@ -33,18 +57,27 @@ extension AccountViewController: UITableViewDelegate {
                 Logger.info("Student Updated At: \(NSDate(timeIntervalSince1970: updatedAt))")
         }
     }
-    
-    //    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-    //        handleDeselectionEventForMemeAtIndex(indexPath.item)
-    //    }
-    
+
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         Logger.debug("called editing method...")
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             //deleteSingleMemeAtIndex(indexPath.item)
             Logger.debug("could call delete")
             if let studentInformation = dataManager?.userLocationAtIndex(indexPath.item) {
-                dataManager?.deleteStudentInformation(studentInformation)
+                dataManager?.deleteStudentInformation(studentInformation) {
+                    success, error in
+                    
+                    if success {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            tableView.reloadData()
+                        }
+                    } else if let error = error {
+                        ToolKit.showErrorAlert(viewController: self, title: "Delete Failed", message: error.localizedDescription)
+                    } else {
+                        Logger.error("Delete Failed, But Error Not Specified")
+                         ToolKit.showErrorAlert(viewController: self, title: "Delete Failed", message: "")
+                    }
+                }
             }
         }
     }

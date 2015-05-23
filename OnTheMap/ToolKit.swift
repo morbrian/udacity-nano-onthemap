@@ -45,4 +45,32 @@ class ToolKit {
         }
     }
     
+    static func produceGravatarUrlFromEmailString(email: String) -> NSURL? {
+        return NSURL(string: "https://www.gravatar.com/avatar/\(email.md5)")
+    }
+    
+}
+
+//
+// Thank you StackOverflow!
+// http://stackoverflow.com/questions/24123518/how-to-use-cc-md5-method-in-swift-language
+//
+extension String  {
+    var md5: String! {
+        let str = self.cStringUsingEncoding(NSUTF8StringEncoding)
+        let strLen = CC_LONG(self.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
+        let digestLen = Int(CC_MD5_DIGEST_LENGTH)
+        let result = UnsafeMutablePointer<CUnsignedChar>.alloc(digestLen)
+        
+        CC_MD5(str!, strLen, result)
+        
+        var hash = NSMutableString()
+        for i in 0..<digestLen {
+            hash.appendFormat("%02x", result[i])
+        }
+        
+        result.dealloc(digestLen)
+        
+        return String(format: hash as String)
+    }
 }

@@ -160,9 +160,28 @@ class StudentDataAccessManager {
         }
     }
     
-    func deleteStudentInformation(studentInformation: StudentInformation) {
-        infoPool.deleteInfoItem(studentInformation)
-        onTheMapClient.deleteStudentInformation(studentInformation) { something, error in Logger.debug("called me") }
+    func deleteStudentInformation(studentInformation: StudentInformation, completionHandler: (success: Bool, error: NSError?) -> Void) {
+        func handleStorage(studentInformation: StudentInformation?, error: NSError?) {
+            if let studentInformation = studentInformation {
+                // this isn't always a super cheap operation, but we put it on the main thread to
+                // make sure the UI isn't asking for indices while we're manipulating the data structure
+                dispatch_async(dispatch_get_main_queue()) {
+                    // TODO: this handleStorage function is duplicated except for the actual stoarge operation
+                    self.infoPool.deleteInfoItem(studentInformation)
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                        // back on background thread just in case the handler passed in is expensive
+                        completionHandler(success: true, error: nil)
+                    }
+                }
+            } else if error != nil {
+                Logger.error(error!.description)
+                completionHandler(success: false, error: error)
+            } else {
+                Logger.error("Failed to store student information, but error not handled properly.")
+                completionHandler(success: false, error: nil)
+            }
+        }
+        onTheMapClient.deleteStudentInformation(studentInformation, completionHandler: handleStorage)
     }
     
     // fetch the requested range of data from the OnTheMap Parse Web Service
@@ -266,7 +285,15 @@ func translateToStudentInformationFromUdacityData(udacityData: [String:AnyObject
     parseData = putValue(udacityData[UdacityService.UdacityJsonKey.Firstname], intoDictionary: parseData, forKey: OnTheMapParseService.ParseJsonKey.Firstname)
     parseData = putValue(udacityData[UdacityService.UdacityJsonKey.Lastname], intoDictionary: parseData, forKey: OnTheMapParseService.ParseJsonKey.Lastname)
     
-    return StudentInformation(parseData: parseData)
+    var studentInformation = StudentInformation(parseData: parseData)
+    
+    if let emailBlock = udacityData[UdacityService.UdacityJsonKey.Email] as? [String:AnyObject],
+        emailAddress = emailBlock[UdacityService.UdacityJsonKey.Address] as? String {
+        
+        studentInformation?.email = emailAddress
+    }
+    
+    return studentInformation
 }
 
 // MARK: - Authentication Type

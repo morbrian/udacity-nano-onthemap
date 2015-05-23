@@ -39,6 +39,8 @@ struct StudentInformation {
         return data
     }
     
+    var email: String?
+    
     var studentKey: StudentIdentity {
         return data[OnTheMapParseService.ParseJsonKey.UniqueKey] as? String ?? ""
     }

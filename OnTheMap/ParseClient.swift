@@ -89,25 +89,16 @@ public class ParseClient {
     
     // className: the object model classname of the data type on Parse
     public func deleteObjectOfClassName(className: String, withProperties properties: [String:AnyObject], objectId: String? = nil,
-        completionHandler: (something: String?, error: NSError?) -> Void) {
+        completionHandler: (error: NSError?) -> Void) {
             
-            var bodyError = performHttpMethod(WebClient.HttpDelete, ofClassName: className, withProperties: properties, objectId: objectId)
-                { jsonData, error in
-                    Logger.info("Received back: \(jsonData) or \(error)")
-//                    if let objectId = jsonData?.valueForKey(ParseJsonKey.ObjectId) as? String,
-//                        createdAt = jsonData?.valueForKey(ParseJsonKey.CreateAt) as? String {
-//                            completionHandler(something: nil, error: nil)
-//                    } else if error != nil {
-//                        completionHandler(something: nil, error: error)
-//                    } else {
-//                        var responseError = ParseClient.errorForCode(.ResponseForCreateIsMissingExpectedValues)
-//                        completionHandler(something: nil, error: responseError)
-//                    }
+            var bodyError = performHttpMethod(WebClient.HttpDelete, ofClassName: className, withProperties: properties, objectId: objectId) {
+                jsonData, error in
+                    completionHandler(error: error)
             }
             
             if let bodyError = bodyError {
                 // there was an error preparing the request
-                completionHandler(something: nil, error: bodyError)
+                completionHandler(error: bodyError)
             }
     }
     

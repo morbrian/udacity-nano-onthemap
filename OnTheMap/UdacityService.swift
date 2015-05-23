@@ -165,6 +165,8 @@ extension UdacityService {
         static let Nickname = "nickname"
         static let Firstname = "first_name"
         static let Lastname = "last_name"
+        static let Email = "email"
+        static let Address = "address"
     }
 
 }

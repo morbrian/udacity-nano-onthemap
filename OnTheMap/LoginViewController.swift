@@ -34,6 +34,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         dataManager = StudentDataAccessManager()
         navigationController?.navigationBar.hidden = true
         

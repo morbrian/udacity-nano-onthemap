@@ -77,15 +77,12 @@ class OnTheMapParseService {
             
             parseClient.deleteObjectOfClassName(OnTheMapParseService.StudentLocationClassName,
                 withProperties: [String:AnyObject](), objectId: studentInformation.objectId) {
-                    something, error in
-//                    if let updatedAt = updatedAt {
-//                        var updatedInfo = studentInformation.rawData
-//                        updatedInfo[ParseJsonKey.UpdatedAt] = updatedAt
-//                        completionHandler(studentInformation: StudentInformation(parseData: updatedInfo), error: nil)
-//                    } else {
-//                        Logger.error("Create StudentInformation Failed")
-//                        completionHandler(studentInformation: nil, error: error)
-//                    }
+                    error in
+                    if let error = error {
+                        completionHandler(studentInformation: nil, error: error)
+                    } else {
+                        completionHandler(studentInformation: studentInformation, error: nil)
+                    }
             }
     }
 
