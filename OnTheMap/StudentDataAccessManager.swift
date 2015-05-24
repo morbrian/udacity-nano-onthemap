@@ -199,10 +199,15 @@ class StudentDataAccessManager {
     }
     
     // fetch the requested range of data from the OnTheMap Parse Web Service
-    func preFetchStudentInformationSubset(subset: Range<Int>, completionHandler: (success: Bool, error: NSError?) -> Void) {
-        let skip = subset.startIndex
-        let limit = subset.endIndex - skip
-        onTheMapClient.fetchStudents(limit: limit, skip: skip) {
+    func fetchNextStudentInformationSubset(completionHandler: (success: Bool, error: NSError?) -> Void) {
+        var newestDate: NSTimeInterval? {
+            return infoPool.count() > 0 ? infoPool.infoAtIndex(0)?.updatedAt : nil
+        }
+        var oldestDate: NSTimeInterval? {
+            return infoPool.count() > 1 ? infoPool.lastInfoItem()?.updatedAt : nil
+        }
+        
+        onTheMapClient.fetchStudents(limit: fetchLimit, newerThan: newestDate, olderThan: oldestDate) {
             students, error in
             if let newLocations = students {
                 dispatch_async(dispatch_get_main_queue()) {
@@ -210,30 +215,13 @@ class StudentDataAccessManager {
                     self.infoPool.storeInfoItems(newLocations)
                     dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
                         // but we don't know how expensive the completion handler is, so put it on off the main thread
-                        Logger.info("asked for items \(skip) - \(subset.endIndex) and found \(newLocations.count)")
+                        Logger.info("found \(newLocations.count) items")
                         completionHandler(success: true, error: nil)
                     }
                 }
             } else {
                 completionHandler(success: false, error: error)
             }
-        }
-    }
-    
-    private var lastSuccessfulRange: Range<Int>?
-    // fetch the next set of data starting from where the last successful query left off.
-    // this essentially pages through new data, without discarding previously downloaded data pages.
-    func fetchNextPage(completionHandler: (success: Bool, error: NSError?) -> Void) {
-        let start = lastSuccessfulRange?.endIndex ?? 0
-        let end = start + fetchLimit
-        let attemptRange = start..<end
-        let beforeCount = studentLocationCount
-        preFetchStudentInformationSubset(attemptRange) {
-            success, error in
-            if success && self.studentLocationCount > beforeCount {
-                self.lastSuccessfulRange =  attemptRange.startIndex..<(self.studentLocationCount + 1)
-            }
-            completionHandler(success: success, error: error)
         }
     }
     

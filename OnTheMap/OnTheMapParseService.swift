@@ -17,9 +17,36 @@ class OnTheMapParseService {
     }
     
     func fetchStudents(limit: Int = 50, skip: Int = 0, orderedBy: String = ParseClient.DefaultSortOrder,
+        olderThan: NSTimeInterval? = nil, newerThan: NSTimeInterval? = nil,
         completionHandler: (studentInformation: [StudentInformation]?, error: NSError?) -> Void) {
+            
+            func createUpdatedAtQueryWithValue(value: NSTimeInterval?, usingLogic logic: String) -> String? {
+                if var value = value {
+                    if "gt" == logic {
+                        // increment a little to avoid repeatedly getting the most recent one
+                        value++
+                    }
+                    return "{\"\(ParseClient.ParseJsonKey.UpdatedAt)\":{\"$\(logic)\":\"\(ParseClient.DateFormatter.stringFromDate(NSDate(timeIntervalSince1970: value)))\"}}"
+                } else {
+                    return nil
+                }
+            }
+            
+            let olderThanQuery = createUpdatedAtQueryWithValue(olderThan, usingLogic: "lt")
+            let newerThanQuery = createUpdatedAtQueryWithValue(newerThan, usingLogic: "gt")
+
+            // fetch items that are older than the last one we retrieved, or newer than the most recent
+            // for example: {"$or":[{"updatedAt":{"$lt":"2015-03-10T20:23:49.5-07:00"}},{"updatedAt":{"$gt":"2015-05-23T23:55:13.6-07:00"}}]}]
+            var whereClause: String?
+            switch (olderThanQuery, newerThanQuery) {
+            case let (older, nil): whereClause = older
+            case let (nil, newer): whereClause = newer
+            case let (older, newer): whereClause = "{\"$or\":[\(older!),\(newer!)]}"
+            default: whereClause = nil
+            }
+
             parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName,
-                limit: limit, skip: skip, orderedBy: orderedBy) {
+                limit: limit, skip: skip, orderedBy: orderedBy, whereClause: whereClause) {
             resultsArray, error in
             completionHandler(studentInformation: self.parseResults(resultsArray), error: error)
         }

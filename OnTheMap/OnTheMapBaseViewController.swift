@@ -116,7 +116,7 @@ class OnTheMapBaseViewController: UIViewController {
     func fetchNextPage(completionHandler: (() -> Void)? = nil) {
         let oldCount = self.dataManager?.studentLocationCount ?? 0
         networkActivity(true)
-        dataManager?.fetchNextPage() {
+        dataManager?.fetchNextStudentInformationSubset() {
             success, error in
             self.networkActivity(false)
             if let completionHandler = completionHandler {

@@ -43,6 +43,10 @@ public struct InfoPool<T: InfoItem> {
         }
     }
     
+    public func lastInfoItem(filter: ((infoItem: T) -> Bool)? = nil) -> T? {
+        return infoAtIndex(count(filter: filter) - 1, filter: filter)
+    }
+    
     public func infoItemsAsArray(filter: ((infoItem: T) -> Bool)? = nil) -> [T] {
         if let filter = filter {
            return infoItems.filter(filter)
