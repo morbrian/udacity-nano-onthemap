@@ -42,6 +42,13 @@ class ToolKit {
         return NSURL(string: "https://www.gravatar.com/avatar/\(email.md5)")
     }
     
+    static func produceBingUrlFromSearchString(searchString: String) -> NSURL? {
+        let bingUrlString = "https://www.bing.com/search"
+        let encodedSearch = WebClient.encodeParameters(["q":searchString])
+        let queryString = encodedSearch.stringByReplacingOccurrencesOfString("%20", withString: "+")
+        return NSURL(string: "\(bingUrlString)?\(queryString)")
+    }
+    
 }
 
 //

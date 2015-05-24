@@ -36,7 +36,7 @@ public class WebClient {
             }
             
             if let requestParameters = requestParameters {
-                urlString = "\(urlString)?\(encodeParameters(requestParameters))"
+                urlString = "\(urlString)?\(WebClient.encodeParameters(requestParameters))"
             }
             if let requestUrl = NSURL(string: urlString) {
                 var request = NSMutableURLRequest(URL: requestUrl)
@@ -125,7 +125,7 @@ public class WebClient {
     
     // encodeParameters
     // convert dictionary to parameterized String appropriate for use in an HTTP URL
-    private func encodeParameters(params: [String: AnyObject]) -> String {
+    public static func encodeParameters(params: [String: AnyObject]) -> String {
         var queryItems = map(params) { NSURLQueryItem(name:$0, value:"\($1)")}
         var components = NSURLComponents()
         components.queryItems = queryItems

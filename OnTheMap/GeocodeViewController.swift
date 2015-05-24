@@ -244,9 +244,7 @@ class GeocodeViewController: UIViewController {
     
     @IBAction func showWebView(sender: UIButton) {
         urlTextField.endEditing(false)
-        if let request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: urlTextField.text) {
-            webView.loadRequest(request)
-        }
+        webView.loadRequest(produceRequestForText(urlTextField.text))
         webBrowserPanel.hidden = false
     }
     
@@ -256,6 +254,22 @@ class GeocodeViewController: UIViewController {
     func networkActivity(active: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.activitySpinner?.spinnerActivity(active)
+        }
+    }
+    
+    private func produceRequestForText(textString: String) -> NSURLRequest {
+        
+        if let validUrl = ToolKit.produceValidUrlFromString(textString),
+            validUrlString = validUrl.absoluteString,
+            request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: validUrlString) {
+            return request
+        } else if let bingUrl = ToolKit.produceBingUrlFromSearchString(textString),
+            bingUrlString = bingUrl.absoluteString,
+            request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: bingUrlString) {
+                return request
+        } else {
+            let request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: "http://www.bing.com")
+            return request!
         }
     }
     
@@ -280,20 +294,7 @@ class GeocodeViewController: UIViewController {
 extension GeocodeViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        var searchText = searchBar.text
-
-        if let url = ToolKit.produceValidUrlFromString(searchText),
-               urlString = url.absoluteString,
-            request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: urlString) {
-                webView.loadRequest(request)
-        } else {
-            Logger.error("Need to do something better here.")
-            var alternateString = "http://www.bing.com"
-            if let request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: alternateString) {
-                webView.loadRequest(request)
-            }
-        }
-
-        
+        let request = produceRequestForText(searchBar.text)
+        webView.loadRequest(request)
     }
 }
