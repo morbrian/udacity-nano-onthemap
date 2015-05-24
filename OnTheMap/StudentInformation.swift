@@ -182,8 +182,8 @@ extension StudentInformation: InfoItem {
     typealias IdType = String
     var id: String { return objectId ?? "" }
 
-    typealias OwnerType = StudentIdentity
-    var owner: StudentIdentity { return studentKey }
+    typealias GroupType = StudentIdentity
+    var group: StudentIdentity { return studentKey }
     
     typealias OrderByType = NSTimeInterval
     var orderBy: NSTimeInterval { return updatedAt ?? NSDate(timeIntervalSince1970: 0).timeIntervalSince1970 }

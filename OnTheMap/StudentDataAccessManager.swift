@@ -120,7 +120,7 @@ class StudentDataAccessManager {
     
     func loggedInUserDoesHaveLocation() -> Bool {
         if let identity = currentUser?.studentKey {
-            return infoPool.infoExistsForOwner(identity)
+            return infoPool.infoExistsForGroup(identity)
         } else {
             return false
         }
@@ -167,7 +167,7 @@ class StudentDataAccessManager {
             }
         }
         
-        if infoPool.infoExistsForOwner(studentInformation.studentKey) {
+        if infoPool.infoExistsForGroup(studentInformation.studentKey) {
            onTheMapClient.updateStudentInformation(studentInformation, completionHandler: handleStorage)
         } else {
            onTheMapClient.createStudentInformation(studentInformation, completionHandler: handleStorage)
