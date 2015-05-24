@@ -13,7 +13,7 @@ struct Constants {
     // MARK: Application Info
     
     static let UdacitySignupUrlString = "https://www.udacity.com/account/auth#!/signup"
-    static let MapSpanDistanceMeters = 3000.0
+    static let MapSpanDistanceMeters = 300000.0
     
     
     // MARK: StoryBoard Identifiers

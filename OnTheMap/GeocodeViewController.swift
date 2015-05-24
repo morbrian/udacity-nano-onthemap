@@ -79,6 +79,7 @@ class GeocodeViewController: UIViewController {
     private func configureButton(button: UIButton) {
         button.layer.cornerRadius = 8.0
         button.layer.borderColor = UIColor.darkGrayColor().CGColor
+        button.contentEdgeInsets = UIEdgeInsetsMake(4, 10, 4, 10)
     }
     
     private func produceSpinner() -> SpinnerPanelView {

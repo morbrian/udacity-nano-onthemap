@@ -79,7 +79,7 @@ class StudentMapViewController: OnTheMapBaseViewController {
                 if let latitude = firstLocation.latitude,
                     longitude = firstLocation.longitude {
                         let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
-                        let distance = Constants.MapSpanDistanceMeters * 3
+                        let distance = Constants.MapSpanDistanceMeters
                         var region = MKCoordinateRegionMakeWithDistance(coordinate, distance, distance)
                         self.mapView.setRegion(region, animated: true)
                         
