@@ -24,19 +24,17 @@ class StudentDataAccessManager {
     // application specific operations for OnTheMap Parse Service
     private var onTheMapClient: OnTheMapParseService!
     
+    // user currently using data manager
     private var currentUser: StudentInformation?
     
+    // authentication mechanism the user used to login
     private var authType: AuthenticationType = .NotAuthenticated
     
     // read only access to the logged in user data reference
     var loggedInUser: StudentInformation? { return currentUser }
     
+    // pool of data items fetch by the user
     var infoPool = InfoPool<StudentInformation>()
-    
-    func userFilter(infoItem: StudentInformation) -> Bool {
-        var result = infoItem.studentKey == currentUser?.studentKey
-        return result
-    }
     
     init() {
         udacityClient = UdacityService()
@@ -50,35 +48,39 @@ class StudentDataAccessManager {
         return currentUser != nil
     }
     
+    // type of authentication used to login
     var authenticationTypeUsed: AuthenticationType {
         return authType
     }
     
     // authenticate the user by username and password with the Udacity service.
+    // username: udacity username
+    // password: udacity password
     func authenticateByUsername(username: String, withPassword password: String,
         completionHandler: (success: Bool, error: NSError?) -> Void) {
-            udacityClient.authenticateByUsername(username, withPassword: password) {
-                userIdentity, error in
+            udacityClient.authenticateByUsername(username, withPassword: password) { userIdentity, error in
                 self.handleLoginResponse(userIdentity, authType: .UdacityUsernameAndPassword,
                     error: error, completionHandler: completionHandler)
             }
     }
     
     // authenticate with Udacity using the token provided by facebook login
+    // token: facebook token
     func authenticateByFacebookToken(token: String,
         completionHandler: (success: Bool, error: NSError?) -> Void) {
-            udacityClient.authenticateByFacebookToken(token) {
-                userIdentity, error in
+            udacityClient.authenticateByFacebookToken(token) { userIdentity, error in
                 self.handleLoginResponse(userIdentity, authType: .FacebookToken,
                     error: error, completionHandler: completionHandler)
             }
     }
     
+    // handles response after login attempt
+    // userIdentity: unique key identifying the now logged in user after success
+    // authType: the type of authenticatio used
     private func handleLoginResponse(userIdentity: StudentIdentity?, authType: AuthenticationType, error: NSError?,
         completionHandler: (success: Bool, error: NSError?) -> Void) {
         if let userIdentity = userIdentity {
-            self.udacityClient.fetchInformationForStudentIdentity(userIdentity) {
-                userData, error in
+            self.udacityClient.fetchInformationForStudentIdentity(userIdentity) { userData, error in
                 self.currentUser = userData
                 self.authType = authType
                 completionHandler(success: true, error: nil)
@@ -90,22 +92,28 @@ class StudentDataAccessManager {
     
     // MARK: Access Data Owned by Logged In User
     
+    // filter used to get only the current user's items from a list of students
+    func userFilter(infoItem: StudentInformation) -> Bool {
+        return infoItem.studentKey == currentUser?.studentKey
+    }
+    
+    // number of items owned by the logged in user in the list of student locations
     var userLocationCount: Int {
         return infoPool.count(filter: userFilter)
     }
     
-    // return the student location for the specified index
+    // return the student location for the specified index in the list of items owned by the logged in user
     func userLocationAtIndex(index: Int) -> StudentInformation? {
         return infoPool.infoAtIndex(index, filter: userFilter)
     }
     
-    // return the entire list of student locations
+    // return the entire list of student locations owned by the logged in user
     var userLocations: [StudentInformation] {
         return infoPool.infoItemsAsArray(filter: userFilter)
     }
     
-    // if the location data currently associated with the current user
-    // is deleted, we must reset those attributes.
+    // when the location data currently associated with the current user
+    // is deleted, we reset those attributes.
     func clearUserLocationWithId(objectId: String) {
         if currentUser?.objectId == objectId {
             currentUser?.objectId = nil
@@ -118,6 +126,7 @@ class StudentDataAccessManager {
         }
     }
     
+    // true of the logged in user has saved at least one location item
     func loggedInUserDoesHaveLocation() -> Bool {
         if let identity = currentUser?.studentKey {
             return infoPool.infoExistsForGroup(identity)
@@ -147,6 +156,7 @@ class StudentDataAccessManager {
     
     // store student information item in the info pool and create or update the same change on server
     func storeStudentInformation(studentInformation: StudentInformation, completionHandler: (success: Bool, error: NSError?) -> Void) {
+        
         func handleStorage(studentInformation: StudentInformation?, error: NSError?) {
             if let studentInformation = studentInformation {
                 // this isn't always a super cheap operation, but we put it on the main thread to
@@ -159,7 +169,6 @@ class StudentDataAccessManager {
                     }
                 }
             } else if error != nil {
-                Logger.error(error!.description)
                 completionHandler(success: false, error: error)
             } else {
                 Logger.error("Failed to store student information, but error not handled properly.")
@@ -174,6 +183,7 @@ class StudentDataAccessManager {
         }
     }
     
+    // delete the student information object from server
     func deleteStudentInformation(studentInformation: StudentInformation, completionHandler: (success: Bool, error: NSError?) -> Void) {
         func handleStorage(studentInformation: StudentInformation?, error: NSError?) {
             if let studentInformation = studentInformation {
@@ -188,10 +198,9 @@ class StudentDataAccessManager {
                     }
                 }
             } else if error != nil {
-                Logger.error(error!.description)
                 completionHandler(success: false, error: error)
             } else {
-                Logger.error("Failed to store student information, but error not handled properly.")
+                Logger.error("Failed to delete student information, but error not handled properly.")
                 completionHandler(success: false, error: nil)
             }
         }
@@ -207,14 +216,11 @@ class StudentDataAccessManager {
             return infoPool.count() > 1 ? infoPool.lastInfoItem()?.updatedAt : nil
         }
         
-        onTheMapClient.fetchStudents(limit: fetchLimit, newerThan: newestDate, olderThan: oldestDate) {
-            students, error in
+        onTheMapClient.fetchStudents(limit: fetchLimit, newerThan: newestDate, olderThan: oldestDate) { students, error in
             if let newLocations = students {
                 dispatch_async(dispatch_get_main_queue()) {
-                    // manipulate the data store on the main thread
                     self.infoPool.storeInfoItems(newLocations)
                     dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
-                        // but we don't know how expensive the completion handler is, so put it on off the main thread
                         Logger.info("found \(newLocations.count) items")
                         completionHandler(success: true, error: nil)
                     }
@@ -225,17 +231,14 @@ class StudentDataAccessManager {
         }
     }
     
+    // fetch the current application user's data objects, use first item as the user's default info
     func fetchDataForCurrentUser(completionHandler: (success: Bool, error: NSError?) -> Void) {
         if let studentKey = currentUser?.studentKey {
-            Logger.debug("Will fetch student info for student: \(studentKey)")
-            onTheMapClient.fetchStudentInformationForKey(studentKey) {
-                students, error in
+            onTheMapClient.fetchStudentInformationForKey(studentKey) { students, error in
                 if let newLocations = students {
                     dispatch_async(dispatch_get_main_queue()) {
-                        // manipulate the data store on the main thread
                         if newLocations.count > 0 {
                             let defaultInfo = newLocations[0]
-                            var test = self.currentUser?.objectId
                             self.currentUser?.objectId = defaultInfo.objectId
                             self.currentUser?.mediaUrl = defaultInfo.mediaUrl
                             self.currentUser?.mapString = defaultInfo.mapString
@@ -256,6 +259,7 @@ class StudentDataAccessManager {
         }
     }
     
+    // ping the specified URL to see if we can make a valid request/response
     func validateUrlString(urlString: String, completionHandler: (success: Bool, errorMessage: String?) -> Void) {
         WebClient().pingUrl(urlString) { reply, error in
             if reply {
@@ -267,13 +271,11 @@ class StudentDataAccessManager {
             }
         }
     }
-    
-    
-    
 }
 
-// MARK: - Data Translator
+// MARK: - Data Translation
 
+// store the value in the dictionary if non-nil
 private func putValue(value: AnyObject?, var intoDictionary dictionary: [String:AnyObject], forKey key: String) -> [String:AnyObject] {
     if let value: AnyObject = value {
         dictionary[key] = value
@@ -281,6 +283,7 @@ private func putValue(value: AnyObject?, var intoDictionary dictionary: [String:
     return dictionary
 }
 
+// translate the corresponding udacity values into the same attributes with Parse service names
 func translateToStudentInformationFromUdacityData(udacityData: [String:AnyObject]) -> StudentInformation? {
     var parseData = Dictionary<String, AnyObject>()
     parseData = putValue(udacityData[UdacityService.UdacityJsonKey.Key], intoDictionary: parseData, forKey: OnTheMapParseService.ParseJsonKey.UniqueKey)
@@ -288,10 +291,9 @@ func translateToStudentInformationFromUdacityData(udacityData: [String:AnyObject
     parseData = putValue(udacityData[UdacityService.UdacityJsonKey.Lastname], intoDictionary: parseData, forKey: OnTheMapParseService.ParseJsonKey.Lastname)
     
     var studentInformation = StudentInformation(parseData: parseData)
-    
+
     if let emailBlock = udacityData[UdacityService.UdacityJsonKey.Email] as? [String:AnyObject],
         emailAddress = emailBlock[UdacityService.UdacityJsonKey.Address] as? String {
-        
         studentInformation?.email = emailAddress
     }
     
