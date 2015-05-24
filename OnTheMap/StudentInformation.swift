@@ -16,13 +16,13 @@ typealias StudentIdentity = String
 // MARK: - StudentInformation
 
 // StudentInformation
-// type safe wrapper around basic name-value pairs representing Student data
-// NOTES: the getter/setter approach here has room for optimization improvements,
-// but is a design tradeoff for ease of access to the original dictionary structure.
+// type safe wrapper around simple name-value pairs representing Student data
 struct StudentInformation {
     
+    // name value property pairs
     private var data: [String:AnyObject]
     
+    // formatter for Parse date properties on student data objects
     private let dateFormatter: NSDateFormatter
     
     init?(parseData data: [String:AnyObject]) {
@@ -35,16 +35,20 @@ struct StudentInformation {
         dateFormatter = ParseClient.DateFormatter
     }
     
+    // the raw name-value-pair dictionary
     var rawData: [String:AnyObject] {
         return data
     }
     
+    // student email, excluded form raw data
     var email: String?
     
+    // student unique identifier
     var studentKey: StudentIdentity {
         return data[OnTheMapParseService.ParseJsonKey.UniqueKey] as? String ?? ""
     }
     
+    // unique identifier of the objects data
     var objectId: String? {
         get {
             return data[OnTheMapParseService.ParseJsonKey.ObjectId] as? String
@@ -54,6 +58,7 @@ struct StudentInformation {
         }
     }
     
+    // geographic latitude degrees
     var latitude: Float? {
         get {
             return StudentInformation.validLatitude(data[OnTheMapParseService.ParseJsonKey.Latitude] as? Float)
@@ -63,7 +68,7 @@ struct StudentInformation {
         }
     }
 
-    
+    // geographic longitude degrees
     var longitude: Float? {
         get {
             return StudentInformation.validLongitude(data[OnTheMapParseService.ParseJsonKey.Longitude] as? Float)
@@ -73,6 +78,7 @@ struct StudentInformation {
         }
     }
 
+    // student first name
     var firstname: String? {
         get {
             return data[OnTheMapParseService.ParseJsonKey.Firstname] as? String
@@ -82,6 +88,7 @@ struct StudentInformation {
         }
     }
 
+    // student last name
     var lastname: String? {
         get {
             return data[OnTheMapParseService.ParseJsonKey.Lastname] as? String
@@ -91,6 +98,7 @@ struct StudentInformation {
         }
     }
 
+    // any url, should be properly formed
     var mediaUrl: String? {
         get {
             return data[OnTheMapParseService.ParseJsonKey.MediaUrl] as? String
@@ -100,6 +108,7 @@ struct StudentInformation {
         }
     }
 
+    // place name
     var mapString: String? {
         get {
             return data[OnTheMapParseService.ParseJsonKey.MapString] as? String
@@ -109,6 +118,7 @@ struct StudentInformation {
         }
     }
 
+    // last time this object was updated
     var updatedAt: NSTimeInterval? {
         get {
             return dateFromString(data[OnTheMapParseService.ParseJsonKey.UpdatedAt] as? String)?.timeIntervalSince1970
@@ -122,6 +132,7 @@ struct StudentInformation {
         }
     }
 
+    // time this object was created
     var createdAt: NSTimeInterval? {
         get {
             return dateFromString(data[OnTheMapParseService.ParseJsonKey.CreateAt] as? String)?.timeIntervalSince1970
@@ -135,6 +146,7 @@ struct StudentInformation {
         }
     }
 
+    // firstname + lastname
     var fullname: String {
         var fullname = ""
         if let firstname = firstname {
@@ -146,6 +158,7 @@ struct StudentInformation {
         return fullname
     }
     
+    // parse the string into a data object
     private func dateFromString(string: String?) -> NSDate? {
         if let string = string {
             return dateFormatter.dateFromString(string)
@@ -154,6 +167,7 @@ struct StudentInformation {
         }
     }
     
+    // return a valid latitude or nil
     private static func validLatitude(latitude: Float?) -> Float? {
         if let latitude = latitude
             where latitude <= 90.0 && latitude >= -90.0 {
@@ -163,6 +177,7 @@ struct StudentInformation {
         }
     }
     
+    // return a valid longitude or nil
     private static func validLongitude(longitude: Float?) -> Float? {
         if let longitude = longitude
             where longitude <= 180.0 && longitude >= -180.0 {
@@ -171,7 +186,6 @@ struct StudentInformation {
             return nil
         }
     }
-
 }
 
 // MARK: - StudentInformation: InfoItem
