@@ -160,7 +160,8 @@ class OnTheMapBaseViewController: UIViewController {
     // action when "Add Location" button is tapped
     // pop up Alert dialog if user needs to confirm overwriting old data.
     func addLocationAction(sender: AnyObject!) {
-        if let dataManager = dataManager where dataManager.loggedInUserDoesHaveLocation() {
+        if let dataManager = dataManager
+            where dataManager.loggedInUserDoesHaveLocation() && !dataManager.userAllowedMultiplentries {
             var alert = UIAlertController(title: "Add Study Location", message: "Would you like to overwrite your previously entered location?", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel) {
                 action -> Void in

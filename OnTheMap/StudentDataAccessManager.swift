@@ -92,6 +92,9 @@ class StudentDataAccessManager {
     
     // MARK: Access Data Owned by Logged In User
     
+    // true if the user is permitted to add more than one location entry
+    var userAllowedMultiplentries: Bool = false
+    
     // filter used to get only the current user's items from a list of students
     func userFilter(infoItem: StudentInformation) -> Bool {
         return infoItem.studentKey == currentUser?.studentKey
@@ -176,7 +179,7 @@ class StudentDataAccessManager {
             }
         }
         
-        if infoPool.infoExistsForGroup(studentInformation.studentKey) {
+        if let objectId = studentInformation.objectId where infoPool.infoExistsForId(objectId) {
            onTheMapClient.updateStudentInformation(studentInformation, completionHandler: handleStorage)
         } else {
            onTheMapClient.createStudentInformation(studentInformation, completionHandler: handleStorage)

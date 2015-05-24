@@ -32,7 +32,6 @@ class GeocodeViewController: UIViewController {
     @IBOutlet weak var urlTextField: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     
-    
     @IBOutlet weak var browseButton: UIButton!
     @IBOutlet weak var webBrowserPanel: UIView!
     @IBOutlet weak var webView: UIWebView!
@@ -164,18 +163,25 @@ class GeocodeViewController: UIViewController {
                 if let placemarks = placemarks {
                     if placemarks.count > 0 {
                         if let placemark = placemarks[0] as? CLPlacemark, dataManager = self.dataManager, var updatedInformation = dataManager.loggedInUser  {
-                                // set the new coordinate information and placename
-                                updatedInformation.latitude = Float(placemark.location.coordinate.latitude)
-                                updatedInformation.longitude = Float(placemark.location.coordinate.longitude)
-                                updatedInformation.mapString = placename
-                                var distance: CLLocationDistance?
-                                if let circularRegion = placemark.region as? CLCircularRegion {
-                                    distance = circularRegion.radius
-                                }
-                                dispatch_async(dispatch_get_main_queue()) {
-                                    self.updatedInformation = updatedInformation
-                                    self.transitionToUrlEditing(regionDistance: distance)
-                                }
+                            // set the new coordinate information and placename
+                            updatedInformation.latitude = Float(placemark.location.coordinate.latitude)
+                            updatedInformation.longitude = Float(placemark.location.coordinate.longitude)
+                            updatedInformation.mapString = placename
+                            if dataManager.userAllowedMultiplentries {
+                                // if we allow multiple entries, we can still use the logged-in-user template,
+                                // but we need to clear the Parse provided until the object is created
+                                updatedInformation.objectId = nil
+                                updatedInformation.updatedAt = nil
+                                updatedInformation.createdAt =  nil
+                            }
+                            var distance: CLLocationDistance?
+                            if let circularRegion = placemark.region as? CLCircularRegion {
+                                distance = circularRegion.radius
+                            }
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.updatedInformation = updatedInformation
+                                self.transitionToUrlEditing(regionDistance: distance)
+                            }
                         }
                     }
                 } else if let error = error {
@@ -213,8 +219,7 @@ class GeocodeViewController: UIViewController {
             urlString = url.absoluteString {
                 
             self.networkActivity(true)
-            WebClient().pingUrl(enteredUrlString) {
-                reply, error in
+            WebClient().pingUrl(enteredUrlString) { reply, error in
                 if reply {
                     updatedInformation.mediaUrl = urlString
                     self.dataManager?.storeStudentInformation(updatedInformation) {
@@ -236,7 +241,6 @@ class GeocodeViewController: UIViewController {
                 }
             }
         } else {
-            Logger.error("Bad URL: \(enteredUrlString)")
             ToolKit.showErrorAlert(viewController: self, title: "Invalid Url", message: "Try entering a valid URL.")
         }
     }

@@ -17,12 +17,14 @@ class AccountViewController: OnTheMapBaseViewController {
     @IBOutlet weak var fullNameTextField: UILabel!
     @IBOutlet weak var studentAvatarImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var multipleEntriesToggle: UISwitch!
     
     // MARK: ViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         fullNameTextField.text = dataManager?.loggedInUser?.fullname
+        multipleEntriesToggle.on = dataManager?.userAllowedMultiplentries ?? false
         showUserAvatar()
     }
     
@@ -38,6 +40,13 @@ class AccountViewController: OnTheMapBaseViewController {
             self.tableView.reloadData()
         }
     }
+    
+    // MARK: IBActions
+    
+    @IBAction func changedMultipleEntries(sender: UISwitch) {
+        dataManager?.userAllowedMultiplentries = sender.on
+    }
+    
     
     // MARK: Base Capability
     
