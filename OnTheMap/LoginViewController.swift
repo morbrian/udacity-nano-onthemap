@@ -22,10 +22,13 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var facebookButton: FBSDKLoginButton!
     
+    // central data management object
     private var dataManager: StudentDataAccessManager!
     
+    // remember how far we moved the view after the keyboard displays
     private var viewShiftDistance: CGFloat? = nil
     
+    // network activity properties
     var activityInProgress = false
     private var spinnerBaseTransform: CGAffineTransform!
 
@@ -34,22 +37,17 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         dataManager = StudentDataAccessManager()
         navigationController?.navigationBar.hidden = true
-        
-        // TODO: Consider using GBDeviceInfo, although this check is sufficient for our simple need
+        // TODO: Consider using GBDeviceInfo, although this check is sufficient for our simple needs
         if view.bounds.height <= CGFloat(Constants.DeviceiPhone5Height) {
             // for iPhone5 or smaller, make some of the fonts smaller
             signupButton.titleLabel?.font = signupButton.titleLabel?.font.fontWithSize(CGFloat(16.0))
             loginStatusLabel.font = loginStatusLabel.font.fontWithSize(CGFloat(12.0))
         }
-        
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "handleTap:")
         view.addGestureRecognizer(tapRecognizer)
-        
         spinnerBaseTransform = self.imageView.transform
-        
         facebookButton.delegate = self
     }
     
@@ -78,9 +76,18 @@ class LoginViewController: UIViewController {
     
     // shift the entire view up if bottom text field being edited
     func keyboardWillShow(notification: NSNotification) {
+        var bottomOfLoginButton: CGFloat {
+            var loginButtonOrigin =  view.convertPoint(loginButton.bounds.origin, fromView: loginButton)
+            return loginButtonOrigin.y + loginButton.bounds.height
+        }
         if viewShiftDistance == nil {
-            viewShiftDistance = getKeyboardHeight(notification)
-            self.view.bounds.origin.y += viewShiftDistance!
+            var keyboardHeight = getKeyboardHeight(notification)
+            var topOfKeyboard = view.bounds.maxY - keyboardHeight
+            // we only need to move the view if the keyboard will cover up the login button and text fields
+            if topOfKeyboard < bottomOfLoginButton {
+                viewShiftDistance = bottomOfLoginButton - topOfKeyboard
+                self.view.bounds.origin.y += viewShiftDistance!
+            }
         }
     }
     
@@ -144,7 +151,7 @@ class LoginViewController: UIViewController {
     
     // MARK: Support Helpers
     
-    // provide basic status bar activity indicator.
+    // provide acivity indicators and animations
     func networkActivity(active: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             UIApplication.sharedApplication().networkActivityIndicatorVisible = active
@@ -161,6 +168,7 @@ class LoginViewController: UIViewController {
         }
     }
     
+    // animate Udacity imageView while network activity
     func animate() {
         dispatch_async(dispatch_get_main_queue()) {
             UIView.animateWithDuration(0.001,
@@ -179,7 +187,6 @@ class LoginViewController: UIViewController {
         }
     }
 
-    
     func resetLoginStatusLabel() {
         loginStatusLabel?.text = ""
         loginStatusLabel?.hidden = true

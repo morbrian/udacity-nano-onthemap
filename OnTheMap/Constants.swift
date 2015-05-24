@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Constants used Application wide
 struct Constants {
     
     // MARK: Application Info
