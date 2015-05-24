@@ -18,6 +18,8 @@ class StudentLocationsTableViewController: OnTheMapBaseViewController {
 
     var pinImage: UIImage!
     
+    // MARK: ViewController Lifecycle
+    
     override func viewDidLoad() {
         pinImage = UIImage(named: "Pin")
         super.viewDidLoad()
@@ -28,6 +30,12 @@ class StudentLocationsTableViewController: OnTheMapBaseViewController {
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
+    // figure out the best height for the activity spinner area
     private func produceRefreshViewWithHeight(spinnerAreaHeight: CGFloat) -> RefreshView {
         let refreshViewHeight = view.bounds.height
         var refreshView = RefreshView(frame: CGRect(x: 0, y: -refreshViewHeight, width: CGRectGetWidth(view.bounds), height: refreshViewHeight), spinnerAreaHeight: spinnerAreaHeight, scrollView: tableView)
@@ -37,17 +45,13 @@ class StudentLocationsTableViewController: OnTheMapBaseViewController {
         return refreshView
     }
     
+    // MARK: Overrides from super class
+    
     override func updateDisplayFromModel() {
         dispatch_async(dispatch_get_main_queue()) {
             self.tableView.reloadData()
         }
     }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.reloadData()
-    }
-    
 }
 
 // MARK: - UITableViewDelegate

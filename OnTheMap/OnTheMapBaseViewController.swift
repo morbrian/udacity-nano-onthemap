@@ -100,7 +100,7 @@ class OnTheMapBaseViewController: UIViewController {
     
     // fetch all items created by the currently logged in user
     // this helps us get items for the current user that may not
-    // be in the top 100.
+    // be in the top 100 when all users are included.
     func fetchCurrentUserLocationData() {
         networkActivity(true)
         dataManager?.fetchDataForCurrentUser() { success, error in
@@ -112,12 +112,11 @@ class OnTheMapBaseViewController: UIViewController {
     }
     
     // Make another fetch request for the next available data
-    // TODO: [limitaion] this will not detect DELETE operations made by other users after initial load.
+    // TODO: [limitation] this will not detect DELETE operations made by other users after initial load.
     func fetchNextPage(completionHandler: (() -> Void)? = nil) {
         let oldCount = self.dataManager?.studentLocationCount ?? 0
         networkActivity(true)
-        dataManager?.fetchNextStudentInformationSubset() {
-            success, error in
+        dataManager?.fetchNextStudentInformationSubset() { success, error in
             self.networkActivity(false)
             if let completionHandler = completionHandler {
                 completionHandler()
@@ -134,6 +133,7 @@ class OnTheMapBaseViewController: UIViewController {
                     ToolKit.showErrorAlert(viewController: self, title: "Failed to Fetch Data", message: error.localizedDescription)
                 } else {
                     // this message should never occur, we think we differentiate all errors with a non-nil error object.
+                    // if it does happen, it means we messed up, so hopefully the user will have a good laugh and not hate us.
                     ToolKit.showErrorAlert(viewController: self, title: "Uh Oh, Spaghettios!", message: "An unspecified error occurred, Please take a moment to 'Like' us on Facebook.")
                 }
             }

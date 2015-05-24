@@ -34,6 +34,8 @@ class StudentMapViewController: OnTheMapBaseViewController {
         centerMapOnCurrentUser()
     }
     
+    
+    // a custom spinner used during network activity
     private func produceSpinner() -> SpinnerPanelView {
         var activitySpinner = SpinnerPanelView(frame: view.bounds, spinnerImageView: UIImageView(image: UIImage(named: "Udacity")))
         activitySpinner.backgroundColor = UIColor.orangeColor()
@@ -60,18 +62,21 @@ class StudentMapViewController: OnTheMapBaseViewController {
         }
     }
     
+    // display custom spinner
     override func networkActivity(active: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.activitySpinner.spinnerActivity(active)
         }
     }
     
+    // after user data downloaded, center map on that location
     override func currentUserDataNowAvailable() {
         dispatch_async(dispatch_get_main_queue()) {
             self.centerMapOnCurrentUser()
         }
     }
     
+    // center on the default location previously entered by user, if available
     func centerMapOnCurrentUser() {
         if let currentUserLocations = self.dataManager?.userLocations
             where currentUserLocations.count > 0 {
@@ -122,7 +127,7 @@ extension StudentMapViewController: MKMapViewDelegate {
     }
 }
 
-// MARK: - Extension StudentLocation 
+// MARK: - Extension StudentLocation, MKAnnotation
 
 // StudentAnnotation
 // wrap StudentInformation with Annotation for display on map
