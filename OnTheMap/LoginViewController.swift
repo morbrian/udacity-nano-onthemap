@@ -210,8 +210,6 @@ class LoginViewController: UIViewController {
         if success {
             self.transitionSucessfulLoginSegue()
         } else {
-            Logger.info("Login failed with code \(error?.code) \(error?.description)")
-            
             dispatch_async(dispatch_get_main_queue()) {
                 if let reason = error?.localizedDescription {
                     self.loginStatusLabel?.text = "!! \(reason)"
@@ -238,8 +236,8 @@ class LoginViewController: UIViewController {
 
 extension LoginViewController: FBSDKLoginButtonDelegate {
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
-        networkActivity(true)
         if let token = result.token {
+            networkActivity(true)
             dataManager.authenticateByFacebookToken(token.tokenString,
             completionHandler: handleAuthenticationResponse)
         } else if let error = error {
