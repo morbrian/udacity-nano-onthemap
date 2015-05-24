@@ -103,8 +103,7 @@ class OnTheMapParseService {
         completionHandler: (studentInformation: StudentInformation?, error: NSError?) -> Void) {
             
             parseClient.deleteObjectOfClassName(OnTheMapParseService.StudentLocationClassName,
-                withProperties: [String:AnyObject](), objectId: studentInformation.objectId) {
-                    error in
+                objectId: studentInformation.objectId) { error in
                     if let error = error {
                         completionHandler(studentInformation: nil, error: error)
                     } else {

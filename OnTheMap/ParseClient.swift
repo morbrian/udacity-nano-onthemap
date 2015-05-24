@@ -24,6 +24,7 @@ public class ParseClient {
     
     private var webClient: WebClient!
     
+    // Initialize with app specific keys and id
     // client: insteance of a WebClient
     // applicationId: valid ID provided to this App for use with the Parse service.
     // restApiKey: a developer API Key provided by registering with the Parse service.
@@ -33,10 +34,12 @@ public class ParseClient {
         self.restApiKey = restApiKey
     }
     
+    // Fetch a list of objects from the Parse service for the specified class type.
     // className: the object model classname of the data type on Parse
     // limit: maximum number of objects to fetch
     // skip: number of objects to skip before fetching the limit.
     // orderedBy: name of an attribute on the object model to sort results by.
+    // whereClause: Parse formatted query where clause to constrain query results.
     public func fetchResultsForClassName(className: String, limit: Int = 50, skip: Int = 0, orderedBy: String = ParseJsonKey.UpdatedAt,
         whereClause: String? = nil,
         completionHandler: (resultsArray: [[String:AnyObject]]?, error: NSError?) -> Void) {
@@ -66,12 +69,16 @@ public class ParseClient {
             }
     }
     
+    // Create an object of the specified class type.
+    // PRE: properties MUST NOT already contain an objectId, createdAt, or updatedAt properties.
     // className: the object model classname of the data type on Parse
+    // withProperties: key value pair attributes of the new object.
+    // completionHandler - objectId: the ID of the newly create object
+    // completionHandler - createdAt: the time of creation for newly created object.
     public func createObjectOfClassName(className: String, withProperties properties: [String:AnyObject],
         completionHandler: (objectId: String?, createdAt: String?, error: NSError?) -> Void) {
             
-            var bodyError = performHttpMethod(WebClient.HttpPost, ofClassName: className, withProperties: properties)
-                { jsonData, error in
+            performHttpMethod(WebClient.HttpPost, ofClassName: className, withProperties: properties) { jsonData, error in
                     if let objectId = jsonData?.valueForKey(ParseJsonKey.ObjectId) as? String,
                         createdAt = jsonData?.valueForKey(ParseJsonKey.CreateAt) as? String {
                             completionHandler(objectId: objectId, createdAt: createdAt, error: nil)
@@ -84,33 +91,25 @@ public class ParseClient {
                         completionHandler(objectId: nil, createdAt: nil, error: responseError)
                     }
             }
-            
-            if let bodyError = bodyError {
-                // there was an error preparing the request
-                completionHandler(objectId: nil, createdAt: nil, error: bodyError)
-            }
     }
     
+    // Delete an object of the specified class type with the given objectId
     // className: the object model classname of the data type on Parse
-    public func deleteObjectOfClassName(className: String, withProperties properties: [String:AnyObject], objectId: String? = nil,
-        completionHandler: (error: NSError?) -> Void) {
-            
-            var bodyError = performHttpMethod(WebClient.HttpDelete, ofClassName: className, withProperties: properties, objectId: objectId) {
-                jsonData, error in
-                    completionHandler(error: error)
-            }
-            
-            if let bodyError = bodyError {
-                // there was an error preparing the request
-                completionHandler(error: bodyError)
-            }
+    public func deleteObjectOfClassName(className: String, objectId: String? = nil, completionHandler: (error: NSError?) -> Void) {
+        performHttpMethod(WebClient.HttpDelete, ofClassName: className, objectId: objectId) { jsonData, error in
+                completionHandler(error: error)
+        }
     }
     
+    // Update an object of the specified class type and objectId with the new properties.
+    // className: the object model classname of the data type on Parse
+    // withProperties: key value pair attributes to update the object.
+    // objectId: the unique id of the object to update.
+    // completionHandler - updatedAt: the time object is updated when update successful
     public func updateObjectOfClassName(className: String, withProperties properties: [String:AnyObject], objectId: String? = nil,
         completionHandler: (updatedAt: String?, error: NSError?) -> Void) {
             println("Raw Data: \(properties)")
-            var bodyError = performHttpMethod(WebClient.HttpPut, ofClassName: className, withProperties: properties, objectId: objectId)
-            { jsonData, error in
+            performHttpMethod(WebClient.HttpPut, ofClassName: className, withProperties: properties, objectId: objectId) { jsonData, error in
                 if let updatedAt = jsonData?.valueForKey(ParseJsonKey.UpdatedAt) as? String {
                     completionHandler(updatedAt: updatedAt, error: nil)
                 } else if error != nil {
@@ -120,16 +119,17 @@ public class ParseClient {
                     completionHandler(updatedAt: nil, error: responseError)
                 }
         }
-        
-        if let bodyError = bodyError {
-            // there was an error preparing the request
-            completionHandler(updatedAt: nil, error: bodyError)
-        }
     }
     
-    // return true if the requests gets prepared and handed off to client thread
-    private func performHttpMethod(method: String, ofClassName className: String, withProperties properties: [String:AnyObject], objectId: String? = nil,
-                requestHandler: (jsonData: AnyObject?, error: NSError?) -> Void ) -> NSError? {
+    // Perform an HTTP/HTTPS request with the specified configuration and content.
+    // method: the HTTP method to use
+    // ofClassName: the PARSE classname targeted by the request.
+    // withProperties: the data properties
+    // objectId: the objectId targeted by the request
+    // requestHandler - jsonData: the parsed body content of the response
+    private func performHttpMethod(method: String, ofClassName className: String, withProperties properties: [String:AnyObject] = [String:AnyObject](),
+        objectId: String? = nil, requestHandler: (jsonData: AnyObject?, error: NSError?) -> Void ) {
+        
         var bodyError: NSError?
         if let body = NSJSONSerialization.dataWithJSONObject(properties, options: nil, error: &bodyError)
             where bodyError == nil {
@@ -138,17 +138,13 @@ public class ParseClient {
                     targetUrlString += "/\(objectId)"
                 }
                 if let request = webClient.createHttpRequestUsingMethod(method, forUrlString: targetUrlString,
-                    withBody: body,
-                    includeHeaders: StandardHeaders) {
-                
+                    withBody: body, includeHeaders: StandardHeaders) {
                         webClient.executeRequest(request, completionHandler: requestHandler)
-                        
-                        return nil
                 } else {
-                    return WebClient.errorForCode(.UnableToCreateRequest)
+                    requestHandler(jsonData: nil, error: WebClient.errorForCode(.UnableToCreateRequest))
                 }
         } else {
-            return bodyError
+            requestHandler(jsonData: nil, error: bodyError)
         }
     }
 

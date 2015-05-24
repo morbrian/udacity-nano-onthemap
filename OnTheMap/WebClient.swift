@@ -20,6 +20,15 @@ public class WebClient {
     //                  before or after the desired JSON content in response data.
     public var prepareData: ((NSData) -> NSData?)?
     
+    // encodeParameters
+    // convert dictionary to parameterized String appropriate for use in an HTTP URL
+    public static func encodeParameters(params: [String: AnyObject]) -> String {
+        var queryItems = map(params) { NSURLQueryItem(name:$0, value:"\($1)")}
+        var components = NSURLComponents()
+        components.queryItems = queryItems
+        return components.percentEncodedQuery ?? ""
+    }
+    
     // createHttpRequestUsingMethod
     // Creates fuly configured NSURLRequest for making HTTP POST requests.
     // urlString: properly formatted URL string
@@ -122,16 +131,6 @@ public class WebClient {
         }
         return request
     }
-    
-    // encodeParameters
-    // convert dictionary to parameterized String appropriate for use in an HTTP URL
-    public static func encodeParameters(params: [String: AnyObject]) -> String {
-        var queryItems = map(params) { NSURLQueryItem(name:$0, value:"\($1)")}
-        var components = NSURLComponents()
-        components.queryItems = queryItems
-        return components.percentEncodedQuery ?? ""
-    }
-    
 }
 
 // MARK: - Constants
