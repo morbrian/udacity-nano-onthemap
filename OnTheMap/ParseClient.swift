@@ -194,6 +194,10 @@ extension ParseClient {
         static let UpdatedAt = "updatedAt"
     }
     
+    struct Logic {
+        static let LessThan = "lt"
+        static let GreaterThan = "gt"
+    }
 }
 
 // MARK: - Errors {

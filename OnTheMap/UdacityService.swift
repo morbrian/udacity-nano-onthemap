@@ -20,11 +20,13 @@ class UdacityService {
     init() {
         webClient = WebClient()
         webClient.prepareData = prepareDataForParsing
-
     }
     
     // authenticate with Udacity using a username and password.
     // the user's basic identity (userid) is returned as a UserIdentity in the completionHandler.
+    // username: udacity username
+    // withPassword: udacity password
+    // completionHandler - userIdentity: the udacity user key uniquely identifying this user if login successful
     func authenticateByUsername(username: String, withPassword password: String,
         completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
             // first check the basic requirements
@@ -43,6 +45,8 @@ class UdacityService {
     
     // authenticate with Udacity using a username and password.
     // the user's basic identity (userid) is returned as a UserIdentity in the completionHandler.
+    // token: facebook token from facebook authentication
+    // completionHandler - userIdentity: the udacity user key uniquely identifying this user if login successful
     func authenticateByFacebookToken(token: String,
         completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
             // first check the basic requirements
@@ -54,13 +58,11 @@ class UdacityService {
             authenticateUsingHttpBody(httpBody, completionHandler: completionHandler)
     }
     
+    // authenticate with udacity using prepared body content containing authentication credentials
     private func authenticateUsingHttpBody(httpBody: NSData,
         completionHandler: (userIdentity: StudentIdentity?, error: NSError?) -> Void) {
-            
-           
             if let request = webClient.createHttpRequestUsingMethod(WebClient.HttpPost, forUrlString: UdacityService.SessionUrlString,
-                withBody: httpBody,
-                includeHeaders: UdacityService.StandardHeaders) {
+                withBody: httpBody, includeHeaders: UdacityService.StandardHeaders) {
             
                 webClient.executeRequest(request)
                     { jsonData, error in
@@ -80,7 +82,7 @@ class UdacityService {
     
     // fetch available data for the user identified by userIdentity.
     // For the logged in user, the service returns most of the available data on the user.
-    // For any non-logged in user, this will return just the public data for the specified user.
+    // For any non-logged in user, this will return only the public data for the specified user.
     func fetchInformationForStudentIdentity(studentIdentity: StudentIdentity,
         completionHandler: (studentInformation: StudentInformation?, error: NSError?) -> Void) {
             
