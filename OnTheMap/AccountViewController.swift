@@ -8,11 +8,17 @@
 
 import UIKit
 
+// Account ViewController
+// Displays the locations specific to the current user,
+// optionally allows current user to change setting allow
+// multiple locations to be entered
 class AccountViewController: OnTheMapBaseViewController {
     
     @IBOutlet weak var fullNameTextField: UILabel!
     @IBOutlet weak var studentAvatarImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
+    
+    // MARK: ViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,24 +26,27 @@ class AccountViewController: OnTheMapBaseViewController {
         showUserAvatar()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
+    // MARK: Overrides from OnTheMapBaseViewController
+    
     override func updateDisplayFromModel() {
         dispatch_async(dispatch_get_main_queue()) {
             self.tableView.reloadData()
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.reloadData()
-    }
+    // MARK: Base Capability
     
+    // get the users Gravatar image and display it
     private func showUserAvatar() {
         networkActivity(true)
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
-            if let loggedInUser = self.dataManager?.loggedInUser,
-                email = loggedInUser.email,
-                url = ToolKit.produceGravatarUrlFromEmailString(email),
-                imageData = NSData(contentsOfURL: url) {
+            if let loggedInUser = self.dataManager?.loggedInUser, email = loggedInUser.email,
+                url = ToolKit.produceGravatarUrlFromEmailString(email), imageData = NSData(contentsOfURL: url) {
                     self.networkActivity(false)
                     dispatch_async(dispatch_get_main_queue()) {
                         self.studentAvatarImageView.image = UIImage(data: imageData)
@@ -49,21 +58,14 @@ class AccountViewController: OnTheMapBaseViewController {
 }
 
 // MARK: - UITableViewDelegate
+
 extension AccountViewController: UITableViewDelegate {
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let item = dataManager?.userLocationAtIndex(indexPath.item),
-            updatedAt = item.updatedAt {
-                Logger.info("Student Updated At: \(NSDate(timeIntervalSince1970: updatedAt))")
-        }
-    }
 
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             networkActivity(true)
             if let studentInformation = dataManager?.userLocationAtIndex(indexPath.item) {
-                dataManager?.deleteStudentInformation(studentInformation) {
-                    success, error in
+                dataManager?.deleteStudentInformation(studentInformation) { success, error in
                     self.networkActivity(false)
                     if success {
                         dispatch_async(dispatch_get_main_queue()) {
@@ -88,17 +90,14 @@ extension AccountViewController: UITableViewDelegate {
 extension AccountViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        Logger.debug("table view has \(dataManager?.userLocationCount ?? 0) items")
         return dataManager?.userLocationCount ?? 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var userLocationData = dataManager?.userLocationAtIndex(indexPath.item)
         let cell = tableView.dequeueReusableCellWithIdentifier(Constants.UserLocationCell, forIndexPath: indexPath) as! UITableViewCell
-        
         cell.textLabel?.text = userLocationData?.mapString
         cell.detailTextLabel?.text = userLocationData?.objectId
-        Logger.debug("UserLocationObject: \(userLocationData?.rawData)")
         return cell
     }
 }

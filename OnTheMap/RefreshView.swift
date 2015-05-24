@@ -11,6 +11,8 @@
 
 import UIKit
 
+// RefreshView
+// view displayed at top of tableview during network activity
 class RefreshView: UIView {
     private unowned var scrollView: UIScrollView
     weak var delegate: RefreshViewDelegate?

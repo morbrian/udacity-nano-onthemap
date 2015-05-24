@@ -8,6 +8,8 @@
 
 import UIKit
 
+// ToolKit
+// catch all class for general purpose useful functions
 class ToolKit {
     
     // informs user of error status
@@ -38,19 +40,21 @@ class ToolKit {
         }
     }
     
+    // use the md5 hash of the input email string to produce the appropriate the Gravatar URL
     static func produceGravatarUrlFromEmailString(email: String) -> NSURL? {
         return NSURL(string: "https://www.gravatar.com/avatar/\(email.md5)")
     }
     
+    // turn the search text into a Bing search query URL
     static func produceBingUrlFromSearchString(searchString: String) -> NSURL? {
         let bingUrlString = "https://www.bing.com/search"
         let encodedSearch = WebClient.encodeParameters(["q":searchString])
         let queryString = encodedSearch.stringByReplacingOccurrencesOfString("%20", withString: "+")
         return NSURL(string: "\(bingUrlString)?\(queryString)")
     }
-    
 }
 
+// extend String with a property to get its md5 hash
 //
 // Thank you StackOverflow!
 // http://stackoverflow.com/questions/24123518/how-to-use-cc-md5-method-in-swift-language

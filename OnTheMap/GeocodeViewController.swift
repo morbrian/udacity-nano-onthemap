@@ -1,5 +1,5 @@
 //
-//  ReverseGeocodeViewController.swift
+//  GeocodeViewController.swift
 //  OnTheMap
 //
 //  Created by Brian Moriarty on 5/2/15.
@@ -163,9 +163,7 @@ class GeocodeViewController: UIViewController {
                 self.networkActivity(false)
                 if let placemarks = placemarks {
                     if placemarks.count > 0 {
-                        if let placemark = placemarks[0] as? CLPlacemark,
-                            dataManager = self.dataManager,
-                            var updatedInformation = dataManager.loggedInUser  {
+                        if let placemark = placemarks[0] as? CLPlacemark, dataManager = self.dataManager, var updatedInformation = dataManager.loggedInUser  {
                                 // set the new coordinate information and placename
                                 updatedInformation.latitude = Float(placemark.location.coordinate.latitude)
                                 updatedInformation.longitude = Float(placemark.location.coordinate.longitude)
@@ -260,12 +258,10 @@ class GeocodeViewController: UIViewController {
     
     private func produceRequestForText(textString: String) -> NSURLRequest {
         
-        if let validUrl = ToolKit.produceValidUrlFromString(textString),
-            validUrlString = validUrl.absoluteString,
+        if let validUrl = ToolKit.produceValidUrlFromString(textString), validUrlString = validUrl.absoluteString,
             request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: validUrlString) {
             return request
-        } else if let bingUrl = ToolKit.produceBingUrlFromSearchString(textString),
-            bingUrlString = bingUrl.absoluteString,
+        } else if let bingUrl = ToolKit.produceBingUrlFromSearchString(textString), bingUrlString = bingUrl.absoluteString,
             request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: bingUrlString) {
                 return request
         } else {

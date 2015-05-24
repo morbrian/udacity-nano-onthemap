@@ -8,6 +8,8 @@
 
 import UIKit
 
+// SpinnerPanelView
+// custom view supports spinning an imageView for use during network activity
 class SpinnerPanelView: UIView {
     
     let SpinnerSize = CGFloat(44.0)
@@ -64,6 +66,7 @@ class SpinnerPanelView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // when active = true kicks off the spinner until called again with active = false
     func spinnerActivity(active: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.activityInProgress = active
@@ -78,6 +81,7 @@ class SpinnerPanelView: UIView {
         }
     }
     
+    // continue to animate the spinner until spinnerActivity is not active
     func animate() {
         dispatch_async(dispatch_get_main_queue()) {
         UIView.animateWithDuration(0.001,

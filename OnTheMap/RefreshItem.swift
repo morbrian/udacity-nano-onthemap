@@ -12,6 +12,8 @@ import UIKit
 
 import UIKit
 
+// RefreshItem
+// animation used in RefreshView during network activity
 class RefreshItem {
     unowned var view: UIView
     private var spinnerBaseTransform: CGAffineTransform
@@ -22,8 +24,6 @@ class RefreshItem {
         self.view.center = center
         self.spinnerBaseTransform = view.transform
     }
-    
-    
     
     func animate() {
         UIView.animateWithDuration(0.001,
