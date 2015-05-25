@@ -831,7 +831,7 @@
         <scene sceneID="Tqw-gd-a9F">
             <objects>
                 <navigationController id="a2d-Hq-LC1" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Account" id="NJg-wG-1ir"/>
+                    <tabBarItem key="tabBarItem" title="Account" image="Account" id="NJg-wG-1ir"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hEV-Ou-FYr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -864,6 +864,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Account" width="32" height="32"/>
         <image name="List" width="32" height="32"/>
         <image name="Map" width="32" height="32"/>
         <image name="Udacity" width="256" height="256"/>
