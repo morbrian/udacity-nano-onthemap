@@ -15,6 +15,7 @@ struct Constants {
     
     static let UdacitySignupUrlString = "https://www.udacity.com/account/auth#!/signup"
     static let MapSpanDistanceMeters = 300000.0
+    static let GravatarImageSize = 80.0
     
     
     // MARK: StoryBoard Identifiers

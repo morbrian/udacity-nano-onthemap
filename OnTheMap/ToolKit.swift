@@ -42,7 +42,7 @@ class ToolKit {
     
     // use the md5 hash of the input email string to produce the appropriate the Gravatar URL
     static func produceGravatarUrlFromEmailString(email: String) -> NSURL? {
-        return NSURL(string: "https://www.gravatar.com/avatar/\(email.md5)")
+        return NSURL(string: "https://www.gravatar.com/avatar/\(email.md5)?s=\(Constants.GravatarImageSize)")
     }
     
     // turn the search text into a Bing search query URL
