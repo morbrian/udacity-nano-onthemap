@@ -122,5 +122,13 @@ There are three ways to cause the table view tab to fetch additional data, beyon
 
 ## Account Tab Extra View
 
-pending
+The account tab is an additional view which loads only data specific to the user. This view fetches the user’s **Gravatar** image using the md5 has of the email address on file with Udacity.
+
+The view provides a switch control to let the user enter multiple locations, instead of just updating a single location item.
+
+A table of all of the user’s locations currently stored with the *Parse* service are listed in a table, and the user may `Delete` any of the locations as desired.
+
+![Account Tab](doc/img/AccountTab.png)
+
+
 
