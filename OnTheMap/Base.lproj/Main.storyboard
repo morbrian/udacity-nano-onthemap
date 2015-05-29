@@ -409,7 +409,7 @@
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                         <connections>
-                                                            <action selector="reverseGeocodeAction:" destination="e2o-jI-nQE" eventType="touchUpInside" id="q0F-Ta-vPm"/>
+                                                            <action selector="geocodeAction:" destination="e2o-jI-nQE" eventType="touchUpInside" id="mGI-7J-vdY"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
