@@ -1,22 +1,86 @@
 # On The Map
 
-This is my project submission for the Udacity Course *iOS Networking with Swift*, the 3rd course in the *iOS Developer Nanodegree*.
+This is our project submission for the Udacity Course *iOS Networking with Swift*, the 3rd course in the *iOS Developer Nanodegree*.
+
+*The project was implemented by just me, Brian Moriarty. This documents speaks in plurals such as “we” and “our” because that tends to make better prose in online documentation.*
+
 
 ## Table of Contents
 
 * [App Overview](#app-overview)
+* [Application Core Design](#application-core-design)
+  * [OnTheMap Network Services](#onthemap-network-services)
+  * [OnTheMap Data Management](#onthemap-data-management)
+  * [OnTheMap ViewController Communication](#onthemap-viewcontroller-communication)
 * [Login Screen Implementation](#login-screen-implementation)
+* [Map Tab Implementation](#map-tab-implementation)
+* [Account Tab Extra View](#account-tab-extra-view)
+  
 
 
 ## App Overview
 
-The **On The Map** iOS App functional UI design is specified by Udacity. My implementation sticks very closely to the provided design, with the exception of the added *Account* tab which is an additional tab I chose to add.
+The **On The Map** iOS App functional UI design is specified by Udacity. Our implementation sticks very closely to the provided design, with the exception of the added *Account* tab which is an additional tab we chose to add.
 
-This overview will describe the required baseline functionality of the app. The rest of the document will highlight specific areas of my implementation in the context of the baseline design. All screen captures will be from my implementation, and may differ slightly from the mockups provided by Udacity.
+This overview will describe the required baseline functionality of the app. The rest of the document will highlight specific areas of our implementation in the context of the baseline design. All screen captures will be from our implementation, and may differ slightly from the mockups provided by Udacity.
 
 The general user workflow for the app is listed in the diagram below. The user is presented with a login screen and may login using either Facebook or a Udacity username password. After login, the user is taking to a map view displaying student study locations geographically. The user may choose to view a listing of the student data in a table view. Finally, the user may create a study location of their own by searching for a place name, and then associating a URL with the place entry.
 
 ![User Workflow Baseline](doc/img/User-Workflow-Baseline.png)
+
+## Application Core Design
+
+The application is comprised of several custom components designed to provide the core functionality of the app, independent of the UI design.
+ 
+### OnTheMap Network Servies
+
+The diagram below depicts the layered design of our network service components. 
+
+* **iOS Core Foundation:** baseline network capabilities instrinsic to iOS.
+* **WebClient:** thin layer of utility functions used to simplify building and executing *HTTP* request calls.
+* **UdacityService:** thin layer on top of *WebClient* to simplify requests specific to the Udacity web service.
+* **ParseClient:** thin layer for generic *Parse API* requests to arbitrary class types in the Parse web service.
+* **OnTheMapParseService:** thin layer specific to the `StudentLocation` class type used to simplify requests to the *Parse API*.
+
+![Network Component Design](doc/img/NetworkComponentDesign.png)
+
+### OnTheMap Data Management
+
+In addition to leveraging the common Model-View-Controller (MVC) design pattern, the *OnTheMap* application also encapsulates all data access using a `StudentDataAccessManager` as the data manager. All logic for authentication, data-management in memory, and data-access over the network is encapsulated by the data manager.
+
+![Data Access and Model View Controller](doc/img/DataAccess-MVC.png)
+
+The `InfoPool` component is a generic filtered data pool with limited indexing and sorting capabilities. The `InfoPool` can manage any arbitrary data type provided the type implements the `InfoItem` protocol, show in the code block below.
+
+```swift
+// all info items must have at least an ID, Group, and attribute value to sort by
+public protocol InfoItem {
+    
+    // must be unique value among all other info items in the pool
+    typealias IdType: Hashable, Comparable
+    var id: IdType { get }
+
+    // info items with equal group values are considered part of the same group.
+    typealias GroupType: Hashable, Comparable
+    var group: GroupType { get }
+    
+    // the pool is managed as a sorted list and this value is used to sort the info items.
+    typealias OrderByType: Comparable
+    var orderBy: OrderByType { get }
+    
+}
+``` 
+
+In the *OnTheMap* application, our base `StudentInformation` struct is extended to implement the `InfoItem` protocol, and is added to an array managed by the `StudentDataAccessManager`. The `OrderBy` attribute is implemented as the `UpdatedAt` attributed, meaning our list of data is ordered by the last update time of the data.
+
+The `StudentDataAccessManager` leverages knowledge about the sorted data to make smart requests to the *Parse API* service. Only data updated earlier than the oldest item in the list, or updated later than the most recent item in the list is requested in controlled 100 item batches. This way, when we make a request we are sure to get the most recent data, but we can also continue filling in any older data we may not have requested yet. 
+
+This batched request capability is used at load time, by the **Refresh** button, and leveraged further by the UITableView during scrolling as described later in the document.
+
+### OnTheMap ViewController Communication
+
+The sole data access mechanism for all ViewControllers in the `StudentDataAccessManager`. On Segue, the instance of the `StudentDataAccessManager` is passed on to the next ViewController.
+
 
 ## Login Screen Implementation
 
@@ -26,4 +90,16 @@ Errors are reported as part of the UI design, rather than using a more intrusive
 
 ![Login Screen Errors](doc/img/LoginScreen-Errors.png)
 
+Network activity is communicated to the user in two ways.
+
+1. By the standard `UIApplication.sharedApplication().networkActivityIndicatorVisible` spinner on the status bar.
+2. By a custom animation which spins the Udacity **U** image on the page.
+
+## Map Tab Implementation
+
+pending
+
+## Account Tab Extra View
+
+pending
 
