@@ -151,7 +151,7 @@ class GeocodeViewController: UIViewController {
         webBrowserPanel.hidden = true
     }
     
-    @IBAction func reverseGeocodeAction(sender: UIButton) {
+    @IBAction func geocodeAction(sender: UIButton) {
         placeNameTextField.endEditing(false)
         var geocoder = CLGeocoder()
         
@@ -287,7 +287,7 @@ class GeocodeViewController: UIViewController {
                 mapView.setRegion(region, animated: true)
         }
     }
-    
+
 }
 
 // MARK: - UISearchBarDelegate
