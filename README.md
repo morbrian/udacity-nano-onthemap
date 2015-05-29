@@ -16,6 +16,7 @@ This is our project submission for the Udacity Course *iOS Networking with Swift
 * [Map Tab Implementation](#map-tab-implementation)
 * [Table View Tab Implementation](#table-view-tab-implementation)
 * [Account Tab Extra View](#account-tab-extra-view)
+* [Information Posting Workflow](#information-posting-workflow)
 
 ## App Overview
 
@@ -130,5 +131,23 @@ A table of all of the user’s locations currently stored with the *Parse* servi
 
 ![Account Tab](doc/img/AccountTab.png)
 
+## Information Posting Workflow
 
+Information posting is a two step process. First the user entered the name of a place. If there is a network error or the location cannot be found, a alert popup is displayed and the user can try again or cancel.
+
+Once a location has been entered successfully, the user is presented with the opportunity to enter a URL. The user will be presented with an alert popup if an invalid URL is submitted.
+
+The user can tap **Browse** to browse to a URL. If the user has already entered text in to the URL Text field, the application will decide if it is a valid URL.
+
+* If the entered text is a valid URL, **Browse** will open that URL in a UIWebView
+* If the entered text is not a valid URL, **Browse** will build a *Bing* search query and open the search results in a UIWebView.
+* If no text is entered, **Browse** will open to the *Bing* home page.
+
+![Search or Browse URL](doc/img/SearchBrowse.png)
+
+Once in the UIWebView browser, the user may enter any text or URL in the Search field. Again, if the text appears to be a URL, then that web page will be displayed, otherwise the results of a *Bing* query will be displayed.
+
+The user may click the **Use** button to associate the currently displayed URL with the chosen location, and then submit the new location. While the submit is processing, the Udacity **U** will spin on a translucent orange background until the network activity is complete.
+
+![Submit Location Network Activity](doc/img/SubmitLocation-NetworkActivity.png)
 
