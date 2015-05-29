@@ -14,9 +14,8 @@ This is our project submission for the Udacity Course *iOS Networking with Swift
   * [OnTheMap ViewController Communication](#onthemap-viewcontroller-communication)
 * [Login Screen Implementation](#login-screen-implementation)
 * [Map Tab Implementation](#map-tab-implementation)
+* [Table View Tab Implementation](#table-view-tab-implementation)
 * [Account Tab Extra View](#account-tab-extra-view)
-  
-
 
 ## App Overview
 
@@ -79,8 +78,11 @@ This batched request capability is used at load time, by the **Refresh** button,
 
 ### OnTheMap ViewController Communication
 
-The sole data access mechanism for all ViewControllers in the `StudentDataAccessManager`. On Segue, the instance of the `StudentDataAccessManager` is passed on to the next ViewController.
+Each of the ViewControllers associated with a Tab extend from the `OnTheMapBaseViewController`. This permits them to inherit the core features common to all of them, such as the ToolBar buttons, the `dataManager` property and some of the network activity, extending these as needed for scene specific needs.
 
+![ViewController Hierarchy](doc/img/BaseViewController.png)
+
+The sole data access mechanism for all ViewControllers in the `StudentDataAccessManager`. On Segue, the instance of the `StudentDataAccessManager` is passed on to the next ViewController.
 
 ## Login Screen Implementation
 
@@ -90,14 +92,33 @@ Errors are reported as part of the UI design, rather than using a more intrusive
 
 ![Login Screen Errors](doc/img/LoginScreen-Errors.png)
 
-Network activity is communicated to the user in two ways.
+Network activity is communicated to the user with two visual clues.
 
 1. By the standard `UIApplication.sharedApplication().networkActivityIndicatorVisible` spinner on the status bar.
 2. By a custom animation which spins the Udacity **U** image on the page.
 
 ## Map Tab Implementation
 
-pending
+The first scene to load after the Login Screen is the Map Tab. If the user has not entered any location data, the map will appear zoomed out to show as many of the top 100 locations as possible from other students. However, if the student does have previously entered data, the map will zoom to show the last location entered by the user.
+
+While data is loading, the map will display the `UIApplication.sharedApplication().networkActivityIndicatorVisible` as well as a custom translucent orange view with a spinning **U** image, as displayed below.
+
+![Map Tab Network Activity](doc/img/MapTab-NetworkActivity.png)
+
+To ensure the user’s own data is always downloaded to the map, even if it is older than the most recent 100 locations, a separate request is made  to the `StudentLocation` *Parse API* service to get just data owned by the user.
+
+## Table View Tab Implementation
+
+The table view receives an already populated `dataManager` when it is segued to so does not initially need to fetch data.
+
+There are three ways to cause the table view tab to fetch additional data, beyond the initial 100 downloaded items.
+
+1. Tap the *Refresh* button to get the next 100 or any updates since the previous fetch.
+2. Pull down to scroll when the first row is showing, this will show a spinning Udacity **U** animation on an orange background at the top of the scroll view, shown in the  image below.
+3. Continue scrolling down to the end of the list, and at about 20 items from the end of the list a request for the next 100 items will be made.
+
+![Table View Tab Network Activity](doc/img/TableViewTab-NetworkActivity.png)
+
 
 ## Account Tab Extra View
 
