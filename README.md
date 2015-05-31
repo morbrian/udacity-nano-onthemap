@@ -16,6 +16,7 @@ This is our project submission for the Udacity Course *iOS Networking with Swift
 * [Map Tab Implementation](#map-tab-implementation)
 * [Table View Tab Implementation](#table-view-tab-implementation)
 * [Account Tab Extra View](#account-tab-extra-view)
+* [Tiled Tab Extra View](#Tiled-tab-extra-view)
 * [Information Posting Workflow](#information-posting-workflow)
 
 ## App Overview
@@ -130,6 +131,14 @@ The view provides a switch control to let the user enter multiple locations, ins
 A table of all of the user’s locations currently stored with the *Parse* service are listed in a table, and the user may `Delete` any of the locations as desired.
 
 ![Account Tab](doc/img/AccountTab.png)
+
+## Tiled Tab Extra View
+
+The tiled tab is an additional view which displays a listing of the student locations in a collection view. Tapping on a tile in this view will open the item’s valid URL in the default browser, similar to the table view behavior.
+
+Unlike the table view, the only way to fetch new items beyond the initial 100 in this view is with the **Refresh** button on the navigation bar.
+
+![Tiled Tab](doc/img/StudentCollection.png)
 
 ## Information Posting Workflow
 
