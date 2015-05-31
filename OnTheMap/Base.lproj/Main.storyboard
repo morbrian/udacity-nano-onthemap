@@ -188,12 +188,147 @@
                     <connections>
                         <segue destination="plM-UJ-sRk" kind="relationship" relationship="viewControllers" id="oBW-tj-78K"/>
                         <segue destination="ffO-S2-GJJ" kind="relationship" relationship="viewControllers" id="SS3-pU-ili"/>
+                        <segue destination="oyA-IT-XhG" kind="relationship" relationship="viewControllers" id="5rq-RJ-mE0"/>
                         <segue destination="a2d-Hq-LC1" kind="relationship" relationship="viewControllers" id="ASB-cd-cqp"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rd5-he-o7v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1861" y="242"/>
+        </scene>
+        <!--Tiled-->
+        <scene sceneID="ggz-5G-QUe">
+            <objects>
+                <navigationController id="oyA-IT-XhG" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Tiled" image="Collection" id="Oom-ak-DqD"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wgn-um-LeU">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="wTf-0j-tzJ" kind="relationship" relationship="rootViewController" id="Zkx-fe-9nS"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GEZ-On-XXk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2691" y="-933"/>
+        </scene>
+        <!--On The Map-->
+        <scene sceneID="AAg-RI-6bI">
+            <objects>
+                <viewController id="wTf-0j-tzJ" customClass="StudentLocationsCollectionViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JHP-BD-f8N"/>
+                        <viewControllerLayoutGuide type="bottom" id="VlD-JL-REf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Z4J-Nu-HVu">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="H91-bK-0Dq">
+                                <rect key="frame" x="20" y="0.0" width="560" height="600"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="xff-eS-Xx5">
+                                    <size key="itemSize" width="80" height="80"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StudentLocationCollectionItem" id="Iqf-fb-LOS" customClass="StudentLocationCollectionViewCell" customModule="OnTheMap" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="aCW-nC-BBp" userLabel="First">
+                                                    <rect key="frame" x="8" y="8" width="64" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="gHE-cB-Qmi" userLabel="Last">
+                                                    <rect key="frame" x="8" y="51" width="64" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="32" placeholderIntrinsicHeight="32" translatesAutoresizingMaskIntoConstraints="NO" id="J9L-3h-WjZ">
+                                                    <rect key="frame" x="24" y="24" width="32" height="32"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.33000000000000002" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="centerX" secondItem="J9L-3h-WjZ" secondAttribute="centerX" id="4N1-Q2-Xey"/>
+                                            <constraint firstItem="aCW-nC-BBp" firstAttribute="top" secondItem="Iqf-fb-LOS" secondAttribute="topMargin" id="Pit-FI-brL"/>
+                                            <constraint firstItem="aCW-nC-BBp" firstAttribute="leading" secondItem="Iqf-fb-LOS" secondAttribute="leadingMargin" id="QxC-g7-ynZ"/>
+                                            <constraint firstItem="gHE-cB-Qmi" firstAttribute="bottom" secondItem="Iqf-fb-LOS" secondAttribute="bottomMargin" id="U1d-vt-U4C"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="gHE-cB-Qmi" secondAttribute="trailing" id="aIR-Xg-VE2"/>
+                                            <constraint firstAttribute="centerX" secondItem="J9L-3h-WjZ" secondAttribute="centerX" id="cwS-Bt-dFN"/>
+                                            <constraint firstItem="aCW-nC-BBp" firstAttribute="trailing" secondItem="Iqf-fb-LOS" secondAttribute="trailingMargin" id="jL1-4h-Y3R"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="aCW-nC-BBp" secondAttribute="trailing" id="jN6-O5-qfk"/>
+                                            <constraint firstAttribute="centerY" secondItem="J9L-3h-WjZ" secondAttribute="centerY" id="oNI-wi-JTY"/>
+                                            <constraint firstItem="aCW-nC-BBp" firstAttribute="leading" secondItem="Iqf-fb-LOS" secondAttribute="leadingMargin" id="uqb-xg-k7s"/>
+                                            <constraint firstItem="gHE-cB-Qmi" firstAttribute="leading" secondItem="Iqf-fb-LOS" secondAttribute="leadingMargin" id="wVf-gN-QFU"/>
+                                            <constraint firstItem="J9L-3h-WjZ" firstAttribute="top" secondItem="Iqf-fb-LOS" secondAttribute="topMargin" id="zLi-n6-kIz"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="QxC-g7-ynZ"/>
+                                                <exclude reference="jN6-O5-qfk"/>
+                                                <exclude reference="cwS-Bt-dFN"/>
+                                                <exclude reference="zLi-n6-kIz"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <outlet property="firstNameLabel" destination="aCW-nC-BBp" id="71j-Xw-A8Y"/>
+                                            <outlet property="imageView" destination="J9L-3h-WjZ" id="bJ5-hH-9of"/>
+                                            <outlet property="lastNameLabel" destination="gHE-cB-Qmi" id="PYG-4M-jyz"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="wTf-0j-tzJ" id="tPQ-SO-c1I"/>
+                                    <outlet property="delegate" destination="wTf-0j-tzJ" id="foR-Qf-UbE"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="H91-bK-0Dq" firstAttribute="leading" secondItem="Z4J-Nu-HVu" secondAttribute="leadingMargin" constant="53" id="PBL-FR-DR2"/>
+                            <constraint firstItem="H91-bK-0Dq" firstAttribute="top" secondItem="JHP-BD-f8N" secondAttribute="bottom" id="RQh-yj-OKn"/>
+                            <constraint firstAttribute="trailing" secondItem="H91-bK-0Dq" secondAttribute="trailing" constant="20" symbolic="YES" id="U0j-dX-Ljc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="H91-bK-0Dq" secondAttribute="trailing" constant="-85" id="aYF-eZ-PdT"/>
+                            <constraint firstItem="H91-bK-0Dq" firstAttribute="top" secondItem="Z4J-Nu-HVu" secondAttribute="topMargin" id="bh6-dJ-rR1"/>
+                            <constraint firstItem="H91-bK-0Dq" firstAttribute="top" secondItem="JHP-BD-f8N" secondAttribute="bottom" id="qHx-eu-GhV"/>
+                            <constraint firstAttribute="bottom" secondItem="H91-bK-0Dq" secondAttribute="bottom" id="xgQ-LY-2Mr"/>
+                            <constraint firstItem="H91-bK-0Dq" firstAttribute="top" secondItem="Z4J-Nu-HVu" secondAttribute="topMargin" id="xwg-7S-03C"/>
+                            <constraint firstItem="H91-bK-0Dq" firstAttribute="leading" secondItem="Z4J-Nu-HVu" secondAttribute="leading" constant="20" symbolic="YES" id="zUF-VY-mYA"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="PBL-FR-DR2"/>
+                                <exclude reference="RQh-yj-OKn"/>
+                                <exclude reference="aYF-eZ-PdT"/>
+                                <exclude reference="qHx-eu-GhV"/>
+                                <exclude reference="xwg-7S-03C"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" title="On The Map" id="kMs-4k-4qE"/>
+                    <connections>
+                        <outlet property="collectionView" destination="H91-bK-0Dq" id="wEK-wH-Qs4"/>
+                        <segue destination="e2o-jI-nQE" kind="presentation" identifier="GeocodeSegue" id="JOx-YK-WfK"/>
+                        <segue destination="UQX-Ki-o3j" kind="unwind" identifier="ReturnToLoginScreenSegue" unwindAction="segueToLoginScreen:" id="mqS-bO-XW4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nir-S1-oMj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="UQX-Ki-o3j" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3621" y="-918"/>
         </scene>
         <!--On The Map-->
         <scene sceneID="UZU-6P-Bt6">
@@ -865,11 +1000,12 @@
     </scenes>
     <resources>
         <image name="Account" width="32" height="32"/>
+        <image name="Collection" width="30" height="30"/>
         <image name="List" width="32" height="32"/>
         <image name="Map" width="32" height="32"/>
         <image name="Udacity" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="chx-mU-E29"/>
+        <segue reference="JOx-YK-WfK"/>
     </inferredMetricsTieBreakers>
 </document>
