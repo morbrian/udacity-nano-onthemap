@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0510"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A0146D2A9E9BCCA721C62B1B"
-               BuildableName = "libPods-OnTheMap-Bolts.a"
+               BlueprintIdentifier = "F0CE12F046DF772BD6E7B83E"
+               BuildableName = "Bolts.framework"
                BlueprintName = "Pods-OnTheMap-Bolts"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

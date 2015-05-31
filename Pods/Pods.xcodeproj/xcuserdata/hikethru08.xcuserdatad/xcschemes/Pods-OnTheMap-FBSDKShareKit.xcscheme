@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0510"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3292D3DC4A1C53EEF0E980DD"
-               BuildableName = "libPods-OnTheMap-FBSDKShareKit.a"
+               BlueprintIdentifier = "7A7DBA5FDDEA033532EDA367"
+               BuildableName = "FBSDKShareKit.framework"
                BlueprintName = "Pods-OnTheMap-FBSDKShareKit"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
