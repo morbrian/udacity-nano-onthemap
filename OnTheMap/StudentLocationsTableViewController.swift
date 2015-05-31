@@ -73,7 +73,6 @@ extension StudentLocationsTableViewController: UITableViewDelegate {
                 }
         }
     }
-
 }
 
 // MARK: - UITableViewDataSource
