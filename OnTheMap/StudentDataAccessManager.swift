@@ -216,7 +216,9 @@ class StudentDataAccessManager {
             return infoPool.count() > 0 ? infoPool.infoAtIndex(0)?.updatedAt : nil
         }
         var oldestDate: NSTimeInterval? {
-            return infoPool.count() > 1 ? infoPool.lastInfoItem()?.updatedAt : nil
+            // we filter out objects owned by the current user when identifying the oldest item
+            // because those were prefetched separately and there may be newer objects owned by other users.
+            return infoPool.count() > 1 ? infoPool.lastInfoItem(filter: {$0.objectId != self.currentUser?.objectId})?.updatedAt : nil
         }
         
         onTheMapClient.fetchStudents(limit: fetchLimit, newerThan: newestDate, olderThan: oldestDate) { students, error in
