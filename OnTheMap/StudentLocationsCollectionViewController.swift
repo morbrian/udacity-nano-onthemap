@@ -9,7 +9,7 @@
 import UIKit
 
 // StudentLocationsCollectionViewController
-// Displays all student locations in a table view
+// Displays all student locations in a collection view
 class StudentLocationsCollectionViewController: OnTheMapBaseViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
