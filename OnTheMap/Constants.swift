@@ -24,6 +24,7 @@ struct Constants {
     static let ReturnToLoginScreenSegue = "ReturnToLoginScreenSegue"
     static let GeocodeSegue = "GeocodeSegue"
     static let StudentLocationCell = "StudentLocationCell"
+    static let StudentLocationCollectionItem = "StudentLocationCollectionItem"
     static let UserLocationCell = "UserLocationCell"
     static let StudentLocationAnnotationReuseIdentifier = "StudentLocationAnnotationReuseIdentifier"
     
