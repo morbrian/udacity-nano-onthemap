@@ -17,6 +17,7 @@ class OnTheMapBaseViewController: UIViewController {
     // default max number of items per fetch
     let FetchLimit = 100
     let PreFetchTrigger = 20
+    let BatchedFetchLimit = 10
 
     // access point for all data loading and in memory cache
     var dataManager: StudentDataAccessManager?
@@ -32,7 +33,7 @@ class OnTheMapBaseViewController: UIViewController {
             if let dm = dataManager {
                 dm.fetchLimit = FetchLimit
                 if dm.studentLocationCount == 0 {
-                    fetchNextPage()
+                    fetchNextPage() { self.performBatchedFetch(self.BatchedFetchLimit) }
                 }
                 if let loggedInUser = dm.loggedInUser {
                     fetchCurrentUserLocationData()
@@ -50,6 +51,13 @@ class OnTheMapBaseViewController: UIViewController {
         navigationController?.navigationBar.hidden = false
         tabBarController?.tabBar.hidden = false
         preFetchEnabled = true
+    }
+    
+    func performBatchedFetch(fetchLimit: Int) {
+        if (self.preFetchEnabled && fetchLimit > 0) {
+            // batched data loading requests after the first fetch do not interrupt user viewing
+            self.fetchNextPage(intrusive: false) { self.performBatchedFetch(fetchLimit - 1) }
+        }
     }
     
     // MARK: UIBarButonItem Producers
@@ -86,7 +94,9 @@ class OnTheMapBaseViewController: UIViewController {
     
     // provide basic status bar activity indicator.
     // subclasses can call super, then perform any additional work as appropriate.
-    func networkActivity(active: Bool) {
+    // when true, intrusive suggests it is acceptable for network indicators
+    // such as animations to overlap the user's work until the activity completes.
+    func networkActivity(active: Bool, intrusive: Bool = true) {
         dispatch_async(dispatch_get_main_queue()) {
             UIApplication.sharedApplication().networkActivityIndicatorVisible = active
         }
@@ -113,11 +123,11 @@ class OnTheMapBaseViewController: UIViewController {
     
     // Make another fetch request for the next available data
     // TODO: [limitation] this will not detect DELETE operations made by other users after initial load.
-    func fetchNextPage(completionHandler: (() -> Void)? = nil) {
+    func fetchNextPage(intrusive: Bool = true, completionHandler: (() -> Void)? = nil) {
         let oldCount = self.dataManager?.studentLocationCount ?? 0
-        networkActivity(true)
+        networkActivity(true, intrusive: intrusive)
         dataManager?.fetchNextStudentInformationSubset() { success, error in
-            self.networkActivity(false)
+            self.networkActivity(false, intrusive: intrusive)
             if let completionHandler = completionHandler {
                 completionHandler()
             }

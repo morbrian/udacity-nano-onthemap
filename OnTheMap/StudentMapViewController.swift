@@ -63,9 +63,13 @@ class StudentMapViewController: OnTheMapBaseViewController {
     }
     
     // display custom spinner
-    override func networkActivity(active: Bool) {
+    override func networkActivity(active: Bool, intrusive: Bool = true) {
         dispatch_async(dispatch_get_main_queue()) {
-            self.activitySpinner.spinnerActivity(active)
+            if (intrusive) {
+                self.activitySpinner.spinnerActivity(active)
+            } else {
+                super.networkActivity(active)
+            }
         }
     }
     
