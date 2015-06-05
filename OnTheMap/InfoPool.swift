@@ -108,6 +108,17 @@ public struct InfoPool<T: InfoItem> {
     // we resort everything, but this could be optimized later for larger datasets
     private mutating func organizeInfoItems() {
         infoItems.sort() { $0.0.orderBy > $0.1.orderBy }
+        // enforce uniqueness
+        infoItems.reduce([T]()) { (list, item) in
+            if list.count == 0 || list.last!.id != item.id {
+                var newList = [T]()
+                newList.extend(list)
+                newList.append(item)
+                return list
+            } else {
+                return list
+            }
+        }
         remapIndices()
     }
     
