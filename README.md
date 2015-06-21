@@ -2,9 +2,6 @@
 
 This is our project submission for the Udacity Course *iOS Networking with Swift*, the 3rd course in the *iOS Developer Nanodegree*.
 
-*The project was implemented by just me, Brian Moriarty. This documents speaks in plurals such as “we” and “our” because that tends to make better prose in online documentation.*
-
-
 ## Table of Contents
 
 * [App Overview](#app-overview)
