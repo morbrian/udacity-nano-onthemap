@@ -93,7 +93,7 @@ class StudentDataAccessManager {
     // MARK: Access Data Owned by Logged In User
     
     // true if the user is permitted to add more than one location entry
-    var userAllowedMultiplentries: Bool = false
+    var userAllowedMultiplEntries: Bool = false
     
     // filter used to get only the current user's items from a list of students
     func userFilter(infoItem: StudentInformation) -> Bool {

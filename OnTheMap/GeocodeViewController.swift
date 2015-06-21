@@ -167,7 +167,7 @@ class GeocodeViewController: UIViewController {
                             updatedInformation.latitude = Float(placemark.location.coordinate.latitude)
                             updatedInformation.longitude = Float(placemark.location.coordinate.longitude)
                             updatedInformation.mapString = placename
-                            if dataManager.userAllowedMultiplentries {
+                            if dataManager.userAllowedMultiplEntries {
                                 // if we allow multiple entries, we can still use the logged-in-user template,
                                 // but we need to clear the Parse provided until the object is created
                                 updatedInformation.objectId = nil
