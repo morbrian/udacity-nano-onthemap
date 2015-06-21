@@ -24,7 +24,7 @@ class AccountViewController: OnTheMapBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         fullNameTextField.text = dataManager?.loggedInUser?.fullname
-        multipleEntriesToggle.on = dataManager?.userAllowedMultiplentries ?? false
+        multipleEntriesToggle.on = dataManager?.userAllowedMultiplEntries ?? false
         showUserAvatar()
     }
     
@@ -44,7 +44,10 @@ class AccountViewController: OnTheMapBaseViewController {
     // MARK: IBActions
     
     @IBAction func changedMultipleEntries(sender: UISwitch) {
-        dataManager?.userAllowedMultiplentries = sender.on
+        dataManager?.userAllowedMultiplEntries = sender.on
+        if let allowedMultipleEntries = dataManager?.userAllowedMultiplEntries {
+            NSUserDefaults.standardUserDefaults().setBool(allowedMultipleEntries, forKey: KeyForAllowedMultipleEntries)
+        }
     }
     
     
