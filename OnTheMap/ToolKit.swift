@@ -13,8 +13,8 @@ import UIKit
 class ToolKit {
     
     // informs user of error status
-    static func showErrorAlert(#viewController: UIViewController, title: String, message: String) {
-        var alert = UIAlertController(
+    static func showErrorAlert(viewController viewController: UIViewController, title: String, message: String) {
+        let alert = UIAlertController(
             title: title,
             message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default) {
@@ -27,14 +27,17 @@ class ToolKit {
     }
     
     // try to manipulate the given string into a valid URL, or return nil if it can't be done.
-    static func produceValidUrlFromString(string: String) -> NSURL? {
-        var stringWithScheme = string
-        if let url = NSURL(string: stringWithScheme),
-            scheme = url.scheme,
-            hostname = url.host
-            where !hostname.isEmpty
-        &&  (scheme.lowercaseString == WebClient.HttpScheme || scheme.lowercaseString == WebClient.HttpsScheme) {
-                return url
+    static func produceValidUrlFromString(string: String?) -> NSURL? {
+        if let stringWithScheme = string {
+            let url = NSURL(string: stringWithScheme)
+            if let scheme = url?.scheme,
+                hostname = url?.host
+                where !hostname.isEmpty
+            &&  (scheme.lowercaseString == WebClient.HttpScheme || scheme.lowercaseString == WebClient.HttpsScheme) {
+                    return url
+            } else {
+                return nil
+            }
         } else {
             return nil
         }
@@ -43,6 +46,11 @@ class ToolKit {
     // use the md5 hash of the input email string to produce the appropriate the Gravatar URL
     static func produceGravatarUrlFromEmailString(email: String) -> NSURL? {
         return NSURL(string: "https://www.gravatar.com/avatar/\(email.md5)?s=\(Constants.GravatarImageSize)")
+    }
+    
+    // use the md5 hash of the input email string to produce the appropriate the Gravatar URL
+    static func produceRobohashUrlFromEmailString(email: String) -> NSURL? {
+        return NSURL(string: "https://robohash.org/\(email.md5)?gravatar=hashed")
     }
     
     // turn the search text into a Bing search query URL
@@ -68,7 +76,7 @@ extension String  {
         
         CC_MD5(str!, strLen, result)
         
-        var hash = NSMutableString()
+        let hash = NSMutableString()
         for i in 0..<digestLen {
             hash.appendFormat("%02x", result[i])
         }

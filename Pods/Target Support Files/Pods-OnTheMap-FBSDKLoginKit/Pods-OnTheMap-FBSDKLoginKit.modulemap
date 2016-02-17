@@ -1,6 +1,0 @@
-framework module FBSDKLoginKit {
-  umbrella header "Pods-OnTheMap-FBSDKLoginKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -106,7 +106,7 @@ class UdacityService {
     // Verify response length and to trim extraneous characters in the response,
     // specific to the Udacity Web Service.
     private func prepareDataForParsing(data: NSData) -> NSData? {
-        if let lengthError = validateUdacityLengthRequirement(data) {
+        if validateUdacityLengthRequirement(data) != nil {
             Logger.error("Data length is to short to be parsed.")
             return nil
         }
@@ -114,12 +114,12 @@ class UdacityService {
     }
     
     // build the Session request body with username and password values.
-    private func buildUdacitySessionBody(#username: String, password: String) -> NSData {
+    private func buildUdacitySessionBody(username username: String, password: String) -> NSData {
         return "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)!
     }
     
     // build the Session request body with username and password values.
-    private func buildUdacitySessionBody(#facebookToken: String) -> NSData {
+    private func buildUdacitySessionBody(facebookToken facebookToken: String) -> NSData {
         return "{\"facebook_mobile\": {\"access_token\": \"\(facebookToken)\"}}".dataUsingEncoding(NSUTF8StringEncoding)!
     }
     
@@ -186,7 +186,7 @@ extension UdacityService {
     
     private static let ErrorDomain = "UdacityWebClient"
     
-    private enum ErrorCode: Int, Printable {
+    private enum ErrorCode: Int, CustomStringConvertible {
         case UnexpectedResponseData, InsufficientDataLength, UsernameRequired, PasswordRequired, MissingFacebookToken
 
         
@@ -197,7 +197,6 @@ extension UdacityService {
             case UsernameRequired: return "Must specify a username"
             case PasswordRequired: return "Must specify a password"
             case MissingFacebookToken: return "Facebook Has Not Authenticated User"
-            default: return "Unknown Error"
             }
         }
     }

@@ -31,7 +31,7 @@ public struct InfoPool<T: InfoItem> {
     }
     
     // get the info item at the specified index from the stored list, or from the filtered list if filter specified
-    public func infoAtIndex(var index: Int, filter: ((infoItem: T) -> Bool)? = nil) -> T? {
+    public func infoAtIndex(index: Int, filter: ((infoItem: T) -> Bool)? = nil) -> T? {
         let itemList: [T]
         if let filter = filter {
             itemList = infoItems.filter(filter)
@@ -47,7 +47,7 @@ public struct InfoPool<T: InfoItem> {
     
     // get the last infor item in the list, or in the filtered list if filter specifed
     public func lastInfoItem(filter: ((infoItem: T) -> Bool)? = nil) -> T? {
-        return infoAtIndex(count(filter: filter) - 1, filter: filter)
+        return infoAtIndex(count(filter) - 1, filter: filter)
     }
     
     // get a copy of the list, or of a subset of the list if filter specified
@@ -80,7 +80,7 @@ public struct InfoPool<T: InfoItem> {
     
     // store multiple info items into the list
     public mutating func storeInfoItems(newInfoItems: [T]) {
-        infoItems.extend(newInfoItems)
+        infoItems.appendContentsOf(newInfoItems)
         organizeInfoItems()
     }
     
@@ -107,12 +107,12 @@ public struct InfoPool<T: InfoItem> {
     // resort and reindex the list, typically called after an add or delete
     // we resort everything, but this could be optimized later for larger datasets
     private mutating func organizeInfoItems() {
-        infoItems.sort() { $0.0.orderBy > $0.1.orderBy }
+        infoItems.sortInPlace() { $0.0.orderBy > $0.1.orderBy }
         // enforce uniqueness
         infoItems.reduce([T]()) { (list, item) in
             if list.count == 0 || list.last!.id != item.id {
                 var newList = [T]()
-                newList.extend(list)
+                newList.appendContentsOf(list)
                 newList.append(item)
                 return list
             } else {
@@ -126,7 +126,7 @@ public struct InfoPool<T: InfoItem> {
     private mutating func remapIndices() {
         infoGroupToIndexMap.removeAll(keepCapacity: true)
         infoIdToIndexMap.removeAll(keepCapacity: true)
-        for (index: Int, item: T) in enumerate(infoItems) {
+        for (index, item) in infoItems.enumerate() {
             mapGroup(item.group, toIndex: index)
             mapId(item.id, toIndex: index)
         }

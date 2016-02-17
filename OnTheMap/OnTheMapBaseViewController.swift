@@ -27,7 +27,7 @@ class OnTheMapBaseViewController: UIViewController {
     var preFetchEnabled = true
     
     // MARK: ViewController Lifecycle
-    
+
     override func viewDidLoad() {
         if let tabBarController = self.tabBarController as? ManagingTabBarController {
             dataManager = tabBarController.dataManager
@@ -38,11 +38,11 @@ class OnTheMapBaseViewController: UIViewController {
                 if dm.studentLocationCount == 0 {
                     fetchNextPage() { self.performBatchedFetch(self.BatchedFetchLimit) }
                 }
-                if let loggedInUser = dm.loggedInUser {
+                if dm.loggedInUser != nil {
                     fetchCurrentUserLocationData()
                 }
-                var refreshButton = produceRefreshButton()
-                var addLocationButton = produceAddLocationButton()
+                let refreshButton = produceRefreshButton()
+                let addLocationButton = produceAddLocationButton()
                 addLocationButton.enabled = dm.authenticated
                 navigationItem.rightBarButtonItems = [refreshButton, addLocationButton]
                 navigationItem.leftBarButtonItem = produceLogoutBarButtonItem()
@@ -59,7 +59,7 @@ class OnTheMapBaseViewController: UIViewController {
     func performBatchedFetch(fetchLimit: Int) {
         if (self.preFetchEnabled && fetchLimit > 0) {
             // batched data loading requests after the first fetch do not interrupt user viewing
-            self.fetchNextPage(intrusive: false) { self.performBatchedFetch(fetchLimit - 1) }
+            self.fetchNextPage(false) { self.performBatchedFetch(fetchLimit - 1) }
         }
     }
     
@@ -175,7 +175,7 @@ class OnTheMapBaseViewController: UIViewController {
     func addLocationAction(sender: AnyObject!) {
         if let dataManager = dataManager
             where dataManager.loggedInUserDoesHaveLocation() && !dataManager.userAllowedMultiplEntries {
-            var alert = UIAlertController(title: "Add Study Location", message: "Would you like to overwrite your previously entered location?", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "Add Study Location", message: "Would you like to overwrite your previously entered location?", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel) {
                 action -> Void in
                     // nothing to do
@@ -188,7 +188,6 @@ class OnTheMapBaseViewController: UIViewController {
         } else {
             performSegueWithIdentifier(Constants.GeocodeSegue, sender: self)
         }
-        
     }
     
     // segue to GeocodeViewController to ad new location

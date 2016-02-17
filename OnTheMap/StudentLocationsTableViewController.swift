@@ -38,8 +38,8 @@ class StudentLocationsTableViewController: OnTheMapBaseViewController {
     // figure out the best height for the activity spinner area
     private func produceRefreshViewWithHeight(spinnerAreaHeight: CGFloat) -> RefreshView {
         let refreshViewHeight = view.bounds.height
-        var refreshView = RefreshView(frame: CGRect(x: 0, y: -refreshViewHeight, width: CGRectGetWidth(view.bounds), height: refreshViewHeight), spinnerAreaHeight: spinnerAreaHeight, scrollView: tableView)
-        refreshView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        let refreshView = RefreshView(frame: CGRect(x: 0, y: -refreshViewHeight, width: CGRectGetWidth(view.bounds), height: refreshViewHeight), spinnerAreaHeight: spinnerAreaHeight, scrollView: tableView)
+        refreshView.translatesAutoresizingMaskIntoConstraints = false
         refreshView.delegate = self
         tableView.insertSubview(refreshView, atIndex: 0)
         return refreshView
@@ -84,8 +84,8 @@ extension StudentLocationsTableViewController: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var studentLocationData = dataManager?.studentLocationAtIndex(indexPath.item)
-        let cell = tableView.dequeueReusableCellWithIdentifier(Constants.StudentLocationCell, forIndexPath: indexPath) as! UITableViewCell
+        let studentLocationData = dataManager?.studentLocationAtIndex(indexPath.item)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Constants.StudentLocationCell, forIndexPath: indexPath) 
  
         cell.textLabel?.text = studentLocationData?.fullname
         cell.imageView?.image = pinImage

@@ -82,7 +82,7 @@ class GeocodeViewController: UIViewController {
     }
     
     private func produceSpinner() -> SpinnerPanelView {
-        var activitySpinner = SpinnerPanelView(frame: view.bounds, spinnerImageView: UIImageView(image: UIImage(named: "Udacity")))
+        let activitySpinner = SpinnerPanelView(frame: view.bounds, spinnerImageView: UIImageView(image: UIImage(named: "Udacity")))
         activitySpinner.backgroundColor = UIColor.orangeColor()
         activitySpinner.alpha = CGFloat(0.5)
         return activitySpinner
@@ -153,7 +153,7 @@ class GeocodeViewController: UIViewController {
     
     @IBAction func geocodeAction(sender: UIButton) {
         placeNameTextField.endEditing(false)
-        var geocoder = CLGeocoder()
+        let geocoder = CLGeocoder()
         
         if let placename = placeNameTextField.text {
             networkActivity(true)
@@ -162,10 +162,18 @@ class GeocodeViewController: UIViewController {
                 self.networkActivity(false)
                 if let placemarks = placemarks {
                     if placemarks.count > 0 {
-                        if let placemark = placemarks[0] as? CLPlacemark, dataManager = self.dataManager, var updatedInformation = dataManager.loggedInUser  {
+                        let placemark = placemarks[0]
+                        if let dataManager = self.dataManager, var updatedInformation = dataManager.loggedInUser  {
                             // set the new coordinate information and placename
-                            updatedInformation.latitude = Float(placemark.location.coordinate.latitude)
-                            updatedInformation.longitude = Float(placemark.location.coordinate.longitude)
+                            
+                            
+                            if let latitude = placemark.location?.coordinate.latitude {
+                                updatedInformation.latitude = Float(latitude)
+                            }
+                            if let longitude = placemark.location?.coordinate.longitude {
+                                updatedInformation.longitude = Float(longitude)
+                                
+                            }
                             updatedInformation.mapString = placename
                             if dataManager.userAllowedMultiplEntries {
                                 // if we allow multiple entries, we can still use the logged-in-user template,
@@ -215,9 +223,9 @@ class GeocodeViewController: UIViewController {
         // then we verify the protocol is http(s) because these should be web pages not some other link,
         // finally we'll do a lightweight HEAD check with a request.
         if var updatedInformation = updatedInformation,
-            url = ToolKit.produceValidUrlFromString(enteredUrlString),
-            urlString = url.absoluteString {
+            let url = ToolKit.produceValidUrlFromString(enteredUrlString) {
                 
+            let urlString = url.absoluteString
             self.networkActivity(true)
             WebClient().pingUrl(enteredUrlString) { reply, error in
                 if reply {
@@ -247,7 +255,9 @@ class GeocodeViewController: UIViewController {
     
     @IBAction func showWebView(sender: UIButton) {
         urlTextField.endEditing(false)
-        webView.loadRequest(produceRequestForText(urlTextField.text))
+        if let text = urlTextField.text {
+            webView.loadRequest(produceRequestForText(text))
+        }
         webBrowserPanel.hidden = false
     }
     
@@ -262,11 +272,11 @@ class GeocodeViewController: UIViewController {
     
     private func produceRequestForText(textString: String) -> NSURLRequest {
         
-        if let validUrl = ToolKit.produceValidUrlFromString(textString), validUrlString = validUrl.absoluteString,
-            request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: validUrlString) {
+        if let validUrl = ToolKit.produceValidUrlFromString(textString),
+            request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: validUrl.absoluteString) {
             return request
-        } else if let bingUrl = ToolKit.produceBingUrlFromSearchString(textString), bingUrlString = bingUrl.absoluteString,
-            request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: bingUrlString) {
+        } else if let bingUrl = ToolKit.produceBingUrlFromSearchString(textString),
+            request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: bingUrl.absoluteString) {
                 return request
         } else {
             let request = WebClient().createHttpRequestUsingMethod(WebClient.HttpGet, forUrlString: "http://www.bing.com")
@@ -274,7 +284,7 @@ class GeocodeViewController: UIViewController {
         }
     }
     
-    private func transitionToUrlEditing(#regionDistance: CLLocationDistance?) {
+    private func transitionToUrlEditing(regionDistance regionDistance: CLLocationDistance?) {
         whereStudyingPanel.hidden = true
         placeNameEditorPanel.hidden = true
         urlEditorPanel.hidden = false
@@ -283,7 +293,7 @@ class GeocodeViewController: UIViewController {
             annotation = StudentAnnotation(student: updatedInformation) {
                 mapView.addAnnotation(annotation)
                 let distance = regionDistance ?? Constants.MapSpanDistanceMeters
-                var region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, distance, distance)
+                let region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, distance, distance)
                 mapView.setRegion(region, animated: true)
         }
     }
@@ -295,7 +305,8 @@ class GeocodeViewController: UIViewController {
 extension GeocodeViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        let request = produceRequestForText(searchBar.text)
-        webView.loadRequest(request)
+        if let text = searchBar.text {
+            webView.loadRequest(produceRequestForText(text))
+        }
     }
 }

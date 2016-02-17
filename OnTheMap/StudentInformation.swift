@@ -105,7 +105,6 @@ struct StudentInformation {
         createdAt = dateFromString(data[OnTheMapParseService.ParseJsonKey.CreateAt] as? String)?.timeIntervalSince1970
         
         // dictionary must at least have a key
-        var uniqueKey = data[OnTheMapParseService.ParseJsonKey.UniqueKey] as? String ?? ""
         if studentKey.isEmpty {
             return nil
         }

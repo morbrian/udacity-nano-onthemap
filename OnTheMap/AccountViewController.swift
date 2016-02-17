@@ -58,7 +58,7 @@ class AccountViewController: OnTheMapBaseViewController {
         networkActivity(true)
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
             if let loggedInUser = self.dataManager?.loggedInUser, email = loggedInUser.email,
-                url = ToolKit.produceGravatarUrlFromEmailString(email), imageData = NSData(contentsOfURL: url) {
+                url = ToolKit.produceRobohashUrlFromEmailString(email), imageData = NSData(contentsOfURL: url) {
                     self.networkActivity(false)
                     dispatch_async(dispatch_get_main_queue()) {
                         self.studentAvatarImageView.image = UIImage(data: imageData)
@@ -106,8 +106,8 @@ extension AccountViewController: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var userLocationData = dataManager?.userLocationAtIndex(indexPath.item)
-        let cell = tableView.dequeueReusableCellWithIdentifier(Constants.UserLocationCell, forIndexPath: indexPath) as! UITableViewCell
+        let userLocationData = dataManager?.userLocationAtIndex(indexPath.item)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Constants.UserLocationCell, forIndexPath: indexPath) 
         cell.textLabel?.text = userLocationData?.mapString
         cell.detailTextLabel?.text = userLocationData?.objectId
         return cell

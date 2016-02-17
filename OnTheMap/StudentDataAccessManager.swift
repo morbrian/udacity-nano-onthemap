@@ -102,7 +102,7 @@ class StudentDataAccessManager {
     
     // number of items owned by the logged in user in the list of student locations
     var userLocationCount: Int {
-        return infoPool.count(filter: userFilter)
+        return infoPool.count(userFilter)
     }
     
     // return the student location for the specified index in the list of items owned by the logged in user
@@ -112,7 +112,7 @@ class StudentDataAccessManager {
     
     // return the entire list of student locations owned by the logged in user
     var userLocations: [StudentInformation] {
-        return infoPool.infoItemsAsArray(filter: userFilter)
+        return infoPool.infoItemsAsArray(userFilter)
     }
     
     // when the location data currently associated with the current user
@@ -218,10 +218,10 @@ class StudentDataAccessManager {
         var oldestDate: NSTimeInterval? {
             // we filter out objects owned by the current user when identifying the oldest item
             // because those were prefetched separately and there may be newer objects owned by other users.
-            return infoPool.count() > 1 ? infoPool.lastInfoItem(filter: {$0.objectId != self.currentUser?.objectId})?.updatedAt : nil
+            return infoPool.count() > 1 ? infoPool.lastInfoItem({$0.objectId != self.currentUser?.objectId})?.updatedAt : nil
         }
         
-        onTheMapClient.fetchStudents(limit: fetchLimit, newerThan: newestDate, olderThan: oldestDate) { students, error in
+        onTheMapClient.fetchStudents(fetchLimit, newerThan: newestDate, olderThan: oldestDate) { students, error in
             if let newLocations = students {
                 dispatch_async(dispatch_get_main_queue()) {
                     self.infoPool.storeInfoItems(newLocations)

@@ -1,6 +1,0 @@
-framework module FBSDKShareKit {
-  umbrella header "Pods-OnTheMap-FBSDKShareKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

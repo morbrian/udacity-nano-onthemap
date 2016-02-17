@@ -24,7 +24,7 @@ class RefreshView: UIView {
     
     var refreshItem: RefreshItem!
 
-    required init(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         scrollView = UIScrollView()
         spinnerAreaHeight = CGFloat(44)
         assert(false, "use init(frame: scrollView:)")

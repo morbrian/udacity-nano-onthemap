@@ -18,7 +18,7 @@ public class Logger {
     // DEBUG = low-level step-through messages to help troubleshoot during development.
     // INFO = messages about significant events or transitions during development.
     // ERROR = unexpected issues or misbehavior to call out during development.
-    enum LogLevel: Printable {
+    enum LogLevel: CustomStringConvertible {
         case Debug
         case Info
         case Error
@@ -26,15 +26,13 @@ public class Logger {
             switch self {
             case Debug: return "DEBUG"
             case Info: return "INFO"
-            case Error: return "ERROR"
-            default: return "LOG"
-            }
+            case Error: return "ERROR"            }
         }
     }
     
     // output the log information in a predefined format
     static private func outputMessage(message: String, file: String, line: Int, function: String, level: LogLevel) {
-        println("[\(level)][\(file.lastPathComponent):\(line)][\(function)][\(message)]")
+        print("[\(level)][\((file as NSString).lastPathComponent):\(line)][\(function)][\(message)]")
     }
     
     // print debug level messages

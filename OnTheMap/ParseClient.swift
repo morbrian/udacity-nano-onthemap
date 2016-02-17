@@ -87,7 +87,7 @@ public class ParseClient {
                     } else if let errorMessage = jsonData?.valueForKey(ParseJsonKey.Error) as? String {
                         completionHandler(objectId: nil, createdAt: nil, error: ParseClient.errorForCode(.ParseServerError, message: errorMessage))
                     } else {
-                        var responseError = ParseClient.errorForCode(.ResponseForCreateIsMissingExpectedValues)
+                        let responseError = ParseClient.errorForCode(.ResponseForCreateIsMissingExpectedValues)
                         completionHandler(objectId: nil, createdAt: nil, error: responseError)
                     }
             }
@@ -108,14 +108,14 @@ public class ParseClient {
     // completionHandler - updatedAt: the time object is updated when update successful
     public func updateObjectOfClassName(className: String, withProperties properties: [String:AnyObject], objectId: String? = nil,
         completionHandler: (updatedAt: String?, error: NSError?) -> Void) {
-            println("Raw Data: \(properties)")
+            print("Raw Data: \(properties)")
             performHttpMethod(WebClient.HttpPut, ofClassName: className, withProperties: properties, objectId: objectId) { jsonData, error in
                 if let updatedAt = jsonData?.valueForKey(ParseJsonKey.UpdatedAt) as? String {
                     completionHandler(updatedAt: updatedAt, error: nil)
                 } else if error != nil {
                     completionHandler(updatedAt: nil, error: error)
                 } else {
-                    var responseError = ParseClient.errorForCode(.ResponseForUpdateIsMissingExpectedValues)
+                    let responseError = ParseClient.errorForCode(.ResponseForUpdateIsMissingExpectedValues)
                     completionHandler(updatedAt: nil, error: responseError)
                 }
         }
@@ -130,21 +130,20 @@ public class ParseClient {
     private func performHttpMethod(method: String, ofClassName className: String, withProperties properties: [String:AnyObject] = [String:AnyObject](),
         objectId: String? = nil, requestHandler: (jsonData: AnyObject?, error: NSError?) -> Void ) {
         
-        var bodyError: NSError?
-        if let body = NSJSONSerialization.dataWithJSONObject(properties, options: nil, error: &bodyError)
-            where bodyError == nil {
-                var targetUrlString = "\(ParseClient.ObjectUrl)/\(className)"
-                if let objectId = objectId {
-                    targetUrlString += "/\(objectId)"
-                }
-                if let request = webClient.createHttpRequestUsingMethod(method, forUrlString: targetUrlString,
-                    withBody: body, includeHeaders: StandardHeaders) {
-                        webClient.executeRequest(request, completionHandler: requestHandler)
-                } else {
-                    requestHandler(jsonData: nil, error: WebClient.errorForCode(.UnableToCreateRequest))
-                }
-        } else {
-            requestHandler(jsonData: nil, error: bodyError)
+        do {
+            let body = try NSJSONSerialization.dataWithJSONObject(properties, options: NSJSONWritingOptions.PrettyPrinted)
+            var targetUrlString = "\(ParseClient.ObjectUrl)/\(className)"
+            if let objectId = objectId {
+                targetUrlString += "/\(objectId)"
+            }
+            if let request = webClient.createHttpRequestUsingMethod(method, forUrlString: targetUrlString,
+                withBody: body, includeHeaders: StandardHeaders) {
+                    webClient.executeRequest(request, completionHandler: requestHandler)
+            } else {
+                requestHandler(jsonData: nil, error: WebClient.errorForCode(.UnableToCreateRequest))
+            }
+        } catch {
+            requestHandler(jsonData: nil, error: ParseClient.errorForCode(ErrorCode.ParseServerError))
         }
     }
 
@@ -171,7 +170,7 @@ extension ParseClient {
     }
     
     static var DateFormatter: NSDateFormatter {
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         let enUSPosixLocale = NSLocale(localeIdentifier: ParseClient.Locale.EN_US_POSIX)
         dateFormatter.locale = enUSPosixLocale
         dateFormatter.dateFormat = ParseClient.DateFormat.ISO8601
@@ -206,7 +205,7 @@ extension ParseClient {
     
     private static let ErrorDomain = "ParseClient"
     
-    private enum ErrorCode: Int, Printable {
+    private enum ErrorCode: Int, CustomStringConvertible {
         case ResponseContainedNoResultObject = 1
         case ResponseForCreateIsMissingExpectedValues
         case ResponseForUpdateIsMissingExpectedValues

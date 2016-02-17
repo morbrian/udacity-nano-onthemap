@@ -51,7 +51,6 @@ class OnTheMapParseService {
             case let (older, nil): whereClause = older
             case let (nil, newer): whereClause = newer
             case let (older, newer): whereClause = "{\"$or\":[\(older!),\(newer!)]}"
-            default: whereClause = nil
             }
 
             parseClient.fetchResultsForClassName(OnTheMapParseService.StudentLocationClassName,
@@ -167,14 +166,13 @@ extension OnTheMapParseService {
     
     private static let ErrorDomain = "OnTheMapParseWebClient"
 
-    private enum ErrorCode: Int, Printable {
+    private enum ErrorCode: Int, CustomStringConvertible {
         case ResponseContainedNoResultObject = 1, ParseClientApiFailure
         
         var description: String {
             switch self {
             case ResponseContainedNoResultObject: return "Response data did not provide a results object."
             case ParseClientApiFailure: return "Parse Client failed to find data but also failed to provide a valid error object."
-            default: return "Unknown Error"
             }
         }
     }

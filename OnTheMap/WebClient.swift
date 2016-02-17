@@ -23,8 +23,8 @@ public class WebClient {
     // encodeParameters
     // convert dictionary to parameterized String appropriate for use in an HTTP URL
     public static func encodeParameters(params: [String: AnyObject]) -> String {
-        var queryItems = map(params) { NSURLQueryItem(name:$0, value:"\($1)")}
-        var components = NSURLComponents()
+        let queryItems = params.map(){ NSURLQueryItem(name:$0, value:"\($1)")}
+        let components = NSURLComponents()
         components.queryItems = queryItems
         return components.percentEncodedQuery ?? ""
     }
@@ -72,30 +72,27 @@ public class WebClient {
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             // this is a general communication error
-            if error != nil {
+            if let error = error {
                 Logger.debug(error.description)
                 completionHandler(jsonData: nil, error: error)
                 return
             }
-
-            let (jsonData: AnyObject?, parsingError: NSError?) =
-                self.parseJsonFromData(data)
             
-            if let parsingError = parsingError {
-                Logger.debug(parsingError.description)
+            if let data = data,
+                jsonData = self.parseJsonFromData(data) {
+                completionHandler(jsonData: jsonData, error: nil)
+            } else {
                 Logger.debug("\(data)")
-                completionHandler(jsonData: nil, error: parsingError)
-                return
+                completionHandler(jsonData: nil, error: WebClient.errorForCode(WebClient.ErrorCode.ResponseDataError))
             }
-            
-            completionHandler(jsonData: jsonData, error: nil)
         }
         task.resume()
     }
     
     // quick check to see if URL is valid and responsive
-    public func pingUrl(urlString: String, completionHandler: (reply: Bool, error: NSError?) -> Void) {
-        if let request = createHttpRequestUsingMethod(WebClient.HttpHead, forUrlString: urlString) {
+    public func pingUrl(urlString: String?, completionHandler: (reply: Bool, error: NSError?) -> Void) {
+        if let urlString = urlString,
+            request = createHttpRequestUsingMethod(WebClient.HttpHead, forUrlString: urlString) {
             let session = NSURLSession.sharedSession()
             let task = session.dataTaskWithRequest(request) { data, response, error in
                 if let error = error {
@@ -112,20 +109,24 @@ public class WebClient {
     // MARK: Private Helpers
     
     // Produces usable JSON object from the raw data.
-    private func parseJsonFromData(data: NSData) -> (jsonData: AnyObject?, error: NSError?) {
+    private func parseJsonFromData(data: NSData) -> AnyObject? {
         var mutableData = data
-        var parsingError: NSError? = nil
         if let prepareData = prepareData,
             modifiedData = prepareData(data) {
                 mutableData = modifiedData
         }
-        let jsonData: AnyObject? = NSJSONSerialization.JSONObjectWithData(mutableData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError)
-        return (jsonData, parsingError)
+        
+        do {
+            let jsonData: AnyObject? = try NSJSONSerialization.JSONObjectWithData(mutableData, options: NSJSONReadingOptions.AllowFragments)
+            return (jsonData)
+        } catch {
+            return nil
+        }
     }
     
     // helper function adds request headers to request
     private func addRequestHeaders(requestHeaders: [String:String], toRequest request: NSMutableURLRequest) -> NSMutableURLRequest {
-        var request = request
+        let request = request
         for (field, value) in requestHeaders {
             request.addValue(value, forHTTPHeaderField: field)
         }
@@ -156,13 +157,13 @@ extension WebClient {
     
     private static let ErrorDomain = "WebClient"
     
-    enum ErrorCode: Int, Printable {
-        case UnableToCreateRequest
+    enum ErrorCode: Int, CustomStringConvertible {
+        case UnableToCreateRequest, ResponseDataError
         
         var description: String {
             switch self {
             case UnableToCreateRequest: return "Could Not Create Request"
-            default: return "Unknown Error"
+            case ResponseDataError: return "response data error"
             }
         }
     }

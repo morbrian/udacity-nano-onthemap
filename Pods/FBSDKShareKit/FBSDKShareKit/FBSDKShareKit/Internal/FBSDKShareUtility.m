@@ -21,7 +21,7 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareError.h"
-#import "FBSDKShareLinkContent.h"
+#import "FBSDKShareLinkContent+Internal.h"
 #import "FBSDKShareOpenGraphContent.h"
 #import "FBSDKShareOpenGraphObject.h"
 #import "FBSDKSharePhoto.h"
@@ -179,7 +179,7 @@
   NSMutableDictionary *parameters = nil;
   if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)content;
-    parameters = [[NSMutableDictionary alloc] init];
+    parameters = [[NSMutableDictionary alloc] initWithDictionary:linkContent.feedParameters];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
@@ -236,6 +236,7 @@
   }
 }
 
+#if !TARGET_OS_TV
 + (BOOL)validateAppInviteContent:(FBSDKAppInviteContent *)appInviteContent error:(NSError *__autoreleasing *)errorRef
 {
   return ([self _validateRequiredValue:appInviteContent name:@"content" error:errorRef] &&
@@ -243,7 +244,26 @@
           [self _validateNetworkURL:appInviteContent.appLinkURL name:@"appLinkURL" error:errorRef] &&
           [self _validateNetworkURL:appInviteContent.appInvitePreviewImageURL name:@"appInvitePreviewImageURL" error:errorRef]);
 }
+#endif
 
++ (BOOL)validateAssetLibraryURLWithShareVideoContent:(FBSDKShareVideoContent *)videoContent name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
+{
+  FBSDKShareVideo *video = videoContent.video;
+  NSURL *videoURL = video.videoURL;
+  if (!videoURL || [[videoURL.scheme lowercaseString] isEqualToString:@"assets-library"]) {
+    if (errorRef != NULL) {
+      *errorRef = nil;
+    }
+    return YES;
+  } else {
+    if (errorRef != NULL) {
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name value:videoURL message:nil];
+    }
+    return NO;
+  }
+}
+
+#if !TARGET_OS_TV
 + (BOOL)validateGameRequestContent:(FBSDKGameRequestContent *)gameRequestContent error:(NSError *__autoreleasing *)errorRef
 {
   if (![self _validateRequiredValue:gameRequestContent name:@"content" error:errorRef]
@@ -312,6 +332,7 @@
                                        @(FBSDKGameRequestFilterAppNonUsers)]
                                error:errorRef];
 }
+#endif
 
 + (BOOL)validateShareContent:(id<FBSDKSharingContent>)shareContent error:(NSError *__autoreleasing *)errorRef
 {
@@ -378,8 +399,7 @@
   NSURL *videoURL = video.videoURL;
   return ([self _validateRequiredValue:videoContent name:@"videoContent" error:errorRef] &&
           [self _validateRequiredValue:video name:@"video" error:errorRef] &&
-          [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef] &&
-          [self _validateAssetLibraryURL:videoURL name:@"videoURL" error:errorRef]);
+          [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef]);
 }
 
 #pragma mark - Object Lifecycle
@@ -394,9 +414,16 @@
 
 + (void)_addToParameters:(NSMutableDictionary *)parameters forShareContent:(id<FBSDKSharingContent>)shareContent
 {
-  [FBSDKInternalUtility dictionary:parameters setObject:shareContent.peopleIDs forKey:@"tags"];
-  [FBSDKInternalUtility dictionary:parameters setObject:shareContent.placeID forKey:@"place"];
-  [FBSDKInternalUtility dictionary:parameters setObject:shareContent.ref forKey:@"ref"];
+  if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+    FBSDKShareOpenGraphAction *action = ((FBSDKShareOpenGraphContent *)shareContent).action;
+    [action setArray:shareContent.peopleIDs forKey:@"tags"];
+    [action setString:shareContent.placeID forKey:@"place"];
+    [action setString:shareContent.ref forKey:@"ref"];
+  } else {
+    [FBSDKInternalUtility dictionary:parameters setObject:shareContent.peopleIDs forKey:@"tags"];
+    [FBSDKInternalUtility dictionary:parameters setObject:shareContent.placeID forKey:@"place"];
+    [FBSDKInternalUtility dictionary:parameters setObject:shareContent.ref forKey:@"ref"];
+  }
 }
 
 + (void)_addToParameters:(NSMutableDictionary *)parameters
@@ -469,6 +496,7 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
     // if we have an FBSDKShareOpenGraphObject and a type, then we are creating a new object instance; set the flag
     if ([key isEqualToString:@"og:type"] && [container isKindOfClass:[FBSDKShareOpenGraphObject class]]) {
       dictionary[@"fbsdk:create_object"] = @YES;
+      dictionary[key] = object;
     }
     id value = [self _convertObject:object];
     if (value) {
@@ -613,21 +641,6 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
       *errorRef = nil;
     }
     return YES;
-  }
-}
-
-+ (BOOL)_validateAssetLibraryURL:(NSURL *)URL name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
-{
-  if (!URL || [[URL.scheme lowercaseString] isEqualToString:@"assets-library"]) {
-    if (errorRef != NULL) {
-      *errorRef = nil;
-    }
-    return YES;
-  } else {
-    if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name value:URL message:nil];
-    }
-    return NO;
   }
 }
 

@@ -61,7 +61,7 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         if let token = FBSDKAccessToken.currentAccessToken() {
             networkActivity(true)
-            dataManager.authenticateByFacebookToken(FBSDKAccessToken.currentAccessToken().tokenString,
+            dataManager.authenticateByFacebookToken(token.tokenString,
                 completionHandler: handleAuthenticationResponse)
         }
     }
@@ -77,12 +77,12 @@ class LoginViewController: UIViewController {
     // shift the entire view up if bottom text field being edited
     func keyboardWillShow(notification: NSNotification) {
         var bottomOfLoginButton: CGFloat {
-            var loginButtonOrigin =  view.convertPoint(loginButton.bounds.origin, fromView: loginButton)
+            let loginButtonOrigin =  view.convertPoint(loginButton.bounds.origin, fromView: loginButton)
             return loginButtonOrigin.y + loginButton.bounds.height
         }
         if viewShiftDistance == nil {
-            var keyboardHeight = getKeyboardHeight(notification)
-            var topOfKeyboard = view.bounds.maxY - keyboardHeight
+            let keyboardHeight = getKeyboardHeight(notification)
+            let topOfKeyboard = view.bounds.maxY - keyboardHeight
             // we only need to move the view if the keyboard will cover up the login button and text fields
             if topOfKeyboard < bottomOfLoginButton {
                 viewShiftDistance = bottomOfLoginButton - topOfKeyboard
@@ -116,12 +116,13 @@ class LoginViewController: UIViewController {
     @IBAction func performLogin(sender: UIButton) {
         endTextEditing()
         loginStatusLabel.hidden = true
-        let username = usernameTextField.text
-        let password = passwordTextField.text
         
-        networkActivity(true)
-        dataManager.authenticateByUsername(username, withPassword: password,
-            completionHandler: handleAuthenticationResponse)
+        if let username = usernameTextField.text,
+            password = passwordTextField.text {
+            networkActivity(true)
+            dataManager.authenticateByUsername(username, withPassword: password,
+                completionHandler: handleAuthenticationResponse)
+        }
     }
     
     @IBAction func gotoAccountSignup(sender: UIButton) {
@@ -205,7 +206,7 @@ class LoginViewController: UIViewController {
     
     // MARK: Authentication
     
-    func handleAuthenticationResponse(#success: Bool, error: NSError?) {
+    func handleAuthenticationResponse(success success: Bool, error: NSError?) {
         self.networkActivity(false)
         if success {
             self.transitionSucessfulLoginSegue()

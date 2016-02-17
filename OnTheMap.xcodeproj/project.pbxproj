@@ -38,7 +38,7 @@
 		4EE4BBCE1AE35C0200FC6146 /* OnTheMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBCD1AE35C0200FC6146 /* OnTheMapTests.swift */; };
 		4EE4BBD91AE4193300FC6146 /* WebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBD81AE4193300FC6146 /* WebClient.swift */; };
 		4EE4BBDD1AE4977300FC6146 /* UdacityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE4BBDC1AE4977300FC6146 /* UdacityService.swift */; };
-		E0B88C495A09D975D5EDA088 /* Pods_OnTheMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B7CC5C3341ACA865456AE0 /* Pods_OnTheMap.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		E0B88C495A09D975D5EDA088 /* Pods_OnTheMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21B7CC5C3341ACA865456AE0 /* Pods_OnTheMap.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -317,7 +317,8 @@
 		4EE4BBAA1AE35C0100FC6146 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Brian Moriarty";
 				TargetAttributes = {
 					4EE4BBB11AE35C0100FC6146 = {
@@ -514,6 +515,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -586,6 +588,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.morbrian.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "OnTheMap/OnTheMap-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -602,6 +605,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = OnTheMap/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.morbrian.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "OnTheMap/OnTheMap-Bridging-Header.h";
 			};
@@ -621,6 +625,7 @@
 				);
 				INFOPLIST_FILE = OnTheMapTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.morbrian.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnTheMap.app/OnTheMap";
 			};
@@ -636,6 +641,7 @@
 				);
 				INFOPLIST_FILE = OnTheMapTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.morbrian.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OnTheMap.app/OnTheMap";
 			};

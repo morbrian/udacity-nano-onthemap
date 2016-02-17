@@ -25,7 +25,7 @@ class SpinnerPanelView: UIView {
         self.spinnerBaseTransform = spinnerImageView.transform
         self.addSubview(spinnerImageView)
         spinnerImageView.contentMode = UIViewContentMode.ScaleAspectFit
-        spinnerImageView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        spinnerImageView.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraint(NSLayoutConstraint(
             item: spinnerImageView,
             attribute: NSLayoutAttribute.Width,

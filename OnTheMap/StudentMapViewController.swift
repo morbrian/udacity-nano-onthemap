@@ -37,7 +37,7 @@ class StudentMapViewController: OnTheMapBaseViewController {
     
     // a custom spinner used during network activity
     private func produceSpinner() -> SpinnerPanelView {
-        var activitySpinner = SpinnerPanelView(frame: view.bounds, spinnerImageView: UIImageView(image: UIImage(named: "Udacity")))
+        let activitySpinner = SpinnerPanelView(frame: view.bounds, spinnerImageView: UIImageView(image: UIImage(named: "Udacity")))
         activitySpinner.backgroundColor = UIColor.orangeColor()
         activitySpinner.alpha = CGFloat(0.5)
         return activitySpinner
@@ -89,7 +89,7 @@ class StudentMapViewController: OnTheMapBaseViewController {
                     longitude = firstLocation.longitude {
                         let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
                         let distance = Constants.MapSpanDistanceMeters
-                        var region = MKCoordinateRegionMakeWithDistance(coordinate, distance, distance)
+                        let region = MKCoordinateRegionMakeWithDistance(coordinate, distance, distance)
                         self.mapView.setRegion(region, animated: true)
                         
                 }
@@ -101,28 +101,28 @@ class StudentMapViewController: OnTheMapBaseViewController {
 
 extension StudentMapViewController: MKMapViewDelegate {
 
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         var view = mapView.dequeueReusableAnnotationViewWithIdentifier(Constants.StudentLocationAnnotationReuseIdentifier)
         if view == nil {
             view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: Constants.StudentLocationAnnotationReuseIdentifier)
-            view.canShowCallout = true
+            view?.canShowCallout = true
         } else {
-            view.annotation = annotation
+            view?.annotation = annotation
         }
         
         if let studentAnnotation = annotation as? StudentAnnotation {
             if let urlString = studentAnnotation.student.mediaUrl,
-                url = NSURL(string: urlString) {
-                    var detailButton = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
-                    var detailDisclosure = UIImageView(image: detailButton.imageForState(UIControlState.Highlighted))
-                    view.rightCalloutAccessoryView = detailButton
+                _ = NSURL(string: urlString) {
+                    let detailButton = UIButton(type: UIButtonType.DetailDisclosure)
+                    _ = UIImageView(image: detailButton.imageForState(UIControlState.Highlighted))
+                    view?.rightCalloutAccessoryView = detailButton
             }
         }
         return view
     }
     
     // open the URL for the tapped Student Location pin if it is valid
-    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         // TODO: verify URL and network connectivity before sending to Safari
         if let studentAnnotation = view.annotation as? StudentAnnotation,
             urlString = studentAnnotation.student.mediaUrl {
@@ -151,11 +151,11 @@ class StudentAnnotation: NSObject, MKAnnotation {
         return CLLocationCoordinate2D(latitude: CLLocationDegrees(student.latitude!), longitude: CLLocationDegrees(student.longitude!))
     }
     
-    var title: String! {
+    var title: String? {
         return student.fullname
     }
     
-    var subtitle: String! {
+    var subtitle: String? {
         return student.mediaUrl
     }
     

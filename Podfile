@@ -5,9 +5,9 @@
 use_frameworks!
 
 target 'OnTheMap' do
-  pod 'FBSDKCoreKit', '~> 4.2'
-  pod 'FBSDKLoginKit', '~> 4.2'
-  pod 'FBSDKShareKit', '~> 4.2' 
+  pod 'FBSDKCoreKit', '~> 4.10'
+  pod 'FBSDKLoginKit', '~> 4.10'
+  pod 'FBSDKShareKit', '~> 4.10' 
 end
 
 target 'OnTheMapTests' do

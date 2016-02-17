@@ -69,7 +69,7 @@ extension StudentLocationsCollectionViewController: UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView,
         cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-            var studentLocationData = dataManager?.studentLocationAtIndex(indexPath.item)
+            let studentLocationData = dataManager?.studentLocationAtIndex(indexPath.item)
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(Constants.StudentLocationCollectionItem, forIndexPath: indexPath) as! StudentLocationCollectionViewCell
             
             cell.firstNameLabel?.text = studentLocationData?.firstname
